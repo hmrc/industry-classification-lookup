@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.industrycodelookup
+package config
 
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.hooks.HttpHooks

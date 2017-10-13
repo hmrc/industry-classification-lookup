@@ -1,3 +1,4 @@
 # microservice specific routes
 
-GET        /hello-world             uk.gov.hmrc.industrycodelookup.controllers.MicroserviceHelloWorld.hello
+GET         /lookup/:sicCode                         @controllers.LookupController.lookup(sicCode)
+

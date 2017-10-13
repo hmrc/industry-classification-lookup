@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.industrycodelookup.controllers
+package config
 
-import play.api.http.Status
-import play.api.test.FakeRequest
-import play.api.http.Status
-import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.test.WithFakeApplication
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import javax.inject.{Inject, Singleton}
 
+import com.typesafe.config.ConfigValue
+import play.api.Configuration
 
-class MicroserviceHelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
+@Singleton
+class MicroserviceConfigImpl @Inject()(val playConfig: Configuration) extends MicroserviceConfig
 
-  val fakeRequest = FakeRequest("GET", "/")
+trait MicroserviceConfig {
 
+  protected val playConfig: Configuration
 
-  "GET /" should {
-    "return 200" in {
-      val result = MicroserviceHelloWorld.hello()(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
+  def getConfigObject(key: String): Set[(String, ConfigValue)] = {
+    playConfig.getConfig(key).map(_.entrySet).getOrElse(throw ConfigNotFoundException(key))
   }
 
-
+  private case class ConfigNotFoundException(key: String) extends Throwable {
+    override def getMessage: String = s"Could not find config key $key"
+  }
 }

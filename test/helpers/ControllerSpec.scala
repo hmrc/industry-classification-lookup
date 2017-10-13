@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.industrycodelookup.controllers
+package helpers
 
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.mvc._
-import scala.concurrent.Future
+import java.util.concurrent.TimeUnit.SECONDS
 
-object MicroserviceHelloWorld extends MicroserviceHelloWorld
+import akka.util.Timeout
+import org.scalatest.mockito.MockitoSugar
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
+import play.api.test.Helpers
+import uk.gov.hmrc.play.test.UnitSpec
 
-trait MicroserviceHelloWorld extends BaseController {
+trait ControllerSpec extends UnitSpec with MockitoSugar {
 
-	def hello() = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-	}
+  private val FIVE = 5L
+  private implicit val timeout: Timeout = Timeout(FIVE, SECONDS)
+
+  //Use this instead of 'jsonBodyOf' from UnitSpec so an Application is not required for the Materializer
+  def bodyAsJson(res: Result): JsValue = Helpers.contentAsJson(res)
 }
