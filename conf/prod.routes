@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /industry-code-lookup      app.Routes
-->         /                          health.Routes
+->         /industry-classification-lookup      app.Routes
+->         /                                    health.Routes
 
-GET        /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics
+GET        /admin/metrics                       @com.kenshoo.play.metrics.MetricsController.metrics

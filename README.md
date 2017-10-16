@@ -1,6 +1,6 @@
-# industry-code-lookup
+# industry-classification-lookup
 
-[![Build Status](https://travis-ci.org/hmrc/industry-code-lookup.svg)](https://travis-ci.org/hmrc/industry-code-lookup) [ ![Download](https://api.bintray.com/packages/hmrc/releases/industry-code-lookup/images/download.svg) ](https://bintray.com/hmrc/releases/industry-code-lookup/_latestVersion)
+[![Build Status](https://travis-ci.org/hmrc/industry-classification-lookup.svg)](https://travis-ci.org/hmrc/industry-classification-lookup) [ ![Download](https://api.bintray.com/packages/hmrc/releases/industry-classification-lookup/images/download.svg) ](https://bintray.com/hmrc/releases/industry-classification-lookup/_latestVersion)
 
 This is a placeholder README.md for a new repository
 
