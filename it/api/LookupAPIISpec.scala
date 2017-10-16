@@ -37,7 +37,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
     "trying to lookup a sic code should use the correct url" in {
       val sicCode = "01110001"
       val client = buildClient(s"/lookup/$sicCode")
-      client.url shouldBe s"http://localhost:$port/industry-code-lookup/lookup/$sicCode"
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/lookup/$sicCode"
     }
 
     "supplying a valid sic code should return a 200 and the sic code description as json" in {

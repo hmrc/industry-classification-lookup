@@ -7,7 +7,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object MicroServiceBuild extends Build with MicroService {
 
-  val appName = "industry-code-lookup"
+  val appName = "industry-classification-lookup"
 
   override lazy val appDependencies: Seq[ModuleID] = compile ++ test() ++ it()
 

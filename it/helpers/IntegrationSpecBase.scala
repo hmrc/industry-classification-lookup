@@ -34,7 +34,7 @@ trait IntegrationSpecBase extends UnitSpec with WireMockSpec with GuiceOneServer
   private def wsClient(implicit app: Application): WSClient = app.injector.instanceOf[WSClient]
 
   def buildClient(path: String)(implicit app: Application): WSRequest = {
-    wsClient.url(s"http://localhost:$port/industry-code-lookup$path")
+    wsClient.url(s"http://localhost:$port/industry-classification-lookup$path")
   }
 
   override def beforeEach() {
