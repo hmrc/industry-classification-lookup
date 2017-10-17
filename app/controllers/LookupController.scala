@@ -18,6 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import services.LookupService
 import uk.gov.hmrc.play.microservice.controller.BaseController
@@ -34,7 +35,7 @@ trait LookupController extends BaseController {
   def lookup(sicCode: String): Action[AnyContent] = Action.async{
     implicit request =>
       lookupService.lookup(sicCode) match {
-        case Some(sicCodeDescription) => Future.successful(Ok(sicCodeDescription))
+        case Some(sic) => Future.successful(Ok(Json.toJson(sic)))
         case None => Future.successful(NotFound)
       }
   }

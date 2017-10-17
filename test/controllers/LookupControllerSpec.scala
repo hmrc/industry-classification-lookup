@@ -17,6 +17,7 @@
 package controllers
 
 import helpers.ControllerSpec
+import models.SicCode
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import services.LookupService
@@ -37,23 +38,22 @@ class LookupControllerSpec extends ControllerSpec {
   "lookup" should {
 
     val sicCode = "12345678"
-    val sicCodeDescription = Json.parse(
-      """
-        |{
-        |  "currentFRSPercent":"5.0",
-        |  "description":"test description",
-        |  "frsCategory":"test frs category",
-        |  "displayDetails":"test display details"
-        |}
+    val sicCodeLookupResult = SicCode(sicCode, "test description")
+    val sicCodeResultAsJson = Json.parse(
+      s"""
+         |{
+         |  "code":"$sicCode",
+         |  "desc":"test description"
+         |}
       """.stripMargin).as[JsObject]
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
       when(mockLookupService.lookup(eqTo(sicCode)))
-        .thenReturn(Some(sicCodeDescription))
+        .thenReturn(Some(sicCodeLookupResult))
 
       val result: Result = controller.lookup(sicCode)(FakeRequest())
       status(result) shouldBe 200
-      bodyAsJson(result) shouldBe sicCodeDescription
+      bodyAsJson(result) shouldBe sicCodeResultAsJson
     }
 
     "return a 404 when nothing is returned from LookupService" in new Setup {

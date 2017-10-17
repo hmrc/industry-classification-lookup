@@ -18,8 +18,9 @@ package config
 
 import javax.inject.{Inject, Singleton}
 
-import com.typesafe.config.ConfigValue
+import com.typesafe.config.ConfigRenderOptions
 import play.api.Configuration
+import play.api.libs.json.{JsValue, Json}
 
 @Singleton
 class MicroserviceConfigImpl @Inject()(val playConfig: Configuration) extends MicroserviceConfig
@@ -28,11 +29,12 @@ trait MicroserviceConfig {
 
   protected val playConfig: Configuration
 
-  def getConfigObject(key: String): Set[(String, ConfigValue)] = {
-    playConfig.getConfig(key).map(_.entrySet).getOrElse(throw ConfigNotFoundException(key))
-  }
+  def getConfigObject(key: String): JsValue = playConfig.getObject(key).map{ obj =>
+    val jsonValid = obj.render(ConfigRenderOptions.concise())
+    Json.parse(jsonValid)
+  }.getOrElse(throw ConfigNotFoundException(key))
 
   private case class ConfigNotFoundException(key: String) extends Throwable {
-    override def getMessage: String = s"Could not find config key $key"
+    override def getMessage: String = s"[Config] Could not find config key $key"
   }
 }

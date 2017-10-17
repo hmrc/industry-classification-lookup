@@ -18,12 +18,9 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import com.typesafe.config.ConfigValue
 import config.MicroserviceConfig
-import play.api.Logger
-import play.api.libs.json.{JsObject, Json}
-
-import scala.util.{Failure, Success, Try}
+import models.SicCode
+import play.api.libs.json._
 
 @Singleton
 class LookupServiceImpl @Inject()(val config: MicroserviceConfig) extends LookupService
@@ -32,16 +29,14 @@ trait LookupService {
 
   protected val config: MicroserviceConfig
 
-  def lookup(sicCode: String): Option[JsObject] = {
-    Try(config.getConfigObject(s"sic.codes.$sicCode")) match {
-      case Success(sicCodeConfig) => Some(configToJson(sicCodeConfig))
-      case Failure(ex) =>
-        Logger.error(s"[Lookup] Couldn't find sic code $sicCode in config", ex)
-        None
-    }
-  }
+  private[services] def fetchSicCodes: JsObject = config.getConfigObject("sic").as[JsObject]
 
-  private[services] def configToJson(set: Set[(String, ConfigValue)]): JsObject = {
-    set.foldLeft(Json.obj())((json, config) => json ++ Json.obj(config._1 -> config._2.unwrapped.toString))
-  }
+  //todo: refactor to handle list of sic codes
+  def lookup(sicCode: String): Option[SicCode] = {
+    (fetchSicCodes \ "sectors").as[JsArray].value.flatMap{ sector =>
+      (sector \ "sics").as[JsArray].value.find{ sic =>
+        (sic \ "code").as[String] == sicCode
+      }
+    }
+  }.headOption.map(_.as[SicCode])
 }
