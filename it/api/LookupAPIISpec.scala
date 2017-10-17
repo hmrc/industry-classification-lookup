@@ -24,18 +24,17 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
   "calling GET /lookup" when {
 
-    val sicCodeDescription = Json.parse(
-      """
+    val sicCode = "01110001"
+
+    val sicCodeLookupResult = Json.parse(
+      s"""
         |{
-        |  "currentFRSPercent":"6.5",
-        |  "description":"Barley, oats or wheat growing",
-        |  "frsCategory":"Farming or agriculture that is not listed elsewhere",
-        |  "displayDetails":"Growing of cereals (except rice), leguminous crops and oil seeds"
+        |  "code":"$sicCode",
+        |  "desc":"Barley, oats or wheat growing"
         |}
       """.stripMargin)
 
     "trying to lookup a sic code should use the correct url" in {
-      val sicCode = "01110001"
       val client = buildClient(s"/lookup/$sicCode")
       client.url shouldBe s"http://localhost:$port/industry-classification-lookup/lookup/$sicCode"
     }
@@ -47,7 +46,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
       val response: WSResponse = client.get()
 
       response.status shouldBe 200
-      response.json shouldBe sicCodeDescription
+      response.json shouldBe sicCodeLookupResult
     }
 
     "supplying an invalid sic code should return a 404" in {
