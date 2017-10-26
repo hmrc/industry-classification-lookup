@@ -21,7 +21,7 @@ trait MicroService {
 
   lazy val appDependencies : Seq[ModuleID] = ???
   lazy val plugins : Seq[Plugins] = Seq.empty
-  lazy val playSettings : Seq[Setting[_]] = Seq.empty
+  lazy val playSettings : Seq[Setting[_]] = LuceneIndexCreator.indexSettings
 
   lazy val scoverageSettings = {
     // Semicolon-separated list of regexs matching classes to exclude

@@ -17,8 +17,8 @@
 package config
 
 import com.google.inject.AbstractModule
-import controllers.{LookupController, LookupControllerImpl}
-import services.{LookupService, LookupServiceImpl}
+import controllers._
+import services.{SIC8IndexConnector, SIC8IndexConnectorImpl, LookupService, LookupServiceImpl}
 import uk.gov.hmrc.play.config.inject.{DefaultServicesConfig, ServicesConfig}
 
 class Module extends AbstractModule {
@@ -26,15 +26,21 @@ class Module extends AbstractModule {
   override def configure() {
     bindControllers()
     bindServices()
+    bindConnecors()
     bindConfig()
   }
 
   private def bindControllers() {
     bind(classOf[LookupController]).to(classOf[LookupControllerImpl])
+    bind(classOf[SearchController]).to(classOf[SearchControllerImpl])
   }
 
   private def bindServices() {
     bind(classOf[LookupService]).to(classOf[LookupServiceImpl])
+  }
+
+  private def bindConnecors() {
+    bind(classOf[SIC8IndexConnector]).to(classOf[SIC8IndexConnectorImpl])
   }
 
   private def bindConfig() {

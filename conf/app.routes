@@ -1,4 +1,4 @@
 # microservice specific routes
 
 GET         /lookup/:sicCode                         @controllers.LookupController.lookup(sicCode)
-
+GET         /search                                  @controllers.SearchController.search(query, pageResults: Option[Int], page: Option[Int])
