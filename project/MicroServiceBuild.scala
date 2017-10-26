@@ -14,6 +14,8 @@ object MicroServiceBuild extends Build with MicroService {
   val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "play-reactivemongo" % "6.1.0",
+    "org.apache.lucene" % "lucene-core" % "6.6.1",
+    "org.apache.lucene" % "lucene-queryparser" % "6.6.1",
     "uk.gov.hmrc" %% "microservice-bootstrap" % "6.9.0"
   )
 

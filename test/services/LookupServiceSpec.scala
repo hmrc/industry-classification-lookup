@@ -20,17 +20,20 @@ import config.MicroserviceConfig
 import models.SicCode
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
-import org.mockito.Matchers.{eq => eqTo}
+import org.mockito.Matchers.{eq => eqTo, any}
 import org.mockito.Mockito._
+import org.scalatest.Matchers
 import play.api.libs.json.{JsObject, Json}
 
 class LookupServiceSpec extends UnitSpec with MockitoSugar {
 
-  val mockConfig: MicroserviceConfig = mock[MicroserviceConfig]
+  val mockConfig = mock[MicroserviceConfig]
+  val mockIndex = mock[SIC8IndexConnector]
 
   trait Setup {
     val service: LookupService = new LookupService {
       val config: MicroserviceConfig = mockConfig
+      val sic8Index: SIC8IndexConnector = mockIndex
     }
   }
 
@@ -58,11 +61,23 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
+      when(mockIndex.lookup(eqTo(sicCode))).thenReturn(Some(SicCode(sicCode, "test description")))
+
       val result: Option[SicCode] = service.lookup(sicCode)
 
       val expectedResult = SicCode(sicCode, "test description")
 
       result shouldBe Some(expectedResult)
+    }
+  }
+
+  "search" should {
+    "return the results of the index query" in new Setup {
+      val query = "Foo"
+      private val result = SearchResult(1, Seq(SicCode("12345", "test description")))
+      when(mockIndex.search(eqTo(query), any[Int], any[Int])).thenReturn(result)
+
+      service.search(query) shouldBe result
     }
   }
 }
