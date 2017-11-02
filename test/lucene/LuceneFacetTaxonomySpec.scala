@@ -18,11 +18,12 @@ package lucene
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.{Document, Field, StringField, TextField}
+import org.apache.lucene.facet.taxonomy.FastTaxonomyFacetCounts
+import org.apache.lucene.facet.taxonomy.directory.{DirectoryTaxonomyReader, DirectoryTaxonomyWriter}
+import org.apache.lucene.facet.{FacetField, FacetsCollector, FacetsConfig}
 import org.apache.lucene.index._
-import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
-import org.apache.lucene.util.QueryBuilder
 import uk.gov.hmrc.play.test.UnitSpec
 
 class LuceneFacetTaxonomySpec extends UnitSpec {
@@ -33,45 +34,90 @@ class LuceneFacetTaxonomySpec extends UnitSpec {
 
     def buildIndex() = {
       val config = new IndexWriterConfig(analyzer);
-      def addDoc(w: IndexWriter, title: String, isbn: String) {
+      val index: Directory = new RAMDirectory();
+      val w = new IndexWriter(index, config);
+
+      // Writes facet ords to a separate directory from the main index
+      val taxonomyIndex: Directory = new RAMDirectory()
+      val facetConfig = new FacetsConfig()
+      val tw = new DirectoryTaxonomyWriter(taxonomyIndex)
+
+
+      def addDoc(title: String, isbn: String, sector: String) {
         val doc = new Document
         doc.add(new TextField("title", title, Field.Store.YES))
         doc.add(new StringField("isbn", isbn, Field.Store.YES))
-        w.addDocument(doc)
+        doc.add(new FacetField("sector", sector))
+        w.addDocument(facetConfig.build(tw, doc))
       }
 
-      val index: Directory = new RAMDirectory();
+      addDoc("Lucene in Action", "193398817", "Sector 1");
+      addDoc("Lucene for Dummies", "55320055Z", "Sector 1");
+      addDoc("Lucene for Dummies 2", "55320055Z", "Sector 2");
+      addDoc("Managing Gigabytes", "55063554A", "Sector 2");
+      addDoc("The Art of Computer Science", "9900333X", "Sector 3");
 
-      val w = new IndexWriter(index, config);
-      addDoc(w, "Lucene in Action", "193398817");
-      addDoc(w, "Lucene for Dummies", "55320055Z");
-      addDoc(w, "Managing Gigabytes", "55063554A");
-      addDoc(w, "The Art of Computer Science", "9900333X");
+      tw.close()
       w.close();
 
-      index
+      (index, taxonomyIndex)
     }
 
-    "foo" in {
-      val index = buildIndex()
+    "Calculate facets over whole index" in {
+      val facetConfig = new FacetsConfig()
+      val (index, taxonomyIndex) = buildIndex()
 
       val reader: IndexReader = DirectoryReader.open(index)
+      val taxoReader = new DirectoryTaxonomyReader(taxonomyIndex)
+
       val searcher = new IndexSearcher(reader)
 
-      val qp = new QueryParser("title", analyzer)
+      val collector = new FacetsCollector()
 
-      val result = searcher.search(qp.parse("Lucene^2 OR Science"), 5)
+      FacetsCollector.search(searcher, new MatchAllDocsQuery(), 10, collector)
 
-      result.totalHits shouldBe 3
+      val facets = new FastTaxonomyFacetCounts(taxoReader, facetConfig, collector)
 
-      result.scoreDocs.toSeq map {
-        result =>
-          val doc = searcher.doc(result.doc)
-          val title = doc.get("title")
-          val isbn = doc.get("isbn") //getFields("isbn").head.stringValue()
-          (isbn, title)
-      } shouldBe Seq(("193398817", "Lucene in Action"), ("55320055Z", "Lucene for Dummies"), ("9900333X", "The Art of Computer Science"))
+      val facetResult = facets.getTopChildren(10, "sector").labelValues map {
+        lv => lv.label -> lv.value
+      }
+
+      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
     }
 
+    "search for lucene and get results plus facets for results" in {
+      val facetConfig = new FacetsConfig()
+      val (index, taxonomyIndex) = buildIndex()
+
+      val reader: IndexReader = DirectoryReader.open(index)
+      val taxoReader = new DirectoryTaxonomyReader(taxonomyIndex)
+
+      val q = new TermQuery(new Term("title", "lucene"))
+
+      val searcher = new IndexSearcher(reader)
+
+      val tdc = TopScoreDocCollector.create(10)
+      val fc = new FacetsCollector()
+
+      searcher.search(q, MultiCollector.wrap(tdc, fc))
+
+      val results = tdc.topDocs(0, 5)
+      results.totalHits shouldBe 3
+
+      results.scoreDocs.map{
+        result =>
+          val doc = searcher.doc(result.doc)
+          doc.get("title")
+      }.toSet shouldBe Set("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+
+
+      val facets = new FastTaxonomyFacetCounts(taxoReader, facetConfig, fc)
+
+      val facetResult = facets.getTopChildren(10, "sector").labelValues map {
+        lv => lv.label -> lv.value
+      }
+
+      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
+    }
   }
 }
