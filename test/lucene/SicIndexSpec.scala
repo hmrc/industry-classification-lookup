@@ -112,7 +112,7 @@ class SicIndexSpec extends UnitSpec {
 
           val result = searcher.search(qp.parse(data.query), 5)
 
-          result.totalHits should be >= data.numMin
+          result.totalHits.toInt should be >= data.numMin
 
           val results = result.scoreDocs.toSeq map {
             result =>
