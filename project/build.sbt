@@ -16,5 +16,6 @@
 
 libraryDependencies ++= Seq(
   "org.apache.lucene" % "lucene-core" % "6.6.1",
-  "org.apache.lucene" % "lucene-queryparser" % "6.6.1"
+  "org.apache.lucene" % "lucene-queryparser" % "6.6.1",
+  "org.apache.lucene" % "lucene-facet" % "6.6.1"
 )
