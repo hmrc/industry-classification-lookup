@@ -205,7 +205,6 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
       val (searcher, state, facetConfig) = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val q = new TermQuery(new Term("title", "lucene"))
       val ddq = new DrillDownQuery(facetConfig, q)
