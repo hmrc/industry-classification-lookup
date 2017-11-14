@@ -18,7 +18,7 @@ package config
 
 import org.scalatest.mockito.MockitoSugar
 import play.api.Configuration
-import org.mockito.Matchers.{eq => eqTo}
+import org.mockito.ArgumentMatchers.{eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.play.test.UnitSpec

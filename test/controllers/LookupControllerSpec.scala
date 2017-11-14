@@ -21,7 +21,7 @@ import models.SicCode
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import services.LookupService
-import org.mockito.Matchers.{eq => eqTo}
+import org.mockito.ArgumentMatchers.{eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.{JsObject, Json}
 

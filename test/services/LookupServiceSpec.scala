@@ -20,9 +20,8 @@ import config.MicroserviceConfig
 import models.SicCode
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
-import org.mockito.Matchers.{eq => eqTo, any}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
-import org.scalatest.Matchers
 import play.api.libs.json.{JsObject, Json}
 
 class LookupServiceSpec extends UnitSpec with MockitoSugar {
