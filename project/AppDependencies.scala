@@ -22,14 +22,12 @@ private object AppDependencies {
 }
 
 object LuceneDependencies {
-  private val luceneCoreVersion             = "6.6.1"
-  private val luceneQueryParserVersion      = "6.6.1"
-  private val luceneFacetVersion            = "6.6.1"
+  private val luceneVersion             = "7.1.0"
 
   def apply() = Seq(
-    "org.apache.lucene" % "lucene-core" % luceneCoreVersion,
-    "org.apache.lucene" % "lucene-queryparser" % luceneQueryParserVersion,
-    "org.apache.lucene" % "lucene-facet" % luceneFacetVersion
+    "org.apache.lucene" % "lucene-core" % luceneVersion,
+    "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
+    "org.apache.lucene" % "lucene-facet" % luceneVersion
   )
 }
 

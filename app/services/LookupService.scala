@@ -47,7 +47,7 @@ trait LookupService {
   }
 }
 
-case class SearchResult(numFound: Int, results: Seq[SicCode])
+case class SearchResult(numFound: Long, results: Seq[SicCode])
 object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
 
 @Singleton
