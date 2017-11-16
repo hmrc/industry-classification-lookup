@@ -17,7 +17,7 @@
 package api
 
 import helpers.IntegrationSpecBase
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
 
 class SearchAPIISpec extends IntegrationSpecBase {
@@ -59,14 +59,19 @@ class SearchAPIISpec extends IntegrationSpecBase {
     }
 
     "supplying a valid query and requesting page 3 should return a 200 and the sic code descriptions skipping pages 1 & 2" in {
+
+      // get results from the beginning to the end of page 3
+      val pages1to3 = buildQueryAll(query, 15, 1).get().json
+      val p1to3docs = pages1to3.as[JsObject].value("results").as[JsArray]
+
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 36,
         "results" -> Json.arr(
-          Json.obj("code" -> "46610005", "desc" -> "Dairy farm machinery (wholesale)"),
-          Json.obj("code" -> "46330004", "desc" -> "Dairy produce exporter (wholesale)"),
-          Json.obj("code" -> "46330005", "desc" -> "Dairy produce importer (wholesale)"),
-          Json.obj("code" -> "46330006", "desc" -> "Dairy produce n.e.c (wholesale)"),
-          Json.obj("code" -> "47290002", "desc" -> "Dairy products (retail)")
+          p1to3docs.value(10),
+          p1to3docs.value(11),
+          p1to3docs.value(12),
+          p1to3docs.value(13),
+          p1to3docs.value(14)
         )
       )
 
