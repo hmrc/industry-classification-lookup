@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+val luceneVersion             = "7.1.0"
+
 libraryDependencies ++= Seq(
-  "org.apache.lucene" % "lucene-core" % "6.6.1",
-  "org.apache.lucene" % "lucene-queryparser" % "6.6.1",
-  "org.apache.lucene" % "lucene-facet" % "6.6.1"
+  "org.apache.lucene" % "lucene-core" % luceneVersion,
+  "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
+  "org.apache.lucene" % "lucene-facet" % luceneVersion
 )
