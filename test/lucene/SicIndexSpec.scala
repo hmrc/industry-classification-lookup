@@ -20,6 +20,8 @@ import java.nio.file.{FileSystems, Path}
 
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.facet.{FacetsCollector, FacetsConfig}
+import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetCounts}
 import org.apache.lucene.index._
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search._
@@ -32,6 +34,9 @@ class SicIndexSpec extends UnitSpec {
   "SIC search" should {
     val FIELD_CODE8 = "code8"
     val FIELD_DESC = "description"
+    val industryCodeMapping = Map("01" -> "A","02" -> "A", "03" -> "A",
+      "05" -> "B", "06" -> "B", "07" -> "B", "08" -> "B", "09" -> "B")
+
 
     val stopWords = List(
       "a", "an", "and", "are", "as", "at", "be", "but", "by",
@@ -69,7 +74,21 @@ class SicIndexSpec extends UnitSpec {
       index.close()
     }
 
-    Map(
+    def setupFacetedSearch() = {
+      val reader: IndexReader = DirectoryReader.open(openIndex())
+
+      val searcher = new IndexSearcher(reader)
+      val state = new DefaultSortedSetDocValuesReaderState(reader)
+
+      (searcher, state)
+    }
+
+    def returnIndustrySector(sicCode: String) = {
+      val firstTwoChars = sicCode.substring(0, 2)
+      industryCodeMapping.getOrElse(firstTwoChars, throw new Exception(s"Industry code for sic-code $sicCode does not exist"))
+    }
+
+      Map(
       "01410003" -> "Dairy farming",
       "01130024" -> "Sugar beet growing",
       "28110023" -> "Engines for marine use (manufacture)",
@@ -178,6 +197,55 @@ class SicIndexSpec extends UnitSpec {
           page3SearchResult.totalHits shouldBe initialHits
           page3Result shouldBe p3ExpectedResult
         }
+      }
+    }
+
+    Seq(
+      "01410003",
+      "01130024"
+      ) foreach { sicCode =>
+      s"""return the correct industry sector of A for sic code "${sicCode}" """ in {
+        val result = returnIndustrySector(sicCode)
+        result shouldBe "A"
+      }
+    }
+
+    Seq(
+    "08990008",
+    "08990009"
+    ) foreach { sicCode =>
+      s"""return the correct industry sector of B for sic code "${sicCode}" """ in {
+        val result = returnIndustrySector(sicCode)
+        result shouldBe "B"
+      }
+    }
+
+    "throw an exception when a sic-code with no corresponding industry sector is used" in {
+      val ex = intercept[Exception](await(returnIndustrySector("99999999")))
+      ex.getMessage shouldBe "Industry code for sic-code 99999999 does not exist"
+    }
+
+    "created an index with faceted fields" in {
+
+      val (searcher, state) = setupFacetedSearch()
+
+      val collector = new FacetsCollector()
+
+      val searchTerm: Query = new TermQuery(new Term(FIELD_DESC, "dairy"))
+
+      FacetsCollector.search(searcher, searchTerm, 18, collector)
+
+      val facets = new SortedSetDocValuesFacetCounts(state, collector)
+
+      val facetResult = facets.getTopChildren(18, "sector").labelValues map {
+        lv => lv.label -> lv.value
+      }
+
+      facetResult.toSeq shouldBe Seq("C" -> 9, "G" -> 7, "A" -> 1, "N" -> 1)
+
+      withSearcher { ws =>
+        val results: TopDocs = ws.search(searchTerm,20)
+        results.totalHits shouldBe 18
       }
     }
   }
