@@ -23,6 +23,8 @@ import config.MicroserviceConfig
 import models.SicCode
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.facet.FacetsCollector
+import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetCounts}
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.{IndexSearcher, ScoreDoc, TopScoreDocCollector}
@@ -47,7 +49,9 @@ trait LookupService {
   }
 }
 
-case class SearchResult(numFound: Long, results: Seq[SicCode])
+case class FacetResults(code: String, count: Int)
+object FacetResults { implicit val formats: Format[FacetResults] = Json.format[FacetResults] }
+case class SearchResult(numFound: Long, results: Seq[SicCode], facets: Seq[FacetResults])
 object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
 
 @Singleton
@@ -72,11 +76,15 @@ trait SIC8IndexConnector {
   }
 
   // TODO - when should we close the index?
-  val index = {
+  val index: NIOFSDirectory = {
     val path: Path = FileSystems.getDefault().getPath("conf", "index")
     new NIOFSDirectory(path)
   }
-  val searcher = new IndexSearcher(DirectoryReader.open(index))
+
+  val reader: DirectoryReader = DirectoryReader.open(index)
+  val searcher = new IndexSearcher(reader)
+  val readerState = new DefaultSortedSetDocValuesReaderState(reader)
+  val facetsCollector = new FacetsCollector()
 
   private def extractSic(result: ScoreDoc) = {
     val doc = searcher.doc(result.doc)
@@ -110,15 +118,24 @@ trait SIC8IndexConnector {
     results.totalHits match {
       case 0 => {
         Logger.info(s"""Search for SIC codes with query "${query}" found nothing""")
-        SearchResult(0, Seq())
+        SearchResult(0, Seq(), Seq())
       }
       case n => {
         Logger.info(s"""Search for SIC codes with query "${query}" found ${n} results""")
         val sics = results.scoreDocs.toSeq map {
           result => extractSic(result)
         }
-        SearchResult(n, sics)
+        val facetResults: Seq[FacetResults] = facetSearch(query, qp, pageResults)
+        SearchResult(n, sics, facetResults)
       }
+    }
+  }
+
+  private[services] def facetSearch(query: String, parser: QueryParser, pageResults: Int): Seq[FacetResults] = {
+    FacetsCollector.search(searcher, parser.parse(query), pageResults, facetsCollector)
+    val facets = new SortedSetDocValuesFacetCounts(readerState, facetsCollector)
+    facets.getTopChildren(1000, "sector").labelValues.toSeq map {
+      lv => FacetResults(lv.label, lv.value.intValue())
     }
   }
 }

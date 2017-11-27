@@ -33,7 +33,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
     }
     def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page))
 
-    "trying to seach for a sic code should use the correct url" in {
+    "trying to search for a sic code should use the correct url" in {
       val client = buildQuery(query)
       client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query"
     }
@@ -47,6 +47,12 @@ class SearchAPIISpec extends IntegrationSpecBase {
           Json.obj("code" -> "03220009", "desc" -> "Frog farming"),
           Json.obj("code" -> "01490008", "desc" -> "Fur farming"),
           Json.obj("code" -> "01490026", "desc" -> "Snail farming")
+        ),
+        "facets" -> Json.arr(
+          Json.obj("code" -> "A", "count" -> 19),
+          Json.obj("code" -> "C", "count" -> 9),
+          Json.obj("code" -> "G", "count" -> 7),
+          Json.obj("code" -> "N", "count" -> 1)
         )
       )
 
@@ -72,6 +78,12 @@ class SearchAPIISpec extends IntegrationSpecBase {
           p1to3docs.value(12),
           p1to3docs.value(13),
           p1to3docs.value(14)
+        ),
+        "facets" -> Json.arr(
+          Json.obj("code" -> "A", "count" -> 57),
+          Json.obj("code" -> "C", "count" -> 27),
+          Json.obj("code" -> "G", "count" -> 21),
+          Json.obj("code" -> "N", "count" -> 3)
         )
       )
 
@@ -90,10 +102,31 @@ class SearchAPIISpec extends IntegrationSpecBase {
           Json.obj("code" -> "01410003", "desc" -> "Dairy farming"),
           Json.obj("code" -> "01420003", "desc" -> "Cattle farming"),
           Json.obj("code" -> "03220009", "desc" -> "Frog farming")
+        ),
+        "facets" -> Json.arr(
+          Json.obj("code" -> "A", "count" -> 76),
+          Json.obj("code" -> "C", "count" -> 36),
+          Json.obj("code" -> "G", "count" -> 28),
+          Json.obj("code" -> "N", "count" -> 4)
         )
       )
 
       val client = buildQuery(query, Some(3))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
+    }
+
+    "supplying a valid query but getting no results and no facets should return the corresponding json" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 0,
+        "results" -> Json.arr(),
+        "facets" -> Json.arr()
+      )
+
+      val client = buildQuery("testtesttest", Some(10))
 
       val response: WSResponse = client.get()
 
