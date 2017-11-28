@@ -48,11 +48,11 @@ class SearchAPIISpec extends IntegrationSpecBase {
           Json.obj("code" -> "01490008", "desc" -> "Fur farming"),
           Json.obj("code" -> "01490026", "desc" -> "Snail farming")
         ),
-        "facets" -> Json.arr(
-          Json.obj("code" -> "A", "count" -> 19),
-          Json.obj("code" -> "C", "count" -> 9),
-          Json.obj("code" -> "G", "count" -> 7),
-          Json.obj("code" -> "N", "count" -> 1)
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "AGRICULTURE, FORESTRY AND FISHING", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "MANUFACTURING", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES", "count" -> 1)
         )
       )
 
@@ -79,11 +79,11 @@ class SearchAPIISpec extends IntegrationSpecBase {
           p1to3docs.value(13),
           p1to3docs.value(14)
         ),
-        "facets" -> Json.arr(
-          Json.obj("code" -> "A", "count" -> 57),
-          Json.obj("code" -> "C", "count" -> 27),
-          Json.obj("code" -> "G", "count" -> 21),
-          Json.obj("code" -> "N", "count" -> 3)
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "AGRICULTURE, FORESTRY AND FISHING", "count" -> 57),
+          Json.obj("code" -> "C", "name" -> "MANUFACTURING", "count" -> 27),
+          Json.obj("code" -> "G", "name" -> "WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES", "count" -> 21),
+          Json.obj("code" -> "N", "name" -> "ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES", "count" -> 3)
         )
       )
 
@@ -103,11 +103,11 @@ class SearchAPIISpec extends IntegrationSpecBase {
           Json.obj("code" -> "01420003", "desc" -> "Cattle farming"),
           Json.obj("code" -> "03220009", "desc" -> "Frog farming")
         ),
-        "facets" -> Json.arr(
-          Json.obj("code" -> "A", "count" -> 76),
-          Json.obj("code" -> "C", "count" -> 36),
-          Json.obj("code" -> "G", "count" -> 28),
-          Json.obj("code" -> "N", "count" -> 4)
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "AGRICULTURE, FORESTRY AND FISHING", "count" -> 76),
+          Json.obj("code" -> "C", "name" -> "MANUFACTURING", "count" -> 36),
+          Json.obj("code" -> "G", "name" -> "WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES", "count" -> 28),
+          Json.obj("code" -> "N", "name" -> "ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES", "count" -> 4)
         )
       )
 
@@ -123,7 +123,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 0,
         "results" -> Json.arr(),
-        "facets" -> Json.arr()
+        "sectors" -> Json.arr()
       )
 
       val client = buildQuery("testtesttest", Some(10))

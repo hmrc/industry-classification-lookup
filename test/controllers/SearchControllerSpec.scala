@@ -46,7 +46,7 @@ class SearchControllerSpec extends ControllerSpec {
         "code" -> query,
         "desc" -> desc
       )),
-      "facets" -> Json.arr()
+      "sectors" -> Json.arr()
     )
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
@@ -69,7 +69,7 @@ class SearchControllerSpec extends ControllerSpec {
       bodyAsJson(result) shouldBe Json.obj(
         "numFound" -> 0,
         "results" -> Json.arr(),
-        "facets" -> Json.arr()
+        "sectors" -> Json.arr()
       )
     }
 

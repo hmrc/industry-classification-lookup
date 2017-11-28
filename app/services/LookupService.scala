@@ -33,7 +33,8 @@ import play.api.Logger
 import play.api.libs.json.{Format, Json}
 
 @Singleton
-class LookupServiceImpl @Inject()(val config: MicroserviceConfig, val sic8Index: SIC8IndexConnector) extends LookupService
+class LookupServiceImpl @Inject()(val config: MicroserviceConfig,
+                                  val sic8Index: SIC8IndexConnector) extends LookupService
 
 trait LookupService {
 
@@ -49,18 +50,20 @@ trait LookupService {
   }
 }
 
-case class FacetResults(code: String, count: Int)
+case class FacetResults(code: String, name: String, count: Int)
 object FacetResults { implicit val formats: Format[FacetResults] = Json.format[FacetResults] }
-case class SearchResult(numFound: Long, results: Seq[SicCode], facets: Seq[FacetResults])
+case class SearchResult(numFound: Long, results: Seq[SicCode], sectors: Seq[FacetResults])
 object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
 
 @Singleton
-class SIC8IndexConnectorImpl @Inject()() extends SIC8IndexConnector
+class SIC8IndexConnectorImpl @Inject()(val config: MicroserviceConfig) extends SIC8IndexConnector
 
 trait SIC8IndexConnector {
 
   val FIELD_CODE8 = "code8"
   val FIELD_DESC = "description"
+
+  val config: MicroserviceConfig
 
   val analyzer = {
     import scala.collection.JavaConverters._
@@ -134,8 +137,12 @@ trait SIC8IndexConnector {
   private[services] def facetSearch(query: String, parser: QueryParser, pageResults: Int): Seq[FacetResults] = {
     FacetsCollector.search(searcher, parser.parse(query), pageResults, facetsCollector)
     val facets = new SortedSetDocValuesFacetCounts(readerState, facetsCollector)
-    facets.getTopChildren(1000, "sector").labelValues.toSeq map {
-      lv => FacetResults(lv.label, lv.value.intValue())
+    facets.getTopChildren(1000, "sector").labelValues.toSeq map { lv =>
+      FacetResults(lv.label, getSectorName(lv.label), lv.value.intValue())
     }
+  }
+
+  private[services] def getSectorName(sectorCode: String): String = {
+    config.getConfigString(s"sic.sector.${sectorCode.toUpperCase}")
   }
 }
