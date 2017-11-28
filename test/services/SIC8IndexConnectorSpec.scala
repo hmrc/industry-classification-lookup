@@ -16,14 +16,19 @@
 
 package services
 
+import config.MicroserviceConfig
 import models.SicCode
 import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
+  val mockConfig: MicroserviceConfig = mock[MicroserviceConfig]
+
   trait Setup {
-    val index: SIC8IndexConnector = new SIC8IndexConnector {}
+    val index: SIC8IndexConnector = new SIC8IndexConnector {
+      override val config: MicroserviceConfig = mockConfig
+    }
   }
 
   "lookup" should {

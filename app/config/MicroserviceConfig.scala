@@ -29,6 +29,8 @@ trait MicroserviceConfig {
 
   protected val playConfig: Configuration
 
+  def getConfigString(key: String): String = playConfig.getString(key).getOrElse(throw ConfigNotFoundException(key))
+
   def getConfigObject(key: String): JsValue = playConfig.getObject(key).map{ obj =>
     val jsonValid = obj.render(ConfigRenderOptions.concise())
     Json.parse(jsonValid)
