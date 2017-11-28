@@ -73,7 +73,7 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
   "search" should {
     "return the results of the index query" in new Setup {
       val query = "Foo"
-      private val result = SearchResult(1, Seq(SicCode("12345", "test description")))
+      private val result = SearchResult(1, Seq(SicCode("12345", "test description")), Seq())
       when(mockIndex.search(eqTo(query), any[Int], any[Int])).thenReturn(result)
 
       service.search(query) shouldBe result
