@@ -23,11 +23,11 @@ import config.MicroserviceConfig
 import models.SicCode
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.facet.FacetsCollector
+import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
 import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetCounts}
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.{IndexSearcher, ScoreDoc, TopScoreDocCollector}
+import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
 import org.apache.lucene.store.NIOFSDirectory
 import play.api.Logger
 import play.api.libs.json.{Format, Json}
@@ -45,14 +45,14 @@ trait LookupService {
     sic8Index.lookup(sicCode)
   }
 
-  def search(query: String, pageResults: Option[Int] = None, page: Option[Int] = None): SearchResult = {
-    sic8Index.search(query, pageResults.getOrElse(5), page.getOrElse(1))
+  def search(query: String, pageResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None): SearchResult = {
+    sic8Index.search(query, pageResults.getOrElse(5), page.getOrElse(1), sector)
   }
 }
 
 case class FacetResults(code: String, name: String, count: Int)
 object FacetResults { implicit val formats: Format[FacetResults] = Json.format[FacetResults] }
-case class SearchResult(numFound: Long, results: Seq[SicCode], sectors: Seq[FacetResults])
+case class SearchResult(numFound: Long, nonFilteredFound: Long = 0, results: Seq[SicCode], sectors: Seq[FacetResults])
 object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
 
 @Singleton
@@ -62,10 +62,11 @@ trait SIC8IndexConnector {
 
   val FIELD_CODE8 = "code8"
   val FIELD_DESC = "description"
+  val FIELD_SECTOR = "sector"
 
   val config: MicroserviceConfig
 
-  val analyzer = {
+  val analyzer: StandardAnalyzer = {
     import scala.collection.JavaConverters._
     val stopWords = List(
       "a", "an", "and", "are", "as", "at", "be", "but", "by",
@@ -80,13 +81,12 @@ trait SIC8IndexConnector {
 
   // TODO - when should we close the index?
   val index: NIOFSDirectory = {
-    val path: Path = FileSystems.getDefault().getPath("conf", "index")
+    val path: Path = FileSystems.getDefault.getPath("conf", "index")
     new NIOFSDirectory(path)
   }
 
   val reader: DirectoryReader = DirectoryReader.open(index)
   val searcher = new IndexSearcher(reader)
-  val readerState = new DefaultSortedSetDocValuesReaderState(reader)
   val facetsCollector = new FacetsCollector()
 
   private def extractSic(result: ScoreDoc) = {
@@ -100,45 +100,47 @@ trait SIC8IndexConnector {
     val results = searcher.search(qp.parse(sicCode), 1)
 
     results.totalHits match {
-      case 0 => {
-        Logger.info(s"Search for SIC code ${sicCode} found nothing")
+      case 0 =>
+        Logger.info(s"Search for SIC code $sicCode found nothing")
         None
-      }
       case _ => Some(extractSic(results.scoreDocs(0)))
     }
   }
 
-  def search(query: String, pageResults: Int = 5, page: Int = 1): SearchResult = {
+  def search(query: String, pageResults: Int = 5, page: Int = 1, sector: Option[String] = None): SearchResult = {
 
-    val qp = new QueryParser(FIELD_DESC, analyzer) // TODO QueryBuilder?
-    val collector = TopScoreDocCollector.create(1000)
+    val queryParser = new QueryParser(FIELD_DESC, analyzer) // TODO QueryBuilder?
+    val parsedQuery = queryParser.parse(query)
+    val collector: TopScoreDocCollector = TopScoreDocCollector.create(1000)
 
-    searcher.search(qp.parse(query), collector)
+    val facetConfig = new FacetsConfig
+
+    val drillDownQuery = new DrillDownQuery(facetConfig, parsedQuery)
+
+    sector foreach (s => drillDownQuery.add(FIELD_SECTOR, s))
+
+    val readerState = new DefaultSortedSetDocValuesReaderState(reader)
+    val drillSideways = new DrillSideways(searcher, facetConfig, readerState)
+
+    val result = drillSideways.search(drillDownQuery, collector)
 
     val startIndex = if(page > 0) (page - 1) * pageResults else 0
     val results = collector.topDocs(startIndex, pageResults)
 
     results.totalHits match {
-      case 0 => {
-        Logger.info(s"""Search for SIC codes with query "${query}" found nothing""")
-        SearchResult(0, Seq(), Seq())
-      }
-      case n => {
-        Logger.info(s"""Search for SIC codes with query "${query}" found ${n} results""")
-        val sics = results.scoreDocs.toSeq map {
-          result => extractSic(result)
+      case 0 =>
+        Logger.info(s"""Search for SIC codes with query "$query" found nothing""")
+        SearchResult(0, 0, Seq(), Seq())
+      case n =>
+        Logger.info(s"""Search for SIC codes with query "$query" found $n results""")
+        val sics = results.scoreDocs.toSeq map extractSic
+        val facetResults: Seq[FacetResults] = {
+          result.facets.getTopChildren(1000, FIELD_SECTOR).labelValues.toSeq map { lv =>
+            FacetResults(lv.label, getSectorName(lv.label), lv.value.intValue())
+          }
         }
-        val facetResults: Seq[FacetResults] = facetSearch(query, qp, pageResults)
-        SearchResult(n, sics, facetResults)
-      }
-    }
-  }
-
-  private[services] def facetSearch(query: String, parser: QueryParser, pageResults: Int): Seq[FacetResults] = {
-    FacetsCollector.search(searcher, parser.parse(query), pageResults, facetsCollector)
-    val facets = new SortedSetDocValuesFacetCounts(readerState, facetsCollector)
-    facets.getTopChildren(1000, "sector").labelValues.toSeq map { lv =>
-      FacetResults(lv.label, getSectorName(lv.label), lv.value.intValue())
+        val nonFilteredCount = facetResults.map(_.count).sum
+        SearchResult(n, nonFilteredCount, sics, facetResults)
     }
   }
 
