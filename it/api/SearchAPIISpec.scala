@@ -26,10 +26,11 @@ class SearchAPIISpec extends IntegrationSpecBase {
 
     val query = "Dairy+farming"
 
-    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None) = {
+    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None) = {
       val maxParam = maxResults.fold("")(n => s"&pageResults=${n}")
       val pageParam = page.fold("")(n => s"&page=${n}")
-      buildClient(s"/search?query=${query}${maxParam}${pageParam}")
+      val sectorParam = sector.fold("")(s => s"&sector=$s")
+      buildClient(s"/search?query=${query}${maxParam}${pageParam}$sectorParam")
     }
     def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page))
 
@@ -38,9 +39,10 @@ class SearchAPIISpec extends IntegrationSpecBase {
       client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query"
     }
 
-    "supplying a valid query should return a 200 and the sic code descriptions as json" in {
+    "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 36,
+        "nonFilteredFound" -> 36,
         "results" -> Json.arr(
           Json.obj("code" -> "01410003", "desc" -> "Dairy farming"),
           Json.obj("code" -> "01420003", "desc" -> "Cattle farming"),
@@ -49,14 +51,39 @@ class SearchAPIISpec extends IntegrationSpecBase {
           Json.obj("code" -> "01490026", "desc" -> "Snail farming")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "AGRICULTURE, FORESTRY AND FISHING", "count" -> 19),
-          Json.obj("code" -> "C", "name" -> "MANUFACTURING", "count" -> 9),
-          Json.obj("code" -> "G", "name" -> "WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES", "count" -> 7),
-          Json.obj("code" -> "N", "name" -> "ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
         )
       )
 
       val client = buildQuery(query, Some(5))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
+    }
+
+    "supplying the query 'Dairy+farming' with the sector query string 'N' should return a 200" +
+      "and only the sic code descriptions in sector 'N' as well as all the sector facet counts as json" in {
+
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 1,
+        "nonFilteredFound" -> 36,
+        "results" -> Json.arr(
+          Json.obj("code" -> "77390015", "desc" -> "Dairy machinery rental (non agricultural)")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
+        )
+      )
+
+      val client = buildQuery(query, Some(5), sector = Some("N"))
 
       val response: WSResponse = client.get()
 
@@ -72,6 +99,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
 
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 36,
+        "nonFilteredFound" -> 36,
         "results" -> Json.arr(
           p1to3docs.value(10),
           p1to3docs.value(11),
@@ -80,10 +108,10 @@ class SearchAPIISpec extends IntegrationSpecBase {
           p1to3docs.value(14)
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "AGRICULTURE, FORESTRY AND FISHING", "count" -> 57),
-          Json.obj("code" -> "C", "name" -> "MANUFACTURING", "count" -> 27),
-          Json.obj("code" -> "G", "name" -> "WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES", "count" -> 21),
-          Json.obj("code" -> "N", "name" -> "ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES", "count" -> 3)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
         )
       )
 
@@ -98,16 +126,17 @@ class SearchAPIISpec extends IntegrationSpecBase {
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 36,
+        "nonFilteredFound" -> 36,
         "results" -> Json.arr(
           Json.obj("code" -> "01410003", "desc" -> "Dairy farming"),
           Json.obj("code" -> "01420003", "desc" -> "Cattle farming"),
           Json.obj("code" -> "03220009", "desc" -> "Frog farming")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "AGRICULTURE, FORESTRY AND FISHING", "count" -> 76),
-          Json.obj("code" -> "C", "name" -> "MANUFACTURING", "count" -> 36),
-          Json.obj("code" -> "G", "name" -> "WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES", "count" -> 28),
-          Json.obj("code" -> "N", "name" -> "ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES", "count" -> 4)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
         )
       )
 
@@ -122,6 +151,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
     "supplying a valid query but getting no results and no facets should return the corresponding json" in {
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 0,
+        "nonFilteredFound" -> 0,
         "results" -> Json.arr(),
         "sectors" -> Json.arr()
       )

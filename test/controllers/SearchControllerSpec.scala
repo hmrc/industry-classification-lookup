@@ -39,9 +39,10 @@ class SearchControllerSpec extends ControllerSpec {
 
     val query = "12345678"
     val desc = "test description"
-    val sicCodeLookupResult = SearchResult(1, Seq(SicCode(query, desc)), Seq())
+    val sicCodeLookupResult = SearchResult(1, 1, Seq(SicCode(query, desc)), Seq())
     val sicCodeResultAsJson = Json.obj(
       "numFound" -> 1,
+      "nonFilteredFound" -> 1,
       "results" -> Json.arr(Json.obj(
         "code" -> query,
         "desc" -> desc
@@ -51,7 +52,7 @@ class SearchControllerSpec extends ControllerSpec {
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
 
-      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None)))
+      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(sicCodeLookupResult)
 
       val result: Result = controller.search(query,  None, None)(FakeRequest())
@@ -61,13 +62,14 @@ class SearchControllerSpec extends ControllerSpec {
 
     "return a 404 when no description is returned from LookupService" in new Setup {
 
-      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None)))
-        .thenReturn(SearchResult(0, Seq(), Seq()))
+      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None)))
+        .thenReturn(SearchResult(0, 0, Seq(), Seq()))
 
       val result: Result = controller.search(query, None, None)(FakeRequest())
       status(result) shouldBe 200
       bodyAsJson(result) shouldBe Json.obj(
         "numFound" -> 0,
+        "nonFilteredFound" -> 0,
         "results" -> Json.arr(),
         "sectors" -> Json.arr()
       )
