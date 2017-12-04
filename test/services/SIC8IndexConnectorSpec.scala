@@ -31,6 +31,8 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     }
   }
 
+  val journey: String = Journey.QUERY_BUILDER
+
   "lookup" should {
 
     Map(
@@ -40,9 +42,9 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       "28930070" -> "Press for food and drink (manufacture)"
     ) foreach {
       case ((searchCode, searchDesc)) =>
-        s"find the correct single result document for code8 search with ${searchCode}" in new Setup {
+        s"find the correct single result document for code8 search with $searchCode" in new Setup {
 
-          val result = index.lookup(searchCode)
+          val result: Option[SicCode] = index.lookup(searchCode)
 
           result shouldBe defined
 
@@ -66,12 +68,12 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
-        val result = index.search(data.query)
+        val result: SearchResult = index.search(data.query, journey = Some(journey))
 
-        val sics = result.results
+        val sics: Seq[SicCode] = result.results
         sics.length should be >= data.numMin
 
-        sics(0) shouldBe data.topHit
+        sics.head shouldBe data.topHit
 
         sics shouldBe Seq(
           SicCode("01410003", "Dairy farming"),
@@ -88,24 +90,24 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       "Dairy farming" -> 1,
       "Dairy farming" -> 10
     ) foreach { case (query, maxResults) =>
-      s"""should return ${maxResults} results when maxResult is specified when searching for "${query}"""" in new Setup {
+      s"""should return $maxResults results when maxResult is specified when searching for "$query"""" in new Setup {
 
-        val result = index.search(query, maxResults)
+        val result: SearchResult = index.search(query, maxResults, journey = Some(journey))
 
-        val sics = result.results
+        val sics: Seq[SicCode] = result.results
         sics.length shouldBe maxResults
       }
     }
 
-    s"""should return 2 results from page 2""" in new Setup {
+    "should return 2 results from page 2" in new Setup {
 
       val query = "Dairy farming"
       val pageResults = 2
       val page = 2
 
-      val result = index.search(query, pageResults, page)
+      val result: SearchResult = index.search(query, pageResults, page, None, Some(journey))
 
-      val sics = result.results
+      val sics: Seq[SicCode] = result.results
       sics.length shouldBe pageResults
 
       sics shouldBe Seq(
@@ -114,15 +116,15 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       )
     }
 
-    s"""should return 2 results from page 1 when specifying a negative page""" in new Setup {
+    "should return 2 results from page 1 when specifying a negative page" in new Setup {
 
       val query = "Dairy farming"
       val pageResults = 2
-      val page = -1
+      val page: Int = -1
 
-      val result = index.search(query, pageResults, page)
+      val result: SearchResult = index.search(query, pageResults, page, None, Some(journey))
 
-      val sics = result.results
+      val sics: Seq[SicCode] = result.results
       sics.length shouldBe pageResults
 
       sics shouldBe Seq(
@@ -136,13 +138,13 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
-        val result = index.search(data.query)
+        val result: SearchResult = index.search(data.query, journey = Some(journey))
 
-        val sics = result.results
+        val sics: Seq[SicCode] = result.results
 
         sics.length should be >= data.numMin
 
-        sics(0) shouldBe data.topHit
+        sics.head shouldBe data.topHit
 
         sics shouldBe Seq(
           SicCode("01130008", "Cress growing")
@@ -151,8 +153,7 @@ class SIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     }
 
     "Should return nothing if no match" in new Setup {
-      val result = index.search("XXX")
-
+      val result: SearchResult = index.search("XXX", journey = Some(journey))
       result.results shouldBe Seq()
     }
   }

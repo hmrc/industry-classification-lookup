@@ -25,18 +25,19 @@ class SearchAPIISpec extends IntegrationSpecBase {
   "calling GET /search" when {
 
     val query = "Dairy+farming"
+    val journeyParam = "query-parser"
 
-    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None) = {
+    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, journey: Option[String]) = {
       val maxParam = maxResults.fold("")(n => s"&pageResults=${n}")
       val pageParam = page.fold("")(n => s"&page=${n}")
       val sectorParam = sector.fold("")(s => s"&sector=$s")
-      buildClient(s"/search?query=${query}${maxParam}${pageParam}$sectorParam")
+      val journeyP = journey.fold("")(s => s"&journey=$s")
+      buildClient(s"/search?query=${query}${maxParam}${pageParam}$sectorParam$journeyP")
     }
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page))
-
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page), None, Some(journeyParam))
     "trying to search for a sic code should use the correct url" in {
-      val client = buildQuery(query)
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query"
+      val client = buildQuery(query,journey=Some(journeyParam))
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&journey=$journeyParam"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -58,7 +59,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         )
       )
 
-      val client = buildQuery(query, Some(5))
+      val client = buildQuery(query, Some(5),journey=Some(journeyParam))
 
       val response: WSResponse = client.get()
 
@@ -83,7 +84,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         )
       )
 
-      val client = buildQuery(query, Some(5), sector = Some("N"))
+      val client = buildQuery(query, Some(5), sector = Some("N"),journey=Some(journeyParam))
 
       val response: WSResponse = client.get()
 
@@ -140,7 +141,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         )
       )
 
-      val client = buildQuery(query, Some(3))
+      val client = buildQuery(query, Some(3),journey=Some(journeyParam))
 
       val response: WSResponse = client.get()
 
@@ -156,12 +157,22 @@ class SearchAPIISpec extends IntegrationSpecBase {
         "sectors" -> Json.arr()
       )
 
-      val client = buildQuery("testtesttest", Some(10))
+      val client = buildQuery("testtesttest", Some(10),journey=Some(journeyParam))
 
       val response: WSResponse = client.get()
 
       response.status shouldBe 200
       response.json shouldBe sicCodeLookupResult
+    }
+
+    "supplying a query with no journey should error" in {
+
+      val client = buildQuery("testtesttest", Some(10),journey=Some("RubbishJourney"))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 500
+
     }
   }
 }

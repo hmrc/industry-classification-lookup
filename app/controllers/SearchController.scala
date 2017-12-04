@@ -32,9 +32,13 @@ trait SearchController extends BaseController {
 
   val lookupService: LookupService
 
-  def search(query: String, pageResults: Option[Int] = None, page: Option[Int], sector: Option[String] = None): Action[AnyContent] = Action.async{
+  def search(query: String,
+             pageResults: Option[Int] = None,
+             page: Option[Int],
+             sector: Option[String] = None,
+             journey: Option[String] = None): Action[AnyContent] = Action.async {
     implicit request =>
-      val results = lookupService.search(query, pageResults, page, sector)
+      val results = lookupService.search(query, pageResults, page, sector, journey)
       Future.successful(Ok(Json.toJson(results)))
   }
 }

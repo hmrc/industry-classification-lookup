@@ -18,7 +18,7 @@ package controllers
 
 import helpers.ControllerSpec
 import models.SicCode
-import org.mockito.ArgumentMatchers.{eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -52,7 +52,7 @@ class SearchControllerSpec extends ControllerSpec {
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
 
-      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None)))
+      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None), any()))
         .thenReturn(sicCodeLookupResult)
 
       val result: Result = controller.search(query,  None, None)(FakeRequest())
@@ -62,7 +62,7 @@ class SearchControllerSpec extends ControllerSpec {
 
     "return a 404 when no description is returned from LookupService" in new Setup {
 
-      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None)))
+      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None), any()))
         .thenReturn(SearchResult(0, 0, Seq(), Seq()))
 
       val result: Result = controller.search(query, None, None)(FakeRequest())
@@ -74,6 +74,5 @@ class SearchControllerSpec extends ControllerSpec {
         "sectors" -> Json.arr()
       )
     }
-
   }
 }
