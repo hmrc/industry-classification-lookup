@@ -26,8 +26,8 @@ import play.api.libs.json.{JsObject, Json}
 
 class LookupServiceSpec extends UnitSpec with MockitoSugar {
 
-  val mockConfig = mock[MicroserviceConfig]
-  val mockIndex = mock[SIC8IndexConnector]
+  val mockConfig: MicroserviceConfig = mock[MicroserviceConfig]
+  val mockIndex: SIC8IndexConnector = mock[SIC8IndexConnector]
 
   trait Setup {
     val service: LookupService = new LookupService {
@@ -71,10 +71,11 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
   }
 
   "search" should {
+
     "return the results of the index query" in new Setup {
       val query = "Foo"
-      private val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
-      when(mockIndex.search(eqTo(query), any[Int], any[Int], any())).thenReturn(result)
+      val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
+      when(mockIndex.search(eqTo(query), any[Int], any[Int], any(), any())).thenReturn(result)
 
       service.search(query) shouldBe result
     }

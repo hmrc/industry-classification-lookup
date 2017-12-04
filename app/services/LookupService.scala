@@ -29,6 +29,7 @@ import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
 import org.apache.lucene.store.NIOFSDirectory
+import org.apache.lucene.util.QueryBuilder
 import play.api.Logger
 import play.api.libs.json.{Format, Json}
 
@@ -45,8 +46,12 @@ trait LookupService {
     sic8Index.lookup(sicCode)
   }
 
-  def search(query: String, pageResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None): SearchResult = {
-    sic8Index.search(query, pageResults.getOrElse(5), page.getOrElse(1), sector)
+  def search(query: String,
+             pageResults: Option[Int] = None,
+             page: Option[Int] = None,
+             sector: Option[String] = None,
+             journey: Option[String] = None): SearchResult = {
+    sic8Index.search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, journey)
   }
 }
 
@@ -54,6 +59,11 @@ case class FacetResults(code: String, name: String, count: Int)
 object FacetResults { implicit val formats: Format[FacetResults] = Json.format[FacetResults] }
 case class SearchResult(numFound: Long, nonFilteredFound: Long = 0, results: Seq[SicCode], sectors: Seq[FacetResults])
 object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
+
+object Journey {
+  val QUERY_BUILDER = "query-builder"
+  val QUERY_PARSER = "query-parser"
+}
 
 @Singleton
 class SIC8IndexConnectorImpl @Inject()(val config: MicroserviceConfig) extends SIC8IndexConnector
@@ -107,10 +117,14 @@ trait SIC8IndexConnector {
     }
   }
 
-  def search(query: String, pageResults: Int = 5, page: Int = 1, sector: Option[String] = None): SearchResult = {
+  def search(query: String,
+             pageResults: Int = 5,
+             page: Int = 1,
+             sector: Option[String] = None,
+             journey: Option[String] = None): SearchResult = {
 
-    val queryParser = new QueryParser(FIELD_DESC, analyzer) // TODO QueryBuilder?
-    val parsedQuery = queryParser.parse(query)
+    val parsedQuery = buildQuery(query, journey)
+
     val collector: TopScoreDocCollector = TopScoreDocCollector.create(1000)
 
     val facetConfig = new FacetsConfig
@@ -141,6 +155,15 @@ trait SIC8IndexConnector {
         }
         val nonFilteredCount = facetResults.map(_.count).sum
         SearchResult(n, nonFilteredCount, sics, facetResults)
+    }
+  }
+
+  private[services] def buildQuery(query: String, journey: Option[String] = None): Query = {
+    import Journey._
+    journey match {
+      case Some(QUERY_BUILDER) => new QueryBuilder(analyzer).createBooleanQuery(FIELD_DESC, query)
+      case Some(QUERY_PARSER)  => new QueryParser(FIELD_DESC, analyzer).parse(query)
+      case _                   => throw new RuntimeException("No journey provided")
     }
   }
 
