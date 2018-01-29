@@ -36,14 +36,6 @@ trait SearchController extends BaseController {
   val lookupService: LookupService
   val defaultIndex: String
 
-  @deprecated("Use the new search with index selection and queryType rather than journey", "just now") // TODO remove (+ route) when the frontend is updated
-  def searchOld(query: String,
-             pageResults: Option[Int] = None,
-             page: Option[Int],
-             sector: Option[String] = None,
-             journey: Option[String] = None): Action[AnyContent] =
-    search(query, None, pageResults, page, sector, journey)
-
   def search(query: String,
              indexName: Option[String],
              pageResults: Option[Int] = None,

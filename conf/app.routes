@@ -2,5 +2,3 @@
 
 GET         /lookup/:sicCode                         @controllers.LookupController.lookup(sicCode, queryType: Option[String])
 GET         /search                                  @controllers.SearchController.search(query, indexName: Option[String], pageResults: Option[Int], page: Option[Int], sector: Option[String], queryType: Option[String])
-# TODO remove legacy one and update the frontend
-GET         /search                                  @controllers.SearchController.searchOld(query, pageResults: Option[Int], page: Option[Int], sector: Option[String], journey: Option[String])
