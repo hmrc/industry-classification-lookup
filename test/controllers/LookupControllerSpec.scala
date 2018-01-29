@@ -32,6 +32,7 @@ class LookupControllerSpec extends ControllerSpec {
   trait Setup {
     val controller: LookupController = new LookupController {
       val lookupService: LookupService = mockLookupService
+      val defaultIndex = "bar"
     }
   }
 
@@ -48,20 +49,29 @@ class LookupControllerSpec extends ControllerSpec {
       """.stripMargin).as[JsObject]
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
-      when(mockLookupService.lookup(eqTo(sicCode)))
+      when(mockLookupService.lookup(eqTo(sicCode), eqTo("foo")))
         .thenReturn(Some(sicCodeLookupResult))
 
-      val result: Result = controller.lookup(sicCode)(FakeRequest())
+      val result: Result = controller.lookup(sicCode, Some("foo"))(FakeRequest())
       status(result) shouldBe 200
       bodyAsJson(result) shouldBe sicCodeResultAsJson
     }
 
     "return a 404 when nothing is returned from LookupService" in new Setup {
-      when(mockLookupService.lookup(eqTo(sicCode)))
+      when(mockLookupService.lookup(eqTo(sicCode), eqTo("foo")))
         .thenReturn(None)
 
-      val result: Result = controller.lookup(sicCode)(FakeRequest())
+      val result: Result = controller.lookup(sicCode, Some("foo"))(FakeRequest())
       status(result) shouldBe 404
+    }
+
+    "Use the default index when one isn't specified" in new Setup {
+      when(mockLookupService.lookup(eqTo(sicCode), eqTo("bar")))
+        .thenReturn(Some(sicCodeLookupResult))
+
+      val result: Result = controller.lookup(sicCode, None)(FakeRequest())
+      status(result) shouldBe 200
+      bodyAsJson(result) shouldBe sicCodeResultAsJson
     }
   }
 }

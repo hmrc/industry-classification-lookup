@@ -17,7 +17,7 @@
 package services
 
 import java.nio.file.{FileSystems, Path}
-import javax.inject.{Inject, Singleton}
+import javax.inject.{Inject, Named, Singleton}
 
 import config.MicroserviceConfig
 import models.SicCode
@@ -33,48 +33,72 @@ import org.apache.lucene.util.QueryBuilder
 import play.api.Logger
 import play.api.libs.json.{Format, Json}
 
+object Indexes {
+  final val HMRC_SIC8_INDEX = "hmrc-sic8-codes"
+}
+
+import Indexes._
+
 @Singleton
 class LookupServiceImpl @Inject()(val config: MicroserviceConfig,
-                                  val sic8Index: SIC8IndexConnector) extends LookupService
+                                  @Named(HMRC_SIC8_INDEX) val hmrcSic8Index: IndexConnector
+                                 ) extends LookupService {
+  val indexes = Map(
+    HMRC_SIC8_INDEX -> hmrcSic8Index
+  )
+}
 
 trait LookupService {
 
   val config: MicroserviceConfig
-  val sic8Index: SIC8IndexConnector
+  val indexes: Map[String, IndexConnector]
 
-  def lookup(sicCode: String): Option[SicCode] = {
-    sic8Index.lookup(sicCode)
+  def lookup(sicCode: String, indexName: String): Option[SicCode] = {
+    indexes(indexName).lookup(sicCode)
   }
 
   def search(query: String,
+             indexName: String,
              pageResults: Option[Int] = None,
              page: Option[Int] = None,
              sector: Option[String] = None,
-             journey: Option[String] = None): SearchResult = {
-    sic8Index.search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, journey)
+             queryType: Option[String] = None): SearchResult = {
+    indexes(indexName).search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, queryType)
   }
 }
 
 case class FacetResults(code: String, name: String, count: Int)
 object FacetResults { implicit val formats: Format[FacetResults] = Json.format[FacetResults] }
+
 case class SearchResult(numFound: Long, nonFilteredFound: Long = 0, results: Seq[SicCode], sectors: Seq[FacetResults])
 object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
 
-object Journey {
+object QueryType {
   val QUERY_BUILDER = "query-builder"
   val QUERY_PARSER = "query-parser"
 }
 
-@Singleton
-class SIC8IndexConnectorImpl @Inject()(val config: MicroserviceConfig) extends SIC8IndexConnector
-
-trait SIC8IndexConnector {
-
-  val FIELD_CODE8 = "code8"
+// TODO move this to another file
+@Singleton  // TODO - remove
+class SIC8IndexConnectorImpl @Inject()(val config: MicroserviceConfig) extends IndexConnector {
+  override val name = "hmrc-sic8"
+  val FIELD_CODE = "code"
   val FIELD_DESC = "description"
+  val FIELD_SEARCH_TERMS = "searchTerms"
   val FIELD_SECTOR = "sector"
+}
+
+trait IndexConnector {
+
+  val name: String
+  val FIELD_CODE: String
+  val FIELD_DESC: String
+  val FIELD_SEARCH_TERMS: String
+  val FIELD_SECTOR: String
 
   val config: MicroserviceConfig
+
+  val indexLocation = config.getConfigString("index.path")
 
   val analyzer: StandardAnalyzer = {
     import scala.collection.JavaConverters._
@@ -89,23 +113,22 @@ trait SIC8IndexConnector {
     new StandardAnalyzer(new CharArraySet(stopWords.asJava, true))
   }
 
-  // TODO - when should we close the index?
-  val index: NIOFSDirectory = {
-    val path: Path = FileSystems.getDefault.getPath("conf", "index")
+  def index(indexName: String): NIOFSDirectory = {
+    val path = FileSystems.getDefault().getPath(indexLocation, indexName)
     new NIOFSDirectory(path)
   }
 
-  val reader: DirectoryReader = DirectoryReader.open(index)
-  val searcher = new IndexSearcher(reader)
+  lazy val reader: DirectoryReader = DirectoryReader.open(index(name))
+  lazy val searcher = new IndexSearcher(reader)
   val facetsCollector = new FacetsCollector()
 
   private def extractSic(result: ScoreDoc) = {
     val doc = searcher.doc(result.doc)
-    SicCode(doc.get(FIELD_CODE8), doc.get(FIELD_DESC))
+    SicCode(doc.get(FIELD_CODE), doc.get(FIELD_DESC))
   }
 
   def lookup(sicCode: String): Option[SicCode] = {
-    val qp = new QueryParser(FIELD_CODE8, analyzer) // TODO QueryBuilder?
+    val qp = new QueryParser(FIELD_CODE, analyzer)
 
     val results = searcher.search(qp.parse(sicCode), 1)
 
@@ -121,9 +144,9 @@ trait SIC8IndexConnector {
              pageResults: Int = 5,
              page: Int = 1,
              sector: Option[String] = None,
-             journey: Option[String] = None): SearchResult = {
+             queryType: Option[String] = None): SearchResult = {
 
-    val parsedQuery = buildQuery(query, journey)
+    val parsedQuery = buildQuery(query, queryType)
 
     val collector: TopScoreDocCollector = TopScoreDocCollector.create(1000)
 
@@ -158,12 +181,12 @@ trait SIC8IndexConnector {
     }
   }
 
-  private[services] def buildQuery(query: String, journey: Option[String] = None): Query = {
-    import Journey._
-    journey match {
-      case Some(QUERY_BUILDER) => new QueryBuilder(analyzer).createBooleanQuery(FIELD_DESC, query)
-      case Some(QUERY_PARSER)  => new QueryParser(FIELD_DESC, analyzer).parse(query)
-      case _                   => throw new RuntimeException("No journey provided")
+  private[services] def buildQuery(query: String, queryType: Option[String] = None): Query = {
+    import QueryType._
+    queryType match {
+      case Some(QUERY_BUILDER) => new QueryBuilder(analyzer).createBooleanQuery(FIELD_SEARCH_TERMS, query)
+      case Some(QUERY_PARSER)  => new QueryParser(FIELD_SEARCH_TERMS, analyzer).parse(query)
+      case _                   => throw new RuntimeException("No queryType provided")
     }
   }
 
