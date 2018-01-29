@@ -19,25 +19,29 @@ package api
 import helpers.IntegrationSpecBase
 import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
+import services.Indexes.HMRC_SIC8_INDEX
+import services.QueryType.QUERY_PARSER
 
-class SearchAPIISpec extends IntegrationSpecBase {
+class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
-  "calling GET /search" when {
+  "calling GET /search for hmrc-sic8-codes index" when {
 
     val query = "Dairy+farming"
-    val journeyParam = "query-parser"
 
-    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, journey: Option[String]) = {
+    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, queryType: Option[String]) = {
       val maxParam = maxResults.fold("")(n => s"&pageResults=${n}")
+      val indexName = s"&indexName=${HMRC_SIC8_INDEX}"
       val pageParam = page.fold("")(n => s"&page=${n}")
       val sectorParam = sector.fold("")(s => s"&sector=$s")
-      val journeyP = journey.fold("")(s => s"&journey=$s")
-      buildClient(s"/search?query=${query}${maxParam}${pageParam}$sectorParam$journeyP")
+      val queryTypeParam = queryType.fold("")(s => s"&queryType=$s")
+      buildClient(s"/search?query=${query}${indexName}${maxParam}${pageParam}${sectorParam}${queryTypeParam}")
     }
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page), None, Some(journeyParam))
+
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page), None, Some(QUERY_PARSER))
+
     "trying to search for a sic code should use the correct url" in {
-      val client = buildQuery(query,journey=Some(journeyParam))
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&journey=$journeyParam"
+      val client = buildQuery(query,queryType=Some(QUERY_PARSER))
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=${query}&indexName=${HMRC_SIC8_INDEX}&queryType=${QUERY_PARSER}"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -59,7 +63,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         )
       )
 
-      val client = buildQuery(query, Some(5),journey=Some(journeyParam))
+      val client = buildQuery(query, Some(5),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -84,7 +88,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         )
       )
 
-      val client = buildQuery(query, Some(5), sector = Some("N"),journey=Some(journeyParam))
+      val client = buildQuery(query, Some(5), sector = Some("N"),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -141,7 +145,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         )
       )
 
-      val client = buildQuery(query, Some(3),journey=Some(journeyParam))
+      val client = buildQuery(query, Some(3),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -157,7 +161,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
         "sectors" -> Json.arr()
       )
 
-      val client = buildQuery("testtesttest", Some(10),journey=Some(journeyParam))
+      val client = buildQuery("testtesttest", Some(10),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -167,7 +171,7 @@ class SearchAPIISpec extends IntegrationSpecBase {
 
     "supplying a query with no journey should error" in {
 
-      val client = buildQuery("testtesttest", Some(10),journey=Some("RubbishJourney"))
+      val client = buildQuery("testtesttest", Some(10),queryType=Some("RubbishJourney"))
 
       val response: WSResponse = client.get()
 

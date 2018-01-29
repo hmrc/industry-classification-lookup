@@ -32,6 +32,7 @@ class SearchControllerSpec extends ControllerSpec {
   trait Setup {
     val controller: SearchController = new SearchController {
       val lookupService: LookupService = mockLookupService
+      val defaultIndex = "bar"
     }
   }
 
@@ -52,20 +53,20 @@ class SearchControllerSpec extends ControllerSpec {
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
 
-      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None), any()))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), any()))
         .thenReturn(sicCodeLookupResult)
 
-      val result: Result = controller.search(query,  None, None)(FakeRequest())
+      val result: Result = controller.search(query, Some("foo"), None, None)(FakeRequest())
       status(result) shouldBe 200
       bodyAsJson(result) shouldBe sicCodeResultAsJson
     }
 
     "return a 404 when no description is returned from LookupService" in new Setup {
 
-      when(mockLookupService.search(eqTo(query), eqTo(None), eqTo(None), eqTo(None), any()))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), any()))
         .thenReturn(SearchResult(0, 0, Seq(), Seq()))
 
-      val result: Result = controller.search(query, None, None)(FakeRequest())
+      val result: Result = controller.search(query, Some("foo"), None, None)(FakeRequest())
       status(result) shouldBe 200
       bodyAsJson(result) shouldBe Json.obj(
         "numFound" -> 0,
@@ -74,5 +75,16 @@ class SearchControllerSpec extends ControllerSpec {
         "sectors" -> Json.arr()
       )
     }
+
+    "Use the default index when one isn't specified" in new Setup {
+
+      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), any()))
+        .thenReturn(sicCodeLookupResult)
+
+      val result: Result = controller.search(query, None, None, None)(FakeRequest())
+      status(result) shouldBe 200
+      bodyAsJson(result) shouldBe sicCodeResultAsJson
+    }
+
   }
 }

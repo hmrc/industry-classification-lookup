@@ -32,8 +32,9 @@ import uk.gov.hmrc.play.test.UnitSpec
 class SicIndexSpec extends UnitSpec {
 
   "SIC search" should {
-    val FIELD_CODE8 = "code8"
+    val FIELD_CODE = "code"
     val FIELD_DESC = "description"
+    val FIELD_SEARCH_TERMS = "searchTerms"
     val industryCodeMapping = Map("01" -> "A","02" -> "A", "03" -> "A",
       "05" -> "B", "06" -> "B", "07" -> "B", "08" -> "B", "09" -> "B")
 
@@ -52,15 +53,15 @@ class SicIndexSpec extends UnitSpec {
 
     val analyzer = new StandardAnalyzer(stopSet);
 
+    val indexPath = FileSystems.getDefault().getPath("target", "scala-2.11", "resource_managed", "main", "conf", "index", "hmrc-sic8")
+
     def openIndex() = {
-      val path: Path = FileSystems.getDefault().getPath("conf", "index")
-      val index: Directory = new NIOFSDirectory(path);
+      val index: Directory = new NIOFSDirectory(indexPath);
       index
     }
 
     def withSearcher(f: IndexSearcher => Unit) = {
-      val path: Path = FileSystems.getDefault().getPath("conf", "index")
-      val index: Directory = new NIOFSDirectory(path);
+      val index: Directory = new NIOFSDirectory(indexPath);
       val reader: IndexReader = DirectoryReader.open(index)
       val searcher = new IndexSearcher(reader)
       f(searcher)
@@ -68,8 +69,7 @@ class SicIndexSpec extends UnitSpec {
     }
 
     def withIndex(f: Directory => Unit) = {
-      val path: Path = FileSystems.getDefault().getPath("conf", "index")
-      val index: Directory = new NIOFSDirectory(path);
+      val index: Directory = new NIOFSDirectory(indexPath);
       f(index)
       index.close()
     }
@@ -98,7 +98,7 @@ class SicIndexSpec extends UnitSpec {
         s"find the correct single result document for code8 search with ${searchCode}" in {
           withSearcher {
             searcher =>
-              val qp = new QueryParser(FIELD_CODE8, analyzer) // TODO QueryBuilder?
+              val qp = new QueryParser(FIELD_CODE, analyzer)
 
               val results = searcher.search(qp.parse(searchCode), 5)
 
@@ -106,7 +106,7 @@ class SicIndexSpec extends UnitSpec {
 
               val result = results.scoreDocs(0)
               val doc = searcher.doc(result.doc)
-              val resultCode = doc.get(FIELD_CODE8)
+              val resultCode = doc.get(FIELD_CODE)
               val resultDesc = doc.get(FIELD_DESC)
 
               resultCode shouldBe searchCode
@@ -127,7 +127,7 @@ class SicIndexSpec extends UnitSpec {
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in {
         withSearcher { searcher =>
-          val qp = new QueryParser(FIELD_DESC, analyzer)
+          val qp = new QueryParser(FIELD_SEARCH_TERMS, analyzer)
 
           val result = searcher.search(qp.parse(data.query), 5)
 
@@ -136,7 +136,7 @@ class SicIndexSpec extends UnitSpec {
           val results = result.scoreDocs.toSeq map {
             result =>
               val doc = searcher.doc(result.doc)
-              val code = doc.get(FIELD_CODE8)
+              val code = doc.get(FIELD_CODE)
               val description = doc.get(FIELD_DESC)
               (code, description)
           }
@@ -165,7 +165,7 @@ class SicIndexSpec extends UnitSpec {
           val p2StartIndex = hitsPerPage
           val p3StartIndex = 2 * hitsPerPage
 
-          val qp = new QueryParser(FIELD_DESC, analyzer)
+          val qp = new QueryParser(FIELD_SEARCH_TERMS, analyzer)
           val query = qp.parse(queryString)
 
           // search for the first page with an extra item (i.e. first of page 2)
@@ -173,16 +173,16 @@ class SicIndexSpec extends UnitSpec {
 
           val initialHits = resultPage1Plus1.totalHits
           val p2ExpectedDoc = searcher.doc(resultPage1Plus1.scoreDocs(hitsPerPage).doc)
-          val p2ExpectedResult = (p2ExpectedDoc.get(FIELD_CODE8), p2ExpectedDoc.get(FIELD_DESC))
+          val p2ExpectedResult = (p2ExpectedDoc.get(FIELD_CODE), p2ExpectedDoc.get(FIELD_DESC))
           val p3ExpectedDoc = searcher.doc(resultPage1Plus1.scoreDocs(2 * hitsPerPage).doc)
-          val p3ExpectedResult = (p3ExpectedDoc.get(FIELD_CODE8), p3ExpectedDoc.get(FIELD_DESC))
+          val p3ExpectedResult = (p3ExpectedDoc.get(FIELD_CODE), p3ExpectedDoc.get(FIELD_DESC))
 
           // search for the 2nd page using a collector
           val p2Collector = TopScoreDocCollector.create(1000) // consider whether 1000 is too high
           searcher.search(query, p2Collector)
           val page2SearchResult = p2Collector.topDocs(p2StartIndex, hitsPerPage)
           val page2TopDoc = searcher.doc(page2SearchResult.scoreDocs(0).doc)
-          val page2Result = (page2TopDoc.get(FIELD_CODE8), page2TopDoc.get(FIELD_DESC))
+          val page2Result = (page2TopDoc.get(FIELD_CODE), page2TopDoc.get(FIELD_DESC))
 
           page2SearchResult.totalHits shouldBe initialHits
           page2Result shouldBe p2ExpectedResult
@@ -192,7 +192,7 @@ class SicIndexSpec extends UnitSpec {
           searcher.search(query, p3Collector)
           val page3SearchResult = p3Collector.topDocs(p3StartIndex, hitsPerPage)
           val page3TopDoc = searcher.doc(page3SearchResult.scoreDocs(0).doc)
-          val page3Result = (page3TopDoc.get(FIELD_CODE8), page3TopDoc.get(FIELD_DESC))
+          val page3Result = (page3TopDoc.get(FIELD_CODE), page3TopDoc.get(FIELD_DESC))
 
           page3SearchResult.totalHits shouldBe initialHits
           page3Result shouldBe p3ExpectedResult
@@ -231,7 +231,7 @@ class SicIndexSpec extends UnitSpec {
 
       val collector = new FacetsCollector()
 
-      val searchTerm: Query = new TermQuery(new Term(FIELD_DESC, "dairy"))
+      val searchTerm: Query = new TermQuery(new Term(FIELD_SEARCH_TERMS, "dairy"))
 
       FacetsCollector.search(searcher, searchTerm, 18, collector)
 

@@ -18,6 +18,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import config.MicroserviceConfig
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import services.LookupService
@@ -26,15 +27,19 @@ import uk.gov.hmrc.play.microservice.controller.BaseController
 import scala.concurrent.Future
 
 @Singleton
-class LookupControllerImpl @Inject()(val lookupService: LookupService) extends LookupController
+class LookupControllerImpl @Inject()(val lookupService: LookupService, config: MicroserviceConfig) extends LookupController {
+  val defaultIndex = config.getConfigString("index.default")
+}
 
 trait LookupController extends BaseController {
 
   val lookupService: LookupService
+  val defaultIndex: String
 
-  def lookup(sicCode: String): Action[AnyContent] = Action.async{
+  def lookup(sicCode: String, indexName: Option[String]): Action[AnyContent] = Action.async{
     implicit request =>
-      lookupService.lookup(sicCode) match {
+      val idxName = indexName.getOrElse(defaultIndex)
+      lookupService.lookup(sicCode, idxName) match {
         case Some(sic) => Future.successful(Ok(Json.toJson(sic)))
         case None => Future.successful(NotFound)
       }

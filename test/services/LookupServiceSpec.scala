@@ -23,16 +23,17 @@ import uk.gov.hmrc.play.test.UnitSpec
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.{JsObject, Json}
+import Indexes._
 
 class LookupServiceSpec extends UnitSpec with MockitoSugar {
 
   val mockConfig: MicroserviceConfig = mock[MicroserviceConfig]
-  val mockIndex: SIC8IndexConnector = mock[SIC8IndexConnector]
+  val mockIndex: IndexConnector = mock[IndexConnector]
 
   trait Setup {
     val service: LookupService = new LookupService {
       val config: MicroserviceConfig = mockConfig
-      val sic8Index: SIC8IndexConnector = mockIndex
+      val indexes = Map(HMRC_SIC8_INDEX -> mockIndex)
     }
   }
 
@@ -62,7 +63,7 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
 
       when(mockIndex.lookup(eqTo(sicCode))).thenReturn(Some(SicCode(sicCode, "test description")))
 
-      val result: Option[SicCode] = service.lookup(sicCode)
+      val result: Option[SicCode] = service.lookup(sicCode, HMRC_SIC8_INDEX)
 
       val expectedResult = SicCode(sicCode, "test description")
 
@@ -77,7 +78,7 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
       when(mockIndex.search(eqTo(query), any[Int], any[Int], any(), any())).thenReturn(result)
 
-      service.search(query) shouldBe result
+      service.search(query, HMRC_SIC8_INDEX) shouldBe result
     }
   }
 }

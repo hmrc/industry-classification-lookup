@@ -1,11 +1,11 @@
 # industry-classification-lookup - Indexes
 
-## create pipe delimited from JSON
+## For HMRC '8 digit SIC' codes, create pipe delimited from JSON
 
 Run :
-```cat conf/sic-codes.json |jq -r '.sectors[].sics[] | "\(.code)|\(.desc)"' > conf/sic-codes.txt```
+```cat index-src/hmrc-sic8-codes.json |jq -r '.sectors[].sics[] | "\(.code)|\(.desc)"' > index-src/hmrc-sic8-codes.txt```
 
-To convert JSON in this format :
+To convert to this format :
 ```
 01140001|Sugar cane growing
 01410001|Buffalo milk, raw
@@ -13,7 +13,7 @@ To convert JSON in this format :
 ...
 ```
 
-To convert JSON in this format :
+Converts from JSON in this format :
 ```
 {"sectors":
 [{
