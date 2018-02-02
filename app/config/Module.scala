@@ -28,6 +28,7 @@ class Module extends AbstractModule {
     bindControllers()
     bindServices()
     bindIndexes()
+    bindConnectors()
     bindConfig()
   }
 
@@ -42,6 +43,10 @@ class Module extends AbstractModule {
 
   private def bindIndexes() {
     bind(classOf[IndexConnector]).annotatedWith(Names.named("hmrc-sic8-codes")).to(classOf[SIC8IndexConnectorImpl])
+  }
+
+  private def bindConnectors() = {
+    bind(classOf[MicroserviceAuthConnector]).to(classOf[MicroserviceAuthConnectorImpl])
   }
 
   private def bindConfig() {

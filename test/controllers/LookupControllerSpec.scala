@@ -16,22 +16,25 @@
 
 package controllers
 
-import helpers.ControllerSpec
+import helpers.{AuthHelper, ControllerSpec}
 import models.SicCode
-import play.api.mvc.Result
-import play.api.test.FakeRequest
-import services.LookupService
 import org.mockito.ArgumentMatchers.{eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.{JsObject, Json}
+import play.api.mvc.Result
+import play.api.test.FakeRequest
+import services.LookupService
+import uk.gov.hmrc.auth.core.{AuthConnector, PlayAuthConnector}
 
-class LookupControllerSpec extends ControllerSpec {
+class LookupControllerSpec extends ControllerSpec with AuthHelper {
 
   val mockLookupService: LookupService = mock[LookupService]
+  override val mockAuthConnector: PlayAuthConnector = mock[PlayAuthConnector]
 
   trait Setup {
     val controller: LookupController = new LookupController {
       val lookupService: LookupService = mockLookupService
+      val authConnector: AuthConnector = mockAuthConnector
       val defaultIndex = "bar"
     }
   }
@@ -51,6 +54,7 @@ class LookupControllerSpec extends ControllerSpec {
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
       when(mockLookupService.lookup(eqTo(sicCode), eqTo("foo")))
         .thenReturn(Some(sicCodeLookupResult))
+      mockAuthorisedRequest({})
 
       val result: Result = controller.lookup(sicCode, Some("foo"))(FakeRequest())
       status(result) shouldBe 200
@@ -60,6 +64,7 @@ class LookupControllerSpec extends ControllerSpec {
     "return a 404 when nothing is returned from LookupService" in new Setup {
       when(mockLookupService.lookup(eqTo(sicCode), eqTo("foo")))
         .thenReturn(None)
+      mockAuthorisedRequest({})
 
       val result: Result = controller.lookup(sicCode, Some("foo"))(FakeRequest())
       status(result) shouldBe 404
@@ -68,6 +73,7 @@ class LookupControllerSpec extends ControllerSpec {
     "Use the default index when one isn't specified" in new Setup {
       when(mockLookupService.lookup(eqTo(sicCode), eqTo("bar")))
         .thenReturn(Some(sicCodeLookupResult))
+      mockAuthorisedRequest({})
 
       val result: Result = controller.lookup(sicCode, None)(FakeRequest())
       status(result) shouldBe 200

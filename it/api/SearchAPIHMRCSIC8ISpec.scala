@@ -63,6 +63,8 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
         )
       )
 
+      setupSimpleAuthMocks()
+
       val client = buildQuery(query, Some(5),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
@@ -88,6 +90,8 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
         )
       )
 
+      setupSimpleAuthMocks()
+
       val client = buildQuery(query, Some(5), sector = Some("N"),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
@@ -97,6 +101,8 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
     }
 
     "supplying a valid query and requesting page 3 should return a 200 and the sic code descriptions skipping pages 1 & 2" in {
+
+      setupSimpleAuthMocks()
 
       // get results from the beginning to the end of page 3
       val pages1to3 = buildQueryAll(query, 15, 1).get().json
@@ -145,6 +151,8 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
         )
       )
 
+      setupSimpleAuthMocks()
+
       val client = buildQuery(query, Some(3),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
@@ -161,6 +169,8 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
         "sectors" -> Json.arr()
       )
 
+      setupSimpleAuthMocks()
+
       val client = buildQuery("testtesttest", Some(10),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
@@ -172,6 +182,8 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
     "supplying a query with no journey should error" in {
 
       val client = buildQuery("testtesttest", Some(10),queryType=Some("RubbishJourney"))
+
+      setupSimpleAuthMocks()
 
       val response: WSResponse = client.get()
 

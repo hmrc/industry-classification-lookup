@@ -43,6 +43,8 @@ class LookupAPIISpec extends IntegrationSpecBase {
       val sicCode = "01110001"
       val client = buildClient(s"/lookup/$sicCode")
 
+      setupSimpleAuthMocks()
+
       val response: WSResponse = client.get()
 
       response.status shouldBe 200
@@ -52,6 +54,8 @@ class LookupAPIISpec extends IntegrationSpecBase {
     "supplying an invalid sic code should return a 404" in {
       val invalidSicCode = "abc123"
       val client = buildClient(s"/lookup/$invalidSicCode")
+
+      setupSimpleAuthMocks()
 
       val response: WSResponse = client.get()
 

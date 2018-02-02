@@ -24,11 +24,23 @@ import play.api.libs.ws.{WSClient, WSRequest}
 import uk.gov.hmrc.play.test.UnitSpec
 
 trait IntegrationSpecBase extends UnitSpec with WireMockSpec with GuiceOneServerPerSuite
-  with BeforeAndAfterEach with BeforeAndAfterAll{
+  with BeforeAndAfterEach with BeforeAndAfterAll {
+
+  val wiremockPort = 11111
+  val wiremockHost = "localhost"
+
+  val mockHost = wiremockHost
+  val mockPort = wiremockPort
+  val mockUrl = s"http://$mockHost:$mockPort"
+
+  val extraConfig = Map(
+    "microservice.services.auth.host" -> s"$mockHost",
+    "microservice.services.auth.port" -> s"$mockPort"
+  )
 
   //The application used for integration tests
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .configure()
+    .configure(extraConfig)
     .build()
 
   private def wsClient(implicit app: Application): WSClient = app.injector.instanceOf[WSClient]

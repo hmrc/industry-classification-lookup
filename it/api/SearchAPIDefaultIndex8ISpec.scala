@@ -39,6 +39,8 @@ class SearchAPIDefaultIndex8ISpec extends IntegrationSpecBase {
       val clientDefault = buildQuery(query)
       val clientHMRC = buildQuery(query, Some(HMRC_SIC8_INDEX))
 
+      setupSimpleAuthMocks()
+
       val responseDefault: WSResponse = clientDefault.get()
       val responseHMRC: WSResponse = clientHMRC.get()
 
