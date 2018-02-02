@@ -72,11 +72,14 @@ trait WireMockSpec {
     )
   }
 
-  def stubAudits: StubMapping = stubPost("/write/audit", 200, """{"auditing":"stubbed"}""")
-
-  def setupSimpleAuthMocks(internalId: String = "Int-xxx"): StubMapping = {
-    stubAudits
-    stubGet("/auth/authority", 200, """{"uri":"xxx","credentials":{"gatewayId":"xxx2"},"userDetailsLink":"xxx3","ids":"/auth/ids"}""")
-    stubGet("/auth/ids", 200, s"""{"internalId":"$internalId","externalId":"Ext-xxx"}""")
-  }
+  val userId = "/auth/oid/1234567890"
+  def setupSimpleAuthMocks(internalId: String = "Int-xxx"): StubMapping =
+    stubPost("/auth/authorise", 200, s"""
+                                       |{
+                                       |  "internalId": "$internalId",
+                                       |  "loginTimes": {
+                                       |     "currentLogin": "2016-11-27T09:00:00.000Z",
+                                       |     "previousLogin": "2016-11-01T12:00:00.000Z"
+                                       |  }
+                                       |}""".stripMargin)
 }

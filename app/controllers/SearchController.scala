@@ -18,20 +18,24 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import config.MicroserviceConfig
+import config.{MicroserviceAuthConnector, MicroserviceConfig}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
-import services.{Indexes, LookupService}
+import services.LookupService
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
-class SearchControllerImpl @Inject()(val lookupService: LookupService, config: MicroserviceConfig) extends SearchController {
+class SearchControllerImpl @Inject()(val lookupService: LookupService,
+                                     val config: MicroserviceConfig,
+                                     val authConnector: MicroserviceAuthConnector) extends SearchController {
   val defaultIndex = config.getConfigString("index.default")
 }
 
-trait SearchController extends BaseController {
+trait SearchController extends BaseController with AuthorisedFunctions {
 
   val lookupService: LookupService
   val defaultIndex: String
@@ -43,8 +47,10 @@ trait SearchController extends BaseController {
              sector: Option[String] = None,
              queryType: Option[String] = None): Action[AnyContent] = Action.async {
     implicit request =>
-      val idxName = indexName.getOrElse(defaultIndex)
-      val results = lookupService.search(query, idxName, pageResults, page, sector, queryType)
-      Future.successful(Ok(Json.toJson(results)))
+      authorised() {
+        val idxName = indexName.getOrElse(defaultIndex)
+        val results = lookupService.search(query, idxName, pageResults, page, sector, queryType)
+        Future.successful(Ok(Json.toJson(results)))
+      }
   }
 }

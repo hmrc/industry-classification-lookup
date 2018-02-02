@@ -32,12 +32,14 @@ object LuceneDependencies {
 }
 
 object MainDependencies {
-  private val microserviceBootstrapVersion  = "6.13.0"
-  private val playReactiveMongoVersion      = "6.1.0"
+  private val authClientVersion             = "2.5.0"
+  private val microserviceBootstrapVersion  = "6.15.0"
+  private val playReactiveMongoVersion      = "6.2.0"
 
   def apply() = Seq(
     "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
-    "uk.gov.hmrc" %% "play-reactivemongo" % playReactiveMongoVersion
+    "uk.gov.hmrc" %% "play-reactivemongo" % playReactiveMongoVersion,
+    "uk.gov.hmrc" %% "auth-client" % authClientVersion
   )
 }
 
@@ -46,7 +48,7 @@ trait TestDependencies {
   val scalaTestVersion      = "3.0.1"
   val scalaTestPlusVersion  = "2.0.0"
   val pegdownVersion        = "1.6.0"
-  val mockitoCoreVersion    = "2.11.0"
+  val mockitoCoreVersion    = "2.13.0"
   val wiremockVersion       = "2.6.0"
 
   val scope: Configuration
