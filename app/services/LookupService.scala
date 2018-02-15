@@ -16,15 +16,15 @@
 
 package services
 
-import java.nio.file.{FileSystems, Path}
+import java.nio.file.FileSystems
 import javax.inject.{Inject, Named, Singleton}
 
-import config.MicroserviceConfig
+import config.ICLConfig
 import models.SicCode
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
 import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
-import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetCounts}
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
@@ -37,10 +37,10 @@ object Indexes {
   final val HMRC_SIC8_INDEX = "hmrc-sic8-codes"
 }
 
-import Indexes._
+import services.Indexes._
 
 @Singleton
-class LookupServiceImpl @Inject()(val config: MicroserviceConfig,
+class LookupServiceImpl @Inject()(val config: ICLConfig,
                                   @Named(HMRC_SIC8_INDEX) val hmrcSic8Index: IndexConnector
                                  ) extends LookupService {
   val indexes = Map(
@@ -50,7 +50,7 @@ class LookupServiceImpl @Inject()(val config: MicroserviceConfig,
 
 trait LookupService {
 
-  val config: MicroserviceConfig
+  val config: ICLConfig
   val indexes: Map[String, IndexConnector]
 
   def lookup(sicCode: String, indexName: String): Option[SicCode] = {
@@ -80,7 +80,7 @@ object QueryType {
 
 // TODO move this to another file
 @Singleton  // TODO - remove
-class SIC8IndexConnectorImpl @Inject()(val config: MicroserviceConfig) extends IndexConnector {
+class SIC8IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
   override val name = "hmrc-sic8"
   val FIELD_CODE = "code"
   val FIELD_DESC = "description"
@@ -96,7 +96,7 @@ trait IndexConnector {
   val FIELD_SEARCH_TERMS: String
   val FIELD_SECTOR: String
 
-  val config: MicroserviceConfig
+  val config: ICLConfig
 
   val indexLocation = config.getConfigString("index.path")
 

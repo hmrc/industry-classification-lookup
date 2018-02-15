@@ -18,20 +18,20 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import config.{MicroserviceAuthConnector, MicroserviceConfig}
+import config.ICLConfig
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import services.LookupService
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.play.microservice.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
 class SearchControllerImpl @Inject()(val lookupService: LookupService,
-                                     val config: MicroserviceConfig,
-                                     val authConnector: MicroserviceAuthConnector) extends SearchController {
+                                     val config: ICLConfig,
+                                     val authConnector: AuthConnector) extends SearchController {
   val defaultIndex = config.getConfigString("index.default")
 }
 
