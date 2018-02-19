@@ -16,15 +16,18 @@
 
 package services
 
-import config.MicroserviceConfig
+import config.ICLConfig
 import models.SicCode
 import org.scalatest.mockito.MockitoSugar
+import play.api.Configuration
+import play.api.Mode.Mode
 import uk.gov.hmrc.play.test.UnitSpec
 
 class HMRCSICIndexConnectorSpec extends UnitSpec with MockitoSugar {
 
-  val mockConfig: MicroserviceConfig = new MicroserviceConfig {
-    override protected lazy val playConfig = ???
+  val mockConfig: ICLConfig = new ICLConfig {
+    override protected def mode: Mode = ???
+    override protected def runModeConfiguration: Configuration = ???
     override def getConfigString(x: String) = "target/scala-2.11/resource_managed/main/conf/index"
   }
 

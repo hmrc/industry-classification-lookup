@@ -16,22 +16,23 @@
 
 package config
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import com.typesafe.config.ConfigRenderOptions
-import play.api.Configuration
+import play.api.Mode.Mode
 import play.api.libs.json.{JsValue, Json}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.play.config.ServicesConfig
 
-@Singleton
-class MicroserviceConfigImpl @Inject()(val playConfig: Configuration) extends MicroserviceConfig
+class ICLConfigImpl @Inject()(config: Configuration, injEnv: Environment) extends ICLConfig {
+  override protected def runModeConfiguration: Configuration = config
+  override protected def mode: Mode = injEnv.mode
+}
 
-trait MicroserviceConfig {
+trait ICLConfig extends ServicesConfig {
+  def getConfigString(key: String): String = runModeConfiguration.getString(key).getOrElse(throw ConfigNotFoundException(key))
 
-  protected val playConfig: Configuration
-
-  def getConfigString(key: String): String = playConfig.getString(key).getOrElse(throw ConfigNotFoundException(key))
-
-  def getConfigObject(key: String): JsValue = playConfig.getObject(key).map{ obj =>
+  def getConfigObject(key: String): JsValue = runModeConfiguration.getObject(key).map{ obj =>
     val jsonValid = obj.render(ConfigRenderOptions.concise())
     Json.parse(jsonValid)
   }.getOrElse(throw ConfigNotFoundException(key))

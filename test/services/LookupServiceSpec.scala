@@ -16,23 +16,23 @@
 
 package services
 
-import config.MicroserviceConfig
+import config.ICLConfig
 import models.SicCode
-import org.scalatest.mockito.MockitoSugar
-import uk.gov.hmrc.play.test.UnitSpec
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
+import org.scalatest.mockito.MockitoSugar
 import play.api.libs.json.{JsObject, Json}
-import Indexes._
+import services.Indexes._
+import uk.gov.hmrc.play.test.UnitSpec
 
 class LookupServiceSpec extends UnitSpec with MockitoSugar {
 
-  val mockConfig: MicroserviceConfig = mock[MicroserviceConfig]
+  val mockConfig: ICLConfig = mock[ICLConfig]
   val mockIndex: IndexConnector = mock[IndexConnector]
 
   trait Setup {
     val service: LookupService = new LookupService {
-      val config: MicroserviceConfig = mockConfig
+      val config: ICLConfig = mockConfig
       val indexes = Map(HMRC_SIC8_INDEX -> mockIndex)
     }
   }

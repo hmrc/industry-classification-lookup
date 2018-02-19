@@ -32,12 +32,12 @@ object LuceneDependencies {
 }
 
 object MainDependencies {
-  private val authClientVersion             = "2.5.0"
-  private val microserviceBootstrapVersion  = "6.15.0"
-  private val playReactiveMongoVersion      = "6.2.0"
+  private val authClientVersion        = "2.5.0"
+  private val bootstrapPlay25Version   = "1.3.0"
+  private val playReactiveMongoVersion = "6.2.0"
 
   def apply() = Seq(
-    "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlay25Version,
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactiveMongoVersion,
     "uk.gov.hmrc" %% "auth-client" % authClientVersion
   )

@@ -20,7 +20,6 @@ import com.google.inject.AbstractModule
 import com.google.inject.name.Names
 import controllers._
 import services._
-import uk.gov.hmrc.play.config.inject.{DefaultServicesConfig, ServicesConfig}
 
 class Module extends AbstractModule {
 
@@ -45,12 +44,9 @@ class Module extends AbstractModule {
     bind(classOf[IndexConnector]).annotatedWith(Names.named("hmrc-sic8-codes")).to(classOf[SIC8IndexConnectorImpl])
   }
 
-  private def bindConnectors() = {
-    bind(classOf[MicroserviceAuthConnector]).to(classOf[MicroserviceAuthConnectorImpl])
-  }
+  private def bindConnectors() = {}
 
   private def bindConfig() {
-    bind(classOf[ServicesConfig]).to(classOf[DefaultServicesConfig])
-    bind(classOf[MicroserviceConfig]).to(classOf[MicroserviceConfigImpl])
+    bind(classOf[ICLConfig]).to(classOf[ICLConfigImpl])
   }
 }

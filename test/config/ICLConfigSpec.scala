@@ -16,20 +16,22 @@
 
 package config
 
+import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
-import play.api.Configuration
-import org.mockito.ArgumentMatchers.{eq => eqTo}
-import org.mockito.Mockito._
+import org.scalatestplus.play.PlaySpec
+import play.api.{Configuration, Environment}
+import play.api.Mode.Mode
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.mockito.ArgumentMatchers.{eq => eqTo}
 
-class MicroserviceConfigSpec extends UnitSpec with MockitoSugar {
-
+class ICLConfigSpec extends PlaySpec with MockitoSugar {
   val mockConfig: Configuration = mock[Configuration]
+  val mockEnv: Environment = mock[Environment]
 
   trait Setup {
-    val msConfig: MicroserviceConfig = new MicroserviceConfig {
-      override protected val playConfig: Configuration = mockConfig
+    val msConfig: ICLConfig = new ICLConfig {
+      override protected def mode: Mode = mockEnv.mode
+      override protected def runModeConfiguration: Configuration = mockConfig
     }
   }
 
@@ -64,7 +66,7 @@ class MicroserviceConfigSpec extends UnitSpec with MockitoSugar {
           |}
         """.stripMargin)
 
-      retrievedConfig shouldBe expectedJson
+      retrievedConfig mustBe expectedJson
     }
 
     "throw an unchecked exception when the config object isn't found using the supplied key" in new Setup {
@@ -73,7 +75,7 @@ class MicroserviceConfigSpec extends UnitSpec with MockitoSugar {
 
       val ex: Throwable = intercept[Throwable](msConfig.getConfigObject(key))
 
-      ex.getMessage shouldBe s"[Config] Could not find config key $key"
+      ex.getMessage mustBe s"[Config] Could not find config key $key"
     }
   }
 }
