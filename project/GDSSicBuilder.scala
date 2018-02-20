@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@ import java.io.File
 import sbt.Path.richFile
 
 // Build the index for the HMRC 8-digit variant constructed from the 2003 & 2007 lists
-object HMRCSIC8Builder extends SICIndexBuilder {
+object GDSSicBuilder extends SICIndexBuilder {
 
-  val name = "hmrc-sic8"
+  val name = "gds"
 
-  def produceDocuments(addDocument: HMRCSIC8Builder.AddDocument) = {
+  def produceDocuments(addDocument: GDSSicBuilder.AddDocument) = {
     import scala.io.Source
     var docsAdded = 0
-    val fileSicPipe = "index-src/hmrc-sic8-codes.txt"
+    val fileSicPipe = "index-src/GDSRegisterDataSet.txt"
     val source = Source.fromFile(fileSicPipe)
     for (line <- source.getLines()) {
-      val split = line.split("\\|")
+      val split = line.split("\t")
       val code = split(0)
       val desc = split(1)
       addDocument(SicDocument(code, desc, desc))

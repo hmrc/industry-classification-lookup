@@ -17,6 +17,7 @@
 package services
 
 import config.ICLConfig
+import connectors.IndexConnector
 import models.SicCode
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._

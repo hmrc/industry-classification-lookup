@@ -17,6 +17,7 @@
 package services
 
 import config.ICLConfig
+import connectors.SIC8IndexConnectorImpl
 import models.SicCode
 import org.scalatest.mockito.MockitoSugar
 import play.api.Configuration
