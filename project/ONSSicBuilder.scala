@@ -1,7 +1,7 @@
 
 object ONSSicBuilder extends SICIndexBuilder {
 
-  val name = "ons"
+  val name = "ons-supplement-sic5"
 
   def produceDocuments(addDocument: ONSSicBuilder.AddDocument) = {
     import scala.io.Source

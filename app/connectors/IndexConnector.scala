@@ -32,17 +32,18 @@ import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.QueryBuilder
 import play.api.Logger
 import services.{FacetResults, SearchResult}
+import services.Indexes._
 
-class GDSIndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
-  override val name = "gds"
+class GDSRegisterSIC5IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
+  override val name = GDS_REGISTER_SIC5_INDEX
 }
 
-class ONSIndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
-  override val name = "ons"
+class ONSSupplementSIC5IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
+  override val name = ONS_SUPPLEMENT_SIC5_INDEX
 }
 
 class SIC8IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
-  override val name = "hmrc-sic8"
+  override val name = HMRC_SIC8_INDEX
 }
 
 trait IndexConnector {
