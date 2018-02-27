@@ -40,7 +40,7 @@ object LuceneIndexCreator {
   val indexBuildTask = Def.task {
     val root = (resourceManaged in Compile).value / "conf" / "index"
 
-    val builders: Seq[SICIndexBuilder] = Seq(HMRCSIC8Builder)
+    val builders: Seq[SICIndexBuilder] = Seq(HMRCSIC8Builder, GDSSicBuilder, ONSSicBuilder)
 
     val files = builders.map {
       // Perform the actual index build
@@ -78,7 +78,7 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
   // Implement this method, calling the passed in addDocument Function for each new Indexed document required
   def produceDocuments(addDocument: AddDocument): Int
 
-  type AddDocument = Function1[SicDocument, Boolean]
+  type AddDocument = SicDocument => Boolean
 
   val log = ConsoleLogger()
   private val fs: FileSystem = FileSystems.getDefault
@@ -96,22 +96,22 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
     // Only build if missing
     if( index.listAll().size == 0 ) {
 
-      log.info(s"""Building new index "${name}" into ${indexSic8Path.toAbsolutePath}""")
+      log.info(s"""Building new index "$name" into ${indexSic8Path.toAbsolutePath}""")
 
       val startTime = System.currentTimeMillis()
 
       val stopSet = {
         import scala.collection.JavaConverters._
-        new CharArraySet(STOP_WORDS.asJava, true);
+        new CharArraySet(STOP_WORDS.asJava, true)
       }
 
-      val analyzer = new StandardAnalyzer(stopSet);
-      val config = new IndexWriterConfig(analyzer);
+      val analyzer = new StandardAnalyzer(stopSet)
+      val config = new IndexWriterConfig(analyzer)
       val facetConfig = new FacetsConfig()
 
-      val w = new IndexWriter(index, config);
+      val w = new IndexWriter(index, config)
 
-      val numAdded = produceDocuments(addDoc(w, facetConfig)_)
+      val numAdded = produceDocuments(addDoc(w, facetConfig))
 
       val numIndexDocs = w.numDocs()
 

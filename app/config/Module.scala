@@ -18,6 +18,7 @@ package config
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
+import connectors.{GDSIndexConnectorImpl, IndexConnector, ONSIndexConnectorImpl, SIC8IndexConnectorImpl}
 import controllers._
 import services._
 
@@ -37,11 +38,13 @@ class Module extends AbstractModule {
   }
 
   private def bindServices() {
-    bind(classOf[LookupService]).to(classOf[LookupServiceImpl])
+    bind(classOf[LookupService]).to(classOf[LookupServiceImpl]).asEagerSingleton()
   }
 
   private def bindIndexes() {
-    bind(classOf[IndexConnector]).annotatedWith(Names.named("hmrc-sic8-codes")).to(classOf[SIC8IndexConnectorImpl])
+    bind(classOf[IndexConnector]).annotatedWith(Names.named("hmrc-sic8")).to(classOf[SIC8IndexConnectorImpl]).asEagerSingleton()
+    bind(classOf[IndexConnector]).annotatedWith(Names.named("gds")).to(classOf[GDSIndexConnectorImpl]).asEagerSingleton()
+    bind(classOf[IndexConnector]).annotatedWith(Names.named("ons")).to(classOf[ONSIndexConnectorImpl]).asEagerSingleton()
   }
 
   private def bindConnectors() = {}

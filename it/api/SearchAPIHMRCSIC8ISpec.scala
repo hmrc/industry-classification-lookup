@@ -28,20 +28,20 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
     val query = "Dairy+farming"
 
-    def buildQuery(query: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, queryType: Option[String]) = {
-      val maxParam = maxResults.fold("")(n => s"&pageResults=${n}")
-      val indexName = s"&indexName=${HMRC_SIC8_INDEX}"
-      val pageParam = page.fold("")(n => s"&page=${n}")
+    def buildQuery(query: String, indexName: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, queryType: Option[String]) = {
+      val maxParam = maxResults.fold("")(n => s"&pageResults=$n")
+      val indexNameParam = s"&indexName=$indexName"
+      val pageParam = page.fold("")(n => s"&page=$n")
       val sectorParam = sector.fold("")(s => s"&sector=$s")
       val queryTypeParam = queryType.fold("")(s => s"&queryType=$s")
-      buildClient(s"/search?query=${query}${indexName}${maxParam}${pageParam}${sectorParam}${queryTypeParam}")
+      buildClient(s"/search?query=$query$indexNameParam$maxParam$pageParam$sectorParam$queryTypeParam")
     }
 
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, Some(maxResults), Some(page), None, Some(QUERY_PARSER))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, HMRC_SIC8_INDEX, Some(maxResults), Some(page), None, Some(QUERY_PARSER))
 
     "trying to search for a sic code should use the correct url" in {
-      val client = buildQuery(query,queryType=Some(QUERY_PARSER))
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=${query}&indexName=${HMRC_SIC8_INDEX}&queryType=${QUERY_PARSER}"
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, queryType=Some(QUERY_PARSER))
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$HMRC_SIC8_INDEX&queryType=$QUERY_PARSER"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -65,7 +65,7 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery(query, Some(5),queryType=Some(QUERY_PARSER))
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -92,7 +92,7 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery(query, Some(5), sector = Some("N"),queryType=Some(QUERY_PARSER))
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5), sector = Some("N"),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -153,7 +153,7 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery(query, Some(3),queryType=Some(QUERY_PARSER))
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(3), queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -171,7 +171,7 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", Some(10),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10),queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -181,7 +181,7 @@ class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
 
     "supplying a query with no journey should error" in {
 
-      val client = buildQuery("testtesttest", Some(10),queryType=Some("RubbishJourney"))
+      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10),queryType=Some("RubbishJourney"))
 
       setupSimpleAuthMocks()
 
