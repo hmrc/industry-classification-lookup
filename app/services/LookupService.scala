@@ -25,21 +25,21 @@ import play.api.libs.json.{Format, Json}
 
 object Indexes {
   final val HMRC_SIC8_INDEX = "hmrc-sic8"
-  final val GDS_INDEX = "gds"
-  final val ONS_INDEX = "ons"
+  final val GDS_REGISTER_SIC5_INDEX = "gds-register-sic5"
+  final val ONS_SUPPLEMENT_SIC5_INDEX = "ons-supplement-sic5"
 }
 
 import services.Indexes._
 
 class LookupServiceImpl @Inject()(val config: ICLConfig,
                                   @Named(HMRC_SIC8_INDEX) val hmrcSic8Index: IndexConnector,
-                                  @Named(GDS_INDEX) val gdsIndex: IndexConnector,
-                                  @Named(ONS_INDEX) val onsIndex: IndexConnector
+                                  @Named(GDS_REGISTER_SIC5_INDEX) val gdsIndex: IndexConnector,
+                                  @Named(ONS_SUPPLEMENT_SIC5_INDEX) val onsIndex: IndexConnector
                                  ) extends LookupService {
   val indexes = Map(
-    HMRC_SIC8_INDEX -> hmrcSic8Index,
-    GDS_INDEX       -> gdsIndex,
-    ONS_INDEX       -> onsIndex
+    HMRC_SIC8_INDEX           -> hmrcSic8Index,
+    GDS_REGISTER_SIC5_INDEX   -> gdsIndex,
+    ONS_SUPPLEMENT_SIC5_INDEX -> onsIndex
   )
 }
 

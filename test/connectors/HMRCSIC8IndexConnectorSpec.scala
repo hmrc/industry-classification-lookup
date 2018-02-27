@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package services
+package connectors
 
 import config.ICLConfig
-import connectors.SIC8IndexConnectorImpl
 import models.SicCode
 import org.scalatest.mockito.MockitoSugar
 import play.api.Configuration
 import play.api.Mode.Mode
+import services.{QueryType, SearchResult}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class HMRCSICIndexConnectorSpec extends UnitSpec with MockitoSugar {
+class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
   val mockConfig: ICLConfig = new ICLConfig {
     override protected def mode: Mode = ???

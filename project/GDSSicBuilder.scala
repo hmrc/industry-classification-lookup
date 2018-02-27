@@ -18,10 +18,10 @@ import java.io.File
 
 import sbt.Path.richFile
 
-// Build the index for the HMRC 8-digit variant constructed from the 2003 & 2007 lists
+// Build the index for the GDS Register five digit variant constructed from the 2003 & 2007 lists
 object GDSSicBuilder extends SICIndexBuilder {
 
-  val name = "gds"
+  val name = "gds-register-sic5"
 
   def produceDocuments(addDocument: GDSSicBuilder.AddDocument) = {
     import scala.io.Source

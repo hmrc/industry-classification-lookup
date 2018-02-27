@@ -16,13 +16,13 @@
 
 package api
 
-import helpers.IntegrationSpecBase
+import helpers.SICSearchHelper
 import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
 import services.Indexes.HMRC_SIC8_INDEX
 import services.QueryType.QUERY_PARSER
 
-class SearchAPIHMRCSIC8ISpec extends IntegrationSpecBase {
+class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
   "calling GET /search for hmrc-sic8-codes index" when {
 

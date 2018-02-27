@@ -29,7 +29,7 @@ import org.apache.lucene.store.{Directory, NIOFSDirectory}
 import uk.gov.hmrc.play.test.UnitSpec
 
 
-class HMRC8SicIndexSpec extends UnitSpec {
+class HMRCSIC8IndexSpec extends UnitSpec {
 
   "SIC search" should {
     val FIELD_CODE = "code"
