@@ -25,9 +25,10 @@ import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
 import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
-import org.apache.lucene.index.DirectoryReader
+import org.apache.lucene.index.{DirectoryReader, Term}
 import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
+import org.apache.lucene.search.BooleanClause.Occur
+import org.apache.lucene.search._
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.QueryBuilder
 import play.api.Logger
@@ -144,11 +145,23 @@ trait IndexConnector {
     queryType match {
       case Some(QUERY_BUILDER) => new QueryBuilder(analyzer).createBooleanQuery(FIELD_SEARCH_TERMS, query)
       case Some(QUERY_PARSER)  => new QueryParser(FIELD_SEARCH_TERMS, analyzer).parse(query)
+      case Some(QUERY_BOOSTER) => QueryBooster(FIELD_SEARCH_TERMS, query, 5)
       case _                   => throw new RuntimeException("No queryType provided")
     }
   }
 
   private[connectors] def getSectorName(sectorCode: String): String = {
     config.getConfigString(s"sic.sector.${sectorCode.toUpperCase}")
+  }
+}
+
+object QueryBooster {
+  def apply(fieldName: String, query: String, boostFactor: Float): Query = {
+    val splitSearchParams = query.toLowerCase.split(" ")
+    val queryBuilder      = new BooleanQuery.Builder()
+
+    queryBuilder.add(new BoostQuery(new TermQuery(new Term(fieldName, splitSearchParams.head)), boostFactor), Occur.SHOULD)
+    splitSearchParams.tail.foreach(value => queryBuilder.add(new TermQuery(new Term(fieldName, value)), Occur.SHOULD))
+    queryBuilder.build()
   }
 }

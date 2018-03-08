@@ -33,18 +33,17 @@ class LuceneSearchesSpec extends UnitSpec {
     val analyzer = new StandardAnalyzer();
 
     def buildIndex() = {
-      val config = new IndexWriterConfig(analyzer);
-      val index: Directory = new RAMDirectory();
-      val w = new IndexWriter(index, config);
-
-      val facetConfig = new FacetsConfig()
+      val config            = new IndexWriterConfig(analyzer)
+      val index: Directory  = new RAMDirectory()
+      val indexWriter       = new IndexWriter(index, config)
+      val facetConfig       = new FacetsConfig()
 
       def addDoc(title: String, isbn: String, sector: String) {
         val doc = new Document
         doc.add(new TextField("title", title, Field.Store.YES))
         doc.add(new StringField("isbn", isbn, Field.Store.YES))
         doc.add(new SortedSetDocValuesFacetField("sector", sector))
-        w.addDocument(facetConfig.build(doc))
+        indexWriter.addDocument(facetConfig.build(doc))
       }
 
       addDoc("Lucene in Action", "193398817", "Sector 1");
@@ -53,7 +52,7 @@ class LuceneSearchesSpec extends UnitSpec {
       addDoc("Managing Gigabytes", "55063554A", "Sector 2");
       addDoc("The Art of Computer Science", "9900333X", "Sector 3");
 
-      w.close();
+      indexWriter.close()
 
       index
     }
@@ -159,6 +158,7 @@ class LuceneSearchesSpec extends UnitSpec {
           doc.get("title")
       }.toSeq shouldBe Seq("Lucene for Dummies", "Lucene for Dummies 2", "The Art of Computer Science")
     }
+
 
     "Simple phrase query" in {
 

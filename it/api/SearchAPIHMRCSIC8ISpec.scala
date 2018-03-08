@@ -20,13 +20,13 @@ import helpers.SICSearchHelper
 import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
 import services.Indexes.HMRC_SIC8_INDEX
-import services.QueryType.QUERY_PARSER
+import services.QueryType.{QUERY_BOOSTER, QUERY_PARSER}
 
 class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
   "calling GET /search for hmrc-sic8-codes index" when {
 
-    val query = "Dairy+farming"
+    val query = "Dairy farming"
 
     def buildQuery(query: String, indexName: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, queryType: Option[String]) = {
       val maxParam = maxResults.fold("")(n => s"&pageResults=$n")
@@ -189,6 +189,51 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       response.status shouldBe 500
 
+    }
+
+    "return a valid set of results when using Query booster" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 36,
+        "nonFilteredFound" -> 36,
+        "results" -> Json.arr(
+          Json.obj("code" -> "03220009", "desc" -> "Frog farming"),
+          Json.obj("code" -> "01410003", "desc" -> "Dairy farming"),
+          Json.obj("code" -> "01420003", "desc" -> "Cattle farming")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
+        )
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("frog dAirY farMing", indexName = HMRC_SIC8_INDEX, Some(3), queryType=Some(QUERY_BOOSTER))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json   shouldBe sicCodeLookupResult
+    }
+
+    "supplying a valid query but getting no results and no facets should return the corresponding json (QUERY BOOSTER)" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 0,
+        "nonFilteredFound" -> 0,
+        "results" -> Json.arr(),
+        "sectors" -> Json.arr()
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10) ,queryType=Some(QUERY_BOOSTER))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
     }
   }
 }

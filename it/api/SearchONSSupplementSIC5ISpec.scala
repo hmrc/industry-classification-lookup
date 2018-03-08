@@ -5,7 +5,7 @@ import helpers.SICSearchHelper
 import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
 import services.Indexes.ONS_SUPPLEMENT_SIC5_INDEX
-import services.QueryType.QUERY_PARSER
+import services.QueryType.{QUERY_BOOSTER, QUERY_PARSER}
 
 
 class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
@@ -117,17 +117,17 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 48,
-        "nonFilteredFound" -> 48,
+        "numFound" -> 49,
+        "nonFilteredFound" -> 49,
         "results" -> Json.arr(
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
           Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 5),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
           Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
           Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
           Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
@@ -139,7 +139,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("support", indexName = indexName, Some(3), queryType=Some(QUERY_PARSER))
+      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryType=Some(QUERY_PARSER))
 
       val response: WSResponse = client.get()
 
@@ -175,6 +175,56 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       response.status shouldBe 500
 
+    }
+
+    "return a valid set of results when using Query booster" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 49,
+        "nonFilteredFound" -> 49,
+        "results" -> Json.arr(
+          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
+          Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
+          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
+        )
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("support Silviculture", indexName = indexName, Some(3), queryType=Some(QUERY_BOOSTER))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json   shouldBe sicCodeLookupResult
+    }
+
+    "supplying a valid query but getting no results and no facets should return the corresponding json (QUERY BOOSTER)" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 0,
+        "nonFilteredFound" -> 0,
+        "results" -> Json.arr(),
+        "sectors" -> Json.arr()
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(QUERY_BOOSTER))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
     }
   }
 }

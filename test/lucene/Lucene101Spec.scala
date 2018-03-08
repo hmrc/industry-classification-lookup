@@ -20,6 +20,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.{Document, Field, StringField, TextField}
 import org.apache.lucene.index._
 import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
 import org.apache.lucene.util.QueryBuilder
@@ -103,6 +104,74 @@ class Lucene101Spec extends UnitSpec {
           val isbn = doc.get("isbn") //getFields("isbn").head.stringValue()
           (isbn, title)
       } shouldBe Seq(("193398817", "Lucene in Action"), ("55320055Z", "Lucene for Dummies"))
+    }
+
+    "boost the first search term" in {
+      val index = buildIndex()
+
+      val reader: IndexReader = DirectoryReader.open(index)
+      val searcher = new IndexSearcher(reader)
+
+      val query = new BooleanQuery.Builder()
+      query.add(new BoostQuery(new TermQuery(new Term("title", "dummies")), 2), Occur.SHOULD)
+      query.add(new TermQuery(new Term("title", "science")), Occur.SHOULD).build()
+
+      val result = searcher.search(query.build(), 5)
+
+      result.totalHits shouldBe 2
+
+      result.scoreDocs.map { res =>
+        val doc = searcher.doc(res.doc)
+        doc.get("title")
+      }.toSeq shouldBe Seq("Lucene for Dummies", "The Art of Computer Science")
+    }
+
+    "boost the first search term (each parameter added separately)" in {
+      val index = buildIndex()
+
+      val reader: IndexReader = DirectoryReader.open(index)
+      val searcher = new IndexSearcher(reader)
+
+      val searchParameter  = "dummies managing computer"
+      val splitSearchParams = searchParameter.split(" ")
+
+      val query = new BooleanQuery.Builder()
+      query.add(new BoostQuery(new TermQuery(new Term("title", splitSearchParams(0))), 2), Occur.SHOULD)
+      splitSearchParams.tail.foreach(value => query.add(new TermQuery(new Term("title", value)), Occur.SHOULD))
+
+
+      val result = searcher.search(query.build(), 5)
+
+      result.totalHits shouldBe 3
+
+      result.scoreDocs.map { res =>
+        val doc = searcher.doc(res.doc)
+        doc.get("title")
+      }.toSeq shouldBe Seq("Lucene for Dummies", "Managing Gigabytes", "The Art of Computer Science")
+    }
+
+    "boost the first search term (first param in own boost and the rest in same TermQuery)" in {
+      val index = buildIndex()
+
+      val reader: IndexReader = DirectoryReader.open(index)
+      val searcher = new IndexSearcher(reader)
+
+      val searchParameter  = "dummies managing computer"
+      val splitSearchParams = searchParameter.split(" ")
+
+      val query = new BooleanQuery.Builder()
+      query.add(new BoostQuery(new TermQuery(new Term("title", splitSearchParams(0))), 2), Occur.SHOULD)
+      query.add(new TermQuery(new Term("title", splitSearchParams.tail.mkString(" "))), Occur.SHOULD)
+
+
+      val result = searcher.search(query.build(), 5)
+
+      result.totalHits shouldBe 1
+
+      result.scoreDocs.map { res =>
+        val doc = searcher.doc(res.doc)
+        doc.get("title")
+      }.toSeq shouldBe Seq("Lucene for Dummies")
     }
   }
 }
