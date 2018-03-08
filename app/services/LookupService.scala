@@ -70,9 +70,6 @@ object SearchResult { implicit val formats: Format[SearchResult] = Json.format[S
 
 object QueryType {
   val QUERY_BUILDER = "query-builder"
-  val QUERY_PARSER = "query-parser"
+  val QUERY_PARSER  = "query-parser"
+  val QUERY_BOOSTER = "query-boost-first-term"
 }
-
-
-
-

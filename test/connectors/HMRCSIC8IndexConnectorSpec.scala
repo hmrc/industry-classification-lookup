@@ -162,4 +162,18 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       result.results shouldBe Seq()
     }
   }
+
+  "searching with QueryBooster" should {
+
+    val journey: String = QueryType.QUERY_BOOSTER
+
+    "return different top results for dairy + farming and farming + dairy " in new Setup {
+      val dairyFarmingResults = index.search("dairy farming", queryType = Some(journey))
+      val farmingDairyResults = index.search("farming dairy", queryType = Some(journey))
+
+      dairyFarmingResults.results.take(3) shouldNot   be(farmingDairyResults.results.take(3))
+      dairyFarmingResults.results.length  shouldEqual farmingDairyResults.results.length
+    }
+  }
+
 }
