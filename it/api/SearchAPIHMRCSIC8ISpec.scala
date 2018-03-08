@@ -20,7 +20,7 @@ import helpers.SICSearchHelper
 import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
 import services.Indexes.HMRC_SIC8_INDEX
-import services.QueryType.{QUERY_BOOSTER, QUERY_PARSER}
+import services.QueryType._
 
 class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
@@ -229,6 +229,46 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
       setupSimpleAuthMocks()
 
       val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10) ,queryType=Some(QUERY_BOOSTER))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
+    }
+
+    "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions (FUZZY QUERY)" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 1,
+        "nonFilteredFound" -> 1,
+        "results" -> Json.arr(
+          Json.obj("code" -> "02100011", "desc" -> "Silviculture and other forestry activities")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 1)
+        )
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("SivicuLture", indexName = HMRC_SIC8_INDEX, Some(3), queryType=Some(FUZZY_QUERY))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
+    }
+
+    "supplying a valid query but getting no results and no facets should return the corresponding json (FUZZY QUERY)" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 0,
+        "nonFilteredFound" -> 0,
+        "results" -> Json.arr(),
+        "sectors" -> Json.arr()
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10),queryType=Some(FUZZY_QUERY))
 
       val response: WSResponse = client.get()
 

@@ -20,6 +20,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.{Document, Field, StringField, TextField}
 import org.apache.lucene.index._
 import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.queryparser.flexible.standard.builders.FuzzyQueryNodeBuilder
 import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
@@ -172,6 +173,84 @@ class Lucene101Spec extends UnitSpec {
         val doc = searcher.doc(res.doc)
         doc.get("title")
       }.toSeq shouldBe Seq("Lucene for Dummies")
+    }
+
+    "fuzzzzzzzy" should {
+      "kick in if the initial search returned no results (dumbies)" in {
+        val index = buildIndex()
+
+        val reader: IndexReader = DirectoryReader.open(index)
+        val searcher = new IndexSearcher(reader)
+
+        object FuzzyMatch {
+          def apply(fieldName: String, query: String): Query = {
+            new QueryBuilder(analyzer).createBooleanQuery(fieldName, query)
+          }
+
+          def apply(fieldName: String, query: String, isFuzzy: Boolean): Query = {
+            val splitSearchParams = query.toLowerCase.split(" ")
+            new FuzzyQuery(new Term(fieldName, query))
+          }
+        }
+
+        val query = FuzzyMatch("title", "dumbies")
+
+        val result = searcher.search(query, 5)
+
+        result.totalHits shouldBe 0
+
+        val secondQuery = FuzzyMatch("title", "dumbies", isFuzzy = true)
+
+        val resultTwo = searcher.search(secondQuery, 5)
+
+        resultTwo.totalHits shouldBe 1
+
+        resultTwo.scoreDocs.map { res =>
+          val doc = searcher.doc(res.doc)
+          doc.get("title")
+        }.toSeq shouldBe Seq("Lucene for Dummies")
+      }
+
+      "kick in if the initial search returned no results (dumbies Gigggabytes)" in {
+        val index = buildIndex()
+
+        val reader: IndexReader = DirectoryReader.open(index)
+        val searcher = new IndexSearcher(reader)
+
+        object FuzzyMatch {
+          private def normalSearch(fieldName: String, query: String): Query = {
+            new QueryBuilder(analyzer).createBooleanQuery(fieldName, query)
+          }
+
+          private def fuzzySearch(fieldName: String, query: String): Query = {
+            val splitSearchParams = query.toLowerCase.split(" ")
+            val queryBuilder      = new BooleanQuery.Builder()
+
+            splitSearchParams.foreach(value => queryBuilder.add(new FuzzyQuery(new Term(fieldName, value)), Occur.SHOULD))
+            queryBuilder.build()
+          }
+
+          def apply(fieldName: String, query: String, isFuzzy: Boolean = false): Query =
+            if (isFuzzy) fuzzySearch(fieldName, query) else normalSearch(fieldName, query)
+        }
+
+        val query = FuzzyMatch("title", "dumbies Gigggabytes")
+
+        val result = searcher.search(query, 5)
+
+        result.totalHits shouldBe 0
+
+        val secondQuery = FuzzyMatch("title", "dumbies Gigggabytes", isFuzzy = true)
+
+        val resultTwo = searcher.search(secondQuery, 5)
+
+        resultTwo.totalHits shouldBe 2
+
+        resultTwo.scoreDocs.map { res =>
+          val doc = searcher.doc(res.doc)
+          doc.get("title")
+        }.toSeq shouldBe Seq("Lucene for Dummies", "Managing Gigabytes")
+      }
     }
   }
 }

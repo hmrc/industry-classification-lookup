@@ -72,4 +72,5 @@ object QueryType {
   val QUERY_BUILDER = "query-builder"
   val QUERY_PARSER  = "query-parser"
   val QUERY_BOOSTER = "query-boost-first-term"
+  val FUZZY_QUERY   = "fuzzy-query"
 }
