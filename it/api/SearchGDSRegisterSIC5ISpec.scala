@@ -226,5 +226,45 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
       response.status shouldBe 200
       response.json shouldBe sicCodeLookupResult
     }
+
+    "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions (FUZZY QUERY)" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 1,
+        "nonFilteredFound" -> 1,
+        "results" -> Json.arr(
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 1)
+        )
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("sivicULture", indexName = indexName, Some(3), queryType=Some(FUZZY_QUERY))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
+    }
+
+    "supplying a valid query but getting no results and no facets should return the corresponding json (FUZZY QUERY)" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 0,
+        "nonFilteredFound" -> 0,
+        "results" -> Json.arr(),
+        "sectors" -> Json.arr()
+      )
+
+      setupSimpleAuthMocks()
+
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(FUZZY_QUERY))
+
+      val response: WSResponse = client.get()
+
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
+    }
   }
 }

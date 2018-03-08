@@ -176,4 +176,24 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     }
   }
 
+  "searching with Fuzzy match" should {
+
+    val journey: String = QueryType.FUZZY_QUERY
+
+    "return top results for Drairy farrming" in new Setup {
+      val query = "Drairy farrming"
+
+      val result: SearchResult = index.search(query, queryType = Some(journey))
+
+      val sics: Seq[SicCode] = result.results
+
+      sics shouldBe Seq(
+        SicCode("01410003", "Dairy farming"),
+        SicCode("01420003", "Cattle farming"),
+        SicCode("03220009", "Frog farming"),
+        SicCode("01490008", "Fur farming"),
+        SicCode("01490026", "Snail farming")
+      )
+    }
+  }
 }
