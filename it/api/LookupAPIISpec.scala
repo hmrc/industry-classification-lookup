@@ -24,14 +24,16 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
   "calling GET /lookup" when {
 
-    val sicCode = "01110001"
+    val sicCode = "01110"
 
     val sicCodeLookupResult = Json.parse(
       s"""
-        |{
-        |  "code":"$sicCode",
-        |  "desc":"Barley, oats or wheat growing"
-        |}
+        |[
+        | {
+        |   "code":"$sicCode",
+        |   "desc":"Growing of cereals (except rice), leguminous crops and oil seeds"
+        | }
+        |]
       """.stripMargin)
 
     "trying to lookup a sic code should use the correct url" in {
@@ -40,7 +42,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
     }
 
     "supplying a valid sic code should return a 200 and the sic code description as json" in {
-      val sicCode = "01110001"
+      val sicCode = "01110"
       val client = buildClient(s"/lookup/$sicCode")
 
       setupSimpleAuthMocks()
@@ -59,7 +61,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
       val response: WSResponse = client.get()
 
-      response.status shouldBe 404
+      response.status shouldBe 204
     }
   }
 }

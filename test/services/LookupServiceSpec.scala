@@ -34,41 +34,85 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
   trait Setup {
     val service: LookupService = new LookupService {
       val config: ICLConfig = mockConfig
-      val indexes = Map(HMRC_SIC8_INDEX -> mockIndex)
+      val indexes = Map(HMRC_SIC8_INDEX -> mockIndex, GDS_REGISTER_SIC5_INDEX -> mockIndex)
     }
   }
 
   "lookup" should {
-
     val sicCode = "12345678"
     val sicCodeLookupResult = Json.parse(
       s"""
-        |{
-        | "sectors":[
-        |   {
-        |     "sics":[
-        |       {
-        |         "code":"$sicCode",
-        |         "desc":"test description"
-        |       }
-        |     ]
-        |   }
-        | ]
-        |}
+         |{
+         | "sectors":[
+         |   {
+         |     "sics":[
+         |       {
+         |         "code":"$sicCode",
+         |         "desc":"test description"
+         |       }
+         |     ]
+         |   }
+         | ]
+         |}
       """.stripMargin).as[JsObject]
 
-    "return the sic code description if a matching sic code is found in config" in new Setup {
+    "return an Empty list" in new Setup {
+      val searchList = List("invalid", "invalid2")
 
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockIndex.lookup(eqTo(sicCode))).thenReturn(Some(SicCode(sicCode, "test description")))
+      when(mockIndex.lookup(any())).thenReturn(
+        None,
+        None
+      )
 
-      val result: Option[SicCode] = service.lookup(sicCode, HMRC_SIC8_INDEX)
+      val result = service.lookup(searchList)
+      result shouldBe List.empty[SicCode]
+    }
 
-      val expectedResult = SicCode(sicCode, "test description")
+    "return a list of flattened codes (all matching)" in new Setup {
+      val searchList = List(sicCode, sicCode)
 
-      result shouldBe Some(expectedResult)
+      when(mockConfig.getConfigObject(eqTo("sic")))
+        .thenReturn(sicCodeLookupResult)
+
+      when(mockIndex.lookup(any())).thenReturn(
+        Some(SicCode(sicCode, "test description")),
+        Some(SicCode(sicCode, "test description"))
+      )
+
+      val result = service.lookup(searchList)
+      result shouldBe List(SicCode(sicCode, "test description"), SicCode(sicCode, "test description"))
+    }
+
+    "return a list of flattened codes (single result passed in)" in new Setup {
+      val searchList = List(sicCode)
+
+      when(mockConfig.getConfigObject(eqTo("sic")))
+        .thenReturn(sicCodeLookupResult)
+
+      when(mockIndex.lookup(any())).thenReturn(
+        Some(SicCode(sicCode, "test description"))
+      )
+
+      val result = service.lookup(searchList)
+      result shouldBe List(SicCode(sicCode, "test description"))
+    }
+
+    "return a list of flattened codes (some matching)" in new Setup {
+      val searchList = List(sicCode, "invalid")
+
+      when(mockConfig.getConfigObject(eqTo("sic")))
+        .thenReturn(sicCodeLookupResult)
+
+      when(mockIndex.lookup(any())).thenReturn(
+        Some(SicCode(sicCode, "test description")),
+        None
+      )
+
+      val result = service.lookup(searchList)
+      result shouldBe List(SicCode(sicCode, "test description"))
     }
   }
 
@@ -77,7 +121,7 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
     "return the results of the index query" in new Setup {
       val query = "Foo"
       val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
-      when(mockIndex.search(eqTo(query), any[Int], any[Int], any(), any(), eqTo(false))).thenReturn(result)
+      when(mockIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false))).thenReturn(result)
 
       service.search(query, HMRC_SIC8_INDEX) shouldBe result
     }

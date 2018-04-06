@@ -18,13 +18,14 @@ package controllers
 
 import helpers.{AuthHelper, ControllerSpec}
 import models.SicCode
-import org.mockito.ArgumentMatchers.{eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import services.LookupService
 import uk.gov.hmrc.auth.core.{AuthConnector, PlayAuthConnector}
+import play.api.test.Helpers._
 
 class LookupControllerSpec extends ControllerSpec with AuthHelper {
 
@@ -42,42 +43,65 @@ class LookupControllerSpec extends ControllerSpec with AuthHelper {
   "lookup" should {
 
     val sicCode = "12345678"
-    val sicCodeLookupResult = SicCode(sicCode, "test description")
-    val sicCodeResultAsJson = Json.parse(
-      s"""
-         |{
-         |  "code":"$sicCode",
-         |  "desc":"test description"
-         |}
-      """.stripMargin).as[JsObject]
 
-    "return a 200 when a sic code description is returned from LookupService" in new Setup {
-      when(mockLookupService.lookup(eqTo(sicCode), eqTo("foo")))
-        .thenReturn(Some(sicCodeLookupResult))
-      mockAuthorisedRequest({})
 
-      val result: Result = controller.lookup(sicCode, Some("foo"))(FakeRequest())
-      status(result) shouldBe 200
-      bodyAsJson(result) shouldBe sicCodeResultAsJson
+
+    "return an Ok" when {
+      "when a single sic code is supplied and a result is found" in new Setup {
+        val sicCodeLookupResult = SicCode(sicCode, "test description")
+        val sicCodeResultAsJson = Json.parse(
+          s"""
+             |[
+             |  {
+             |    "code":"$sicCode",
+             |    "desc":"test description"
+             |  }
+             |]
+      """.stripMargin)
+
+        when(mockLookupService.lookup(eqTo(List(sicCode))))
+          .thenReturn(List(sicCodeLookupResult))
+        mockAuthorisedRequest({})
+
+        val result: Result = controller.lookup(sicCode)(FakeRequest())
+        status(result) shouldBe OK
+        bodyAsJson(result) shouldBe sicCodeResultAsJson
+      }
+
+      "matching results have been found" in new Setup {
+        val sicCodeResultAsJson = Json.parse(
+          s"""
+             |[
+             |  {
+             |    "code":"testCode",
+             |    "desc":"test description"
+             |  },
+             |  {
+             |    "code":"testCode2",
+             |    "desc":"test description"
+             |  }
+             |]
+      """.stripMargin)
+
+        when(mockLookupService.lookup(any()))
+          .thenReturn(List(SicCode("testCode", "test description"), SicCode("testCode2", "test description")))
+        mockAuthorisedRequest({})
+
+        val result: Result = controller.lookup("testCode,testCode2")(FakeRequest())
+        status(result)     shouldBe OK
+        bodyAsJson(result) shouldBe sicCodeResultAsJson
+      }
     }
 
-    "return a 404 when nothing is returned from LookupService" in new Setup {
-      when(mockLookupService.lookup(eqTo(sicCode), eqTo("foo")))
-        .thenReturn(None)
-      mockAuthorisedRequest({})
+    "return a NoContent" when {
+      "the request was successful but no results were found" in new Setup {
+        when(mockLookupService.lookup(any()))
+          .thenReturn(List.empty[SicCode])
+        mockAuthorisedRequest({})
 
-      val result: Result = controller.lookup(sicCode, Some("foo"))(FakeRequest())
-      status(result) shouldBe 404
-    }
-
-    "Use the default index when one isn't specified" in new Setup {
-      when(mockLookupService.lookup(eqTo(sicCode), eqTo("bar")))
-        .thenReturn(Some(sicCodeLookupResult))
-      mockAuthorisedRequest({})
-
-      val result: Result = controller.lookup(sicCode, None)(FakeRequest())
-      status(result) shouldBe 200
-      bodyAsJson(result) shouldBe sicCodeResultAsJson
+        val result: Result = controller.lookup("testCode,testCode2")(FakeRequest())
+        status(result) shouldBe NO_CONTENT
+      }
     }
   }
 }
