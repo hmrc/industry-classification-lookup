@@ -48,8 +48,8 @@ trait LookupService {
   val config: ICLConfig
   val indexes: Map[String, IndexConnector]
 
-  def lookup(sicCode: String, indexName: String): Option[SicCode] = {
-    indexes(indexName).lookup(sicCode)
+  def lookup(sicCodes: List[String]): List[SicCode] = {
+    sicCodes flatMap(code => indexes(GDS_REGISTER_SIC5_INDEX).lookup(code))
   }
 
   def search(query: String,

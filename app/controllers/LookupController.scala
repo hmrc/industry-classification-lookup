@@ -17,8 +17,8 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-
 import config.ICLConfig
+import models.SicCode
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import services.LookupService
@@ -32,23 +32,18 @@ import scala.concurrent.Future
 class LookupControllerImpl @Inject()(val lookupService: LookupService,
                                      val config: ICLConfig,
                                      val authConnector: AuthConnector) extends LookupController {
-  val defaultIndex = config.getConfigString("index.default")
-
 }
 
 trait LookupController extends BaseController with AuthorisedFunctions {
 
   val lookupService: LookupService
-  val defaultIndex: String
 
-  def lookup(sicCode: String, indexName: Option[String]): Action[AnyContent] = Action.async{
-    implicit request =>
-      authorised() {
-        val idxName = indexName.getOrElse(defaultIndex)
-        lookupService.lookup(sicCode, idxName) match {
-          case Some(sic) => Future.successful(Ok(Json.toJson(sic)))
-          case None => Future.successful(NotFound)
-        }
+  def lookup(sicCodes: String): Action[AnyContent] = Action.async{ implicit request =>
+    authorised() {
+      lookupService.lookup(sicCodes.split(",").toList) match {
+        case Nil  => Future.successful(NoContent)
+        case list => Future.successful(Ok(Json.toJson(list.distinct)))
       }
+    }
   }
 }
