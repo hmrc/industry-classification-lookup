@@ -16,6 +16,7 @@
 
 package lucene
 
+import org.apache.lucene.analysis.TokenStream
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.analysis.tokenattributes.{PositionIncrementAttribute, PositionLengthAttribute, TermToBytesRefAttribute}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -23,88 +24,90 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class AnalyzerBehaviourSpec extends UnitSpec {
 
+  case class Analyzer (
+                        tokens: TokenStream,
+                        analyzer: StandardAnalyzer,
+                        termAtt: TermToBytesRefAttribute
+                      )
+
+  def testSetup(searchField: String, searchString: String): Analyzer ={
+    val analyzer = new StandardAnalyzer()
+    val tokens = analyzer.tokenStream(searchField, searchString)
+    val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
+    tokens.addAttribute(classOf[PositionIncrementAttribute])
+    tokens.addAttribute(classOf[PositionLengthAttribute])
+    tokens.reset()
+    Analyzer(tokens, analyzer, termAtt)
+  }
+
+  def endTest(tokens: TokenStream): Unit ={
+    tokens.end()
+    tokens.close()
+  }
+
+
   "Testing the Analyzers" should {
 
     "return 2 tokens for a simple string" in {
-      val analyzer = new StandardAnalyzer()
-      val tokens = analyzer.tokenStream("foo", "foo bar")
+      val result = testSetup("foo", "foo bar")
 
-      val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
-      val posIncAtt = tokens.addAttribute(classOf[PositionIncrementAttribute])
-      val posLenAtt = tokens.addAttribute(classOf[PositionLengthAttribute])
+      result.tokens incrementToken()
+      result.termAtt.toString shouldBe "foo"
 
-      tokens.reset()
+      result.tokens.incrementToken()
+      result.termAtt.toString shouldBe "bar"
 
-      tokens.incrementToken()
-      termAtt.toString shouldBe "foo"
+      result.tokens.incrementToken() shouldBe false
+      endTest(result.tokens)
 
-      tokens.incrementToken()
-      termAtt.toString shouldBe "bar"
-
-      tokens.incrementToken() shouldBe false
-
-      tokens.end()
-      tokens.close()
     }
 
     "return 2 tokens for a simple string with a stop word" in {
-      val analyzer = new StandardAnalyzer()
-      val tokens = analyzer.tokenStream("foo", "foo the bar")
+      val result = testSetup("foo", "foo the bar")
 
-      val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
-      val posIncAtt = tokens.addAttribute(classOf[PositionIncrementAttribute])
-      val posLenAtt = tokens.addAttribute(classOf[PositionLengthAttribute])
+      result.tokens incrementToken()
+      result.termAtt.toString shouldBe "foo"
 
-      tokens.reset()
+      result.tokens.incrementToken()
+      result.termAtt.toString shouldBe "bar"
 
-      tokens.incrementToken()
-      termAtt.toString shouldBe "foo"
-
-      tokens.incrementToken()
-      termAtt.toString shouldBe "bar"
-
-      tokens.incrementToken() shouldBe false
-
-      tokens.end()
-      tokens.close()
+      result.tokens.incrementToken() shouldBe false
+      endTest(result.tokens)
     }
 
     "return 2 tokens for a simple string with punctuation" in {
-      val analyzer = new StandardAnalyzer()
-      val tokens = analyzer.tokenStream("foo", "foo : bar")
 
-      val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
-      val posIncAtt = tokens.addAttribute(classOf[PositionIncrementAttribute])
-      val posLenAtt = tokens.addAttribute(classOf[PositionLengthAttribute])
+      val result = testSetup("foo", "foo : bar")
 
-      tokens.reset()
+      result.tokens incrementToken()
+      result.termAtt.toString shouldBe "foo"
 
-      tokens.incrementToken()
-      termAtt.toString shouldBe "foo"
+      result.tokens.incrementToken()
+      result.termAtt.toString shouldBe "bar"
 
-      tokens.incrementToken()
-      termAtt.toString shouldBe "bar"
-
-      tokens.incrementToken() shouldBe false
-
-      tokens.end()
-      tokens.close()
+      result.tokens.incrementToken() shouldBe false
+      endTest(result.tokens)
     }
 
     "testing punctuation returns nothing" in {
-      val analyzer = new StandardAnalyzer()
-      val tokens = analyzer.tokenStream("foo", "< > : { } . , | ( )")
+      val result = testSetup("foo", "< > : { } . , | ( )")
 
-      val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
-      val posIncAtt = tokens.addAttribute(classOf[PositionIncrementAttribute])
-      val posLenAtt = tokens.addAttribute(classOf[PositionLengthAttribute])
+      result.tokens.incrementToken() shouldBe false
+      endTest(result.tokens)
+    }
 
-      tokens.reset()
+    "testing search using a space returns no tokens" in {
+      val result = testSetup("foo", " ")
 
-      tokens.incrementToken() shouldBe false
+      result.tokens.incrementToken() shouldBe false
+      endTest(result.tokens)
+    }
 
-      tokens.end()
-      tokens.close()
+    "testing search using a stop word only returns no tokens" in {
+      val result = testSetup("foo", "the")
+
+      result.tokens.incrementToken() shouldBe false
+      endTest(result.tokens)
     }
   }
 }
