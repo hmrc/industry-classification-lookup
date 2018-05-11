@@ -47,6 +47,28 @@ class AnalyzerBehaviourSpec extends UnitSpec {
       tokens.close()
     }
 
+    "return 2 tokens for a simple string with a stop word" in {
+      val analyzer = new StandardAnalyzer()
+      val tokens = analyzer.tokenStream("foo", "foo the bar")
+
+      val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
+      val posIncAtt = tokens.addAttribute(classOf[PositionIncrementAttribute])
+      val posLenAtt = tokens.addAttribute(classOf[PositionLengthAttribute])
+
+      tokens.reset()
+
+      tokens.incrementToken()
+      termAtt.toString shouldBe "foo"
+
+      tokens.incrementToken()
+      termAtt.toString shouldBe "bar"
+
+      tokens.incrementToken() shouldBe false
+
+      tokens.end()
+      tokens.close()
+    }
+
     "return 2 tokens for a simple string with punctuation" in {
       val analyzer = new StandardAnalyzer()
       val tokens = analyzer.tokenStream("foo", "foo : bar")
