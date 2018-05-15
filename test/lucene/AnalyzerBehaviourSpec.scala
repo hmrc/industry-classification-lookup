@@ -24,6 +24,44 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class AnalyzerBehaviourSpec extends UnitSpec {
 
+  trait Setup {
+    val analyzer = new StandardAnalyzer()
+    def generateTokens(searchString: String) = {
+      val tokens = analyzer.tokenStream("foo", searchString)
+      tokens.addAttribute(classOf[PositionIncrementAttribute])
+      tokens.addAttribute(classOf[PositionLengthAttribute])
+      tokens.reset()
+      tokens
+    }
+    def tokensToSeq(tokens: TokenStream): Seq[String] = {
+      def next(tokens: TokenStream) = tokens.incrementToken() match {
+        case false => None
+        case true => Some(tokens.getAttribute(classOf[TermToBytesRefAttribute]).toString)
+      }
+      next(tokens).fold(Seq[String]()){ Seq(_) ++ tokensToSeq(tokens) }
+    }
+  }
+
+  "Testing the Analyzer (tweak)" should {
+
+    Seq(
+      "foo bar" -> Seq("foo", "bar"),
+      "foo the bar" -> Seq("foo", "bar"),
+      "foo : bar" -> Seq("foo", "bar"),
+      "< > : { } . , | ( )" -> Seq(),
+      " " -> Seq(),
+      "the" -> Seq()
+    ) foreach {
+      case ((query, tokens)) => {
+        s"return $tokens for search term '$query'" in new Setup {
+          val tokens = generateTokens("foo the bar")
+          tokensToSeq(tokens) shouldBe Seq("foo", "bar")
+        }
+      }
+    }
+  }
+
+
   case class Analyzer (
                         tokens: TokenStream,
                         analyzer: StandardAnalyzer,
