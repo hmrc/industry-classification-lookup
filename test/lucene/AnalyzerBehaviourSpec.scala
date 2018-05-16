@@ -42,7 +42,7 @@ class AnalyzerBehaviourSpec extends UnitSpec {
     }
   }
 
-  "Testing the Analyzer (tweak)" should {
+  "Testing the Analyzer" should {
 
     Seq(
       "foo bar" -> Seq("foo", "bar"),
@@ -52,100 +52,14 @@ class AnalyzerBehaviourSpec extends UnitSpec {
       " " -> Seq(),
       "the" -> Seq()
     ) foreach {
-      case ((query, tokens)) => {
+      case (query, tokens) => {
         s"return $tokens for search term '$query'" in new Setup {
-          val tokens = generateTokens("foo the bar")
-          tokensToSeq(tokens) shouldBe Seq("foo", "bar")
+          val tok = generateTokens(query)
+          tokensToSeq(tok) shouldBe tokens
+          tok.close()
         }
       }
     }
   }
 
-
-  case class Analyzer (
-                        tokens: TokenStream,
-                        analyzer: StandardAnalyzer,
-                        termAtt: TermToBytesRefAttribute
-                      )
-
-  def testSetup(searchField: String, searchString: String): Analyzer ={
-    val analyzer = new StandardAnalyzer()
-    val tokens = analyzer.tokenStream(searchField, searchString)
-    val termAtt = tokens.getAttribute(classOf[TermToBytesRefAttribute])
-    tokens.addAttribute(classOf[PositionIncrementAttribute])
-    tokens.addAttribute(classOf[PositionLengthAttribute])
-    tokens.reset()
-    Analyzer(tokens, analyzer, termAtt)
-  }
-
-  def endTest(tokens: TokenStream): Unit ={
-    tokens.end()
-    tokens.close()
-  }
-
-
-  "Testing the Analyzers" should {
-
-    "return 2 tokens for a simple string" in {
-      val result = testSetup("foo", "foo bar")
-
-      result.tokens incrementToken()
-      result.termAtt.toString shouldBe "foo"
-
-      result.tokens.incrementToken()
-      result.termAtt.toString shouldBe "bar"
-
-      result.tokens.incrementToken() shouldBe false
-      endTest(result.tokens)
-
-    }
-
-    "return 2 tokens for a simple string with a stop word" in {
-      val result = testSetup("foo", "foo the bar")
-
-      result.tokens incrementToken()
-      result.termAtt.toString shouldBe "foo"
-
-      result.tokens.incrementToken()
-      result.termAtt.toString shouldBe "bar"
-
-      result.tokens.incrementToken() shouldBe false
-      endTest(result.tokens)
-    }
-
-    "return 2 tokens for a simple string with punctuation" in {
-
-      val result = testSetup("foo", "foo : bar")
-
-      result.tokens incrementToken()
-      result.termAtt.toString shouldBe "foo"
-
-      result.tokens.incrementToken()
-      result.termAtt.toString shouldBe "bar"
-
-      result.tokens.incrementToken() shouldBe false
-      endTest(result.tokens)
-    }
-
-    "testing punctuation returns nothing" in {
-      val result = testSetup("foo", "< > : { } . , | ( )")
-
-      result.tokens.incrementToken() shouldBe false
-      endTest(result.tokens)
-    }
-
-    "testing search using a space returns no tokens" in {
-      val result = testSetup("foo", " ")
-
-      result.tokens.incrementToken() shouldBe false
-      endTest(result.tokens)
-    }
-
-    "testing search using a stop word only returns no tokens" in {
-      val result = testSetup("foo", "the")
-
-      result.tokens.incrementToken() shouldBe false
-      endTest(result.tokens)
-    }
-  }
 }
