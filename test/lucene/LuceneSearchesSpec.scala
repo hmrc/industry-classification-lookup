@@ -90,6 +90,27 @@ class LuceneSearchesSpec extends UnitSpec {
       }.toSeq shouldBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
     }
 
+    "Simple single term search with limited results" in {
+      val limit = 2
+      val searcher = setupSearch()
+
+      val tdc = TopScoreDocCollector.create(10)
+      val fc = new FacetsCollector()
+
+      val q = new TermQuery(new Term("title", "lucene"))
+
+      searcher.search(q, tdc)
+
+      val results = tdc.topDocs(0, limit)
+      results.scoreDocs.length shouldBe 2
+
+      results.scoreDocs.map {
+        result =>
+          val doc = searcher.doc(result.doc)
+          doc.get("title")
+      }.toSeq shouldBe Seq("Lucene in Action", "Lucene for Dummies")
+    }
+
     "Simple multi-term AND search" in {
 
       val searcher = setupSearch()

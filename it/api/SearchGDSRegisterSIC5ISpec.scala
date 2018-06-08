@@ -33,7 +33,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 4,
+        "numFound" -> 3,
         "nonFilteredFound" -> 4,
         "results" -> Json.arr(
           Json.obj("code" -> "01500", "desc" -> "Mixed farming"),
@@ -92,7 +92,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
       val p1to3docs = pages1to3.as[JsObject].value("results").as[JsArray]
 
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 19,
+        "numFound" -> 5,
         "nonFilteredFound" -> 19,
         "results" -> Json.arr(
           p1to3docs.value(10),
@@ -121,7 +121,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 20,
+        "numFound" -> 3,
         "nonFilteredFound" -> 20,
         "results" -> Json.arr(
           Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
@@ -180,7 +180,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
     "return a valid set of results when using Query booster" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 20,
+        "numFound" -> 5,
         "nonFilteredFound" -> 20,
         "results" ->  Json.arr(
           Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
