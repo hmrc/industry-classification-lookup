@@ -115,6 +115,35 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
       facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
     }
 
+    "search for lucene and get limited results plus facets for results" in {
+      val limit = 2
+      val (searcher, state, facetConfig) = setupSearch()
+
+      val q = new TermQuery(new Term("title", "lucene"))
+
+      val tdc = TopScoreDocCollector.create(10)
+      val fc = new FacetsCollector()
+
+      searcher.search(q, MultiCollector.wrap(tdc, fc))
+
+      val results = tdc.topDocs(0, limit)
+      results.scoreDocs.length shouldBe 2
+
+      results.scoreDocs.map {
+        result =>
+          val doc = searcher.doc(result.doc)
+          doc.get("title")
+      }.toSet shouldBe Set("Lucene in Action", "Lucene for Dummies")
+
+      val facets = new SortedSetDocValuesFacetCounts(state, fc)
+
+      val facetResult = facets.getTopChildren(10, "sector").labelValues map {
+        lv => lv.label -> lv.value
+      }
+
+      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
+    }
+
     "search twice for 'lucene' to get facets and then for results with a drill down into Sector 2" in {
 
       val (searcher, state, facetConfig) = setupSearch()

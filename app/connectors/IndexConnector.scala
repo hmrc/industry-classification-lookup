@@ -142,7 +142,7 @@ trait IndexConnector {
           }
         }
         val nonFilteredCount = facetResults.map(_.count).sum
-        SearchResult(n, nonFilteredCount, sics, facetResults)
+        SearchResult(results.scoreDocs.length, nonFilteredCount, sics, facetResults)
     }
   }
 
