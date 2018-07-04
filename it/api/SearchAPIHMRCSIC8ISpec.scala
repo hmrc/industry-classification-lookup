@@ -28,20 +28,11 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
     val query = "Dairy farming"
 
-    def buildQuery(query: String, indexName: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, queryType: Option[String]) = {
-      val maxParam = maxResults.fold("")(n => s"&pageResults=$n")
-      val indexNameParam = s"&indexName=$indexName"
-      val pageParam = page.fold("")(n => s"&page=$n")
-      val sectorParam = sector.fold("")(s => s"&sector=$s")
-      val queryTypeParam = queryType.fold("")(s => s"&queryType=$s")
-      buildClient(s"/search?query=$query$indexNameParam$maxParam$pageParam$sectorParam$queryTypeParam")
-    }
-
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, HMRC_SIC8_INDEX, Some(maxResults), Some(page), None, Some(QUERY_PARSER))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, HMRC_SIC8_INDEX, Some(maxResults), Some(page), None, Some(true))
 
     "trying to search for a sic code should use the correct url" in {
-      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, queryType=Some(QUERY_PARSER))
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$HMRC_SIC8_INDEX&queryType=$QUERY_PARSER"
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, queryParser=Some(true))
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$HMRC_SIC8_INDEX&queryParser=true"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -65,7 +56,7 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5),queryType=Some(QUERY_PARSER))
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -92,7 +83,7 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5), sector = Some("N"),queryType=Some(QUERY_PARSER))
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5), sector = Some("N"),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -153,7 +144,7 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(3), queryType=Some(QUERY_PARSER))
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(3), queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -171,7 +162,7 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10), queryParser = Some(true))
 
       val response: WSResponse = client.get()
 
@@ -179,16 +170,32 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
       response.json shouldBe sicCodeLookupResult
     }
 
-    "supplying a query with no journey should error" in {
-
-      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10),queryType=Some("RubbishJourney"))
+    "supplying a query with no queryParser parameter and no queryBoostFirstTerm parameter should perform a default query builder" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 36,
+        "nonFilteredFound" -> 36,
+        "results" -> Json.arr(
+          Json.obj("code" -> "01410003", "desc" -> "Dairy farming"),
+          Json.obj("code" -> "01420003", "desc" -> "Cattle farming"),
+          Json.obj("code" -> "03220009", "desc" -> "Frog farming"),
+          Json.obj("code" -> "01490008", "desc" -> "Fur farming"),
+          Json.obj("code" -> "01490026", "desc" -> "Snail farming")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 19),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 7),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
+        )
+      )
+      val client = buildQuery(query, indexName = HMRC_SIC8_INDEX, Some(5), queryParser = None, queryBoostFirstTerm = None)
 
       setupSimpleAuthMocks()
 
       val response: WSResponse = client.get()
 
-      response.status shouldBe 500
-
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
     }
 
     "return a valid set of results when using Query booster" in {
@@ -210,7 +217,7 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("frog dAirY farMing", indexName = HMRC_SIC8_INDEX, Some(3), queryType=Some(QUERY_BOOSTER))
+      val client = buildQuery("frog dAirY farMing", indexName = HMRC_SIC8_INDEX, Some(3), queryBoostFirstTerm = Some(true))
 
       val response: WSResponse = client.get()
 
@@ -228,47 +235,7 @@ class SearchAPIHMRCSIC8ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10) ,queryType=Some(QUERY_BOOSTER))
-
-      val response: WSResponse = client.get()
-
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
-    }
-
-    "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions (FUZZY QUERY)" in {
-      val sicCodeLookupResult = Json.obj(
-        "numFound" -> 1,
-        "nonFilteredFound" -> 1,
-        "results" -> Json.arr(
-          Json.obj("code" -> "02100011", "desc" -> "Silviculture and other forestry activities")
-        ),
-        "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 1)
-        )
-      )
-
-      setupSimpleAuthMocks()
-
-      val client = buildQuery("SivicuLture", indexName = HMRC_SIC8_INDEX, Some(3), queryType=Some(FUZZY_QUERY))
-
-      val response: WSResponse = client.get()
-
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
-    }
-
-    "supplying a valid query but getting no results and no facets should return the corresponding json (FUZZY QUERY)" in {
-      val sicCodeLookupResult = Json.obj(
-        "numFound" -> 0,
-        "nonFilteredFound" -> 0,
-        "results" -> Json.arr(),
-        "sectors" -> Json.arr()
-      )
-
-      setupSimpleAuthMocks()
-
-      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10),queryType=Some(FUZZY_QUERY))
+      val client = buildQuery("testtesttest", indexName = HMRC_SIC8_INDEX, Some(10), queryBoostFirstTerm = Some(true))
 
       val response: WSResponse = client.get()
 

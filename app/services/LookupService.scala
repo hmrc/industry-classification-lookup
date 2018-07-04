@@ -57,7 +57,14 @@ trait LookupService {
              pageResults: Option[Int] = None,
              page: Option[Int] = None,
              sector: Option[String] = None,
-             queryType: Option[String] = None): SearchResult = {
+             queryParser: Option[Boolean] = None,
+             queryBoostFirstTerm: Option[Boolean] = None): SearchResult = {
+    val queryType: Option[String] = (queryParser, queryBoostFirstTerm) match {
+      case (Some(true), _) => Some("query-parser")
+      case (_, Some(true)) => Some("query-boost-first-term")
+      case _               => Some("query-builder")
+    }
+
     indexes(indexName).search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, queryType)
   }
 }
@@ -72,5 +79,4 @@ object QueryType {
   val QUERY_BUILDER = "query-builder"
   val QUERY_PARSER  = "query-parser"
   val QUERY_BOOSTER = "query-boost-first-term"
-  val FUZZY_QUERY   = "fuzzy-query"
 }

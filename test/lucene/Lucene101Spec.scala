@@ -175,6 +175,29 @@ class Lucene101Spec extends UnitSpec {
       }.toSeq shouldBe Seq("Lucene for Dummies")
     }
 
+    "fuzzy search and boost first term" in {
+      val index = buildIndex()
+
+      val reader: IndexReader = DirectoryReader.open(index)
+      val searcher = new IndexSearcher(reader)
+
+      val searchParameter  = "scence lucne gigbytes"
+      val splitSearchParams = searchParameter.split(" ")
+
+      val query = new BooleanQuery.Builder()
+      query.add(new BoostQuery(new FuzzyQuery(new Term("title", splitSearchParams(0))), 2), Occur.SHOULD)
+      splitSearchParams.tail.foreach(value => query.add(new FuzzyQuery(new Term("title", value)), Occur.SHOULD))
+
+      val result = searcher.search(query.build(), 5)
+
+      result.totalHits shouldBe 4
+
+      result.scoreDocs.map { res =>
+        val doc = searcher.doc(res.doc)
+        doc.get("title")
+      }.toSeq shouldBe Seq("The Art of Computer Science", "Managing Gigabytes", "Lucene in Action", "Lucene for Dummies")
+    }
+
     "fuzzzzzzzy" should {
       "kick in if the initial search returned no results (dumbies)" in {
         val index = buildIndex()
