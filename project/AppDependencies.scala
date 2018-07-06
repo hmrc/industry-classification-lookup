@@ -33,7 +33,7 @@ object LuceneDependencies {
 
 object MainDependencies {
   private val authClientVersion        = "2.6.0"
-  private val bootstrapPlay25Version   = "1.5.0"
+  private val bootstrapPlay25Version   = "1.7.0"
   private val playReactiveMongoVersion = "6.2.0"
 
   def apply() = Seq(
