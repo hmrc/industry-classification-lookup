@@ -55,7 +55,7 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     )
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), any()))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(sicCodeLookupResult)
       mockAuthorisedRequest({})
 
@@ -65,7 +65,7 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     }
 
     "return a 404 when no description is returned from LookupService" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), any()))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(SearchResult(0, 0, Seq(), Seq()))
       mockAuthorisedRequest({})
 
@@ -80,7 +80,7 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     }
 
     "Use the default index when one isn't specified" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), any()))
+      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(sicCodeLookupResult)
       mockAuthorisedRequest({})
 

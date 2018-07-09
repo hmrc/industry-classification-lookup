@@ -45,11 +45,12 @@ trait SearchController extends BaseController with AuthorisedFunctions {
              pageResults: Option[Int] = None,
              page: Option[Int],
              sector: Option[String] = None,
-             queryType: Option[String] = None): Action[AnyContent] = Action.async {
+             queryParser: Option[Boolean] = None,
+             queryBoostFirstTerm: Option[Boolean] = None): Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         val idxName = indexName.getOrElse(defaultIndex)
-        val results = lookupService.search(query, idxName, pageResults, page, sector, queryType)
+        val results = lookupService.search(query, idxName, pageResults, page, sector, queryParser, queryBoostFirstTerm)
         Future.successful(Ok(Json.toJson(results)))
       }
   }

@@ -157,8 +157,19 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       }
     }
 
-    "Should return nothing if no match" in new Setup {
+    "Should perform second search with a fuzzy match if first search has no match" in new Setup {
       val result: SearchResult = index.search("XXX", queryType = Some(journey))
+      result.results shouldBe Seq(
+        SicCode("20412028", "Wax (manufacture)"),
+        SicCode("25730005", "Axe (manufacture)"),
+        SicCode("69203001", "Tax consultancy"),
+        SicCode("32200024", "Musical box and music box mechanisms (manufacture)"),
+        SicCode("20590013", "Dental wax (manufacture)")
+      )
+    }
+
+    "Should return nothing if first search and second search with fuzzy match has no match" in new Setup {
+      val result: SearchResult = index.search("XXXX", queryType = Some(journey))
       result.results shouldBe Seq()
     }
   }
@@ -173,27 +184,6 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
       dairyFarmingResults.results.take(3) shouldNot   be(farmingDairyResults.results.take(3))
       dairyFarmingResults.results.length  shouldEqual farmingDairyResults.results.length
-    }
-  }
-
-  "searching with Fuzzy match" should {
-
-    val journey: String = QueryType.FUZZY_QUERY
-
-    "return top results for Drairy farrming" in new Setup {
-      val query = "Drairy farrming"
-
-      val result: SearchResult = index.search(query, queryType = Some(journey))
-
-      val sics: Seq[SicCode] = result.results
-
-      sics shouldBe Seq(
-        SicCode("01410003", "Dairy farming"),
-        SicCode("01420003", "Cattle farming"),
-        SicCode("03220009", "Frog farming"),
-        SicCode("01490008", "Fur farming"),
-        SicCode("01490026", "Snail farming")
-      )
     }
   }
 }

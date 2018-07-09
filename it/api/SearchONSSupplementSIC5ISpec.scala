@@ -14,12 +14,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
   s"calling GET /search for $indexName index" when {
 
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, Some(QUERY_PARSER))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser=Some(true))
 
     "trying to search for a sic code should use the correct url" in {
       val query = "Dairy+farming"
-      val client = buildQuery(query, indexName = indexName, queryType=Some(QUERY_PARSER))
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryType=$QUERY_PARSER"
+      val client = buildQuery(query, indexName = indexName, queryParser=Some(true))
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -41,7 +41,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -68,7 +68,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Dairy+farming", indexName = indexName, Some(5), sector = Some("N"),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(5), sector = Some("N"),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -139,7 +139,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryType=Some(QUERY_PARSER))
+      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -157,7 +157,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -165,15 +165,37 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
       response.json shouldBe sicCodeLookupResult
     }
 
-    "supplying a query with no journey should error" in {
+    "supplying a query with no journey should default to query builder" in {
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some("RubbishJourney"))
+
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 49,
+        "nonFilteredFound" -> 49,
+        "results" -> Json.arr(
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
+          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
+          Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
+          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
+        )
+      )
+      val client = buildQuery("support silviculture", indexName = indexName, Some(3),queryParser=None, queryBoostFirstTerm = None)
 
       setupSimpleAuthMocks()
 
       val response: WSResponse = client.get()
 
-      response.status shouldBe 500
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
 
     }
 
@@ -201,7 +223,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("support Silviculture", indexName = indexName, Some(3), queryType=Some(QUERY_BOOSTER))
+      val client = buildQuery("support Silviculture", indexName = indexName, Some(3), queryParser = None, queryBoostFirstTerm = Some(true))
 
       val response: WSResponse = client.get()
 
@@ -219,7 +241,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(QUERY_BOOSTER))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -241,7 +263,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("SiviculturE", indexName = indexName, Some(3), queryType=Some(FUZZY_QUERY))
+      val client = buildQuery("SiviculturE", indexName = indexName, Some(3), queryParser=None, queryBoostFirstTerm = None)
 
       val response: WSResponse = client.get()
 
@@ -259,7 +281,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(FUZZY_QUERY))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=None, queryBoostFirstTerm = None)
 
       val response: WSResponse = client.get()
 

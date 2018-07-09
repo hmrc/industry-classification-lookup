@@ -17,8 +17,8 @@
 package connectors
 
 import java.nio.file.FileSystems
-import javax.inject.Inject
 
+import javax.inject.Inject
 import config.ICLConfig
 import models.SicCode
 import org.apache.lucene.analysis.CharArraySet
@@ -34,6 +34,7 @@ import org.apache.lucene.util.QueryBuilder
 import play.api.Logger
 import services.{FacetResults, QueryType, SearchResult}
 import services.Indexes._
+import services.QueryType.QUERY_PARSER
 
 class GDSRegisterSIC5IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
   override val name = GDS_REGISTER_SIC5_INDEX
@@ -126,7 +127,7 @@ trait IndexConnector {
 
     results.totalHits match {
       case 0 =>
-        if(queryType.contains(QueryType.FUZZY_QUERY) && !isFuzzyExecuted) {
+        if(!queryType.contains(QUERY_PARSER) && !isFuzzyExecuted) {
           Logger.info(s"""Search for SIC codes with query "$query" found nothing performing fuzzy search""")
           search(query, pageResults, page, sector, queryType, true)
         } else {
@@ -146,14 +147,17 @@ trait IndexConnector {
     }
   }
 
-  private[connectors] def buildQuery(query: String, queryType: Option[String] = None, isFuzzyExecuted: Boolean): Query = {
+  private[connectors] def buildQuery(query: String, queryType: Option[String] = None, isFuzzySearchNeeded: Boolean): Query = {
     import services.QueryType._
-    queryType match {
-      case Some(QUERY_BUILDER) => new QueryBuilder(analyzer).createBooleanQuery(FIELD_SEARCH_TERMS, query)
-      case Some(QUERY_PARSER)  => new QueryParser(FIELD_SEARCH_TERMS, analyzer).parse(query)
-      case Some(QUERY_BOOSTER) => QueryBooster(FIELD_SEARCH_TERMS, query, 5)
-      case Some(FUZZY_QUERY)   => FuzzyMatch(FIELD_SEARCH_TERMS, query, analyzer, isFuzzyExecuted)
-      case _                   => throw new RuntimeException("No queryType provided")
+    if (isFuzzySearchNeeded) {
+      FuzzyMatch(FIELD_SEARCH_TERMS, query, analyzer, queryType.contains(QUERY_BOOSTER))
+    } else {
+      queryType match {
+        case Some(QUERY_BUILDER) => new QueryBuilder(analyzer).createBooleanQuery(FIELD_SEARCH_TERMS, query)
+        case Some(QUERY_PARSER) => new QueryParser(FIELD_SEARCH_TERMS, analyzer).parse(query)
+        case Some(QUERY_BOOSTER) => QueryBooster(FIELD_SEARCH_TERMS, query, 5)
+        case _ => throw new RuntimeException("No queryType provided")
+      }
     }
   }
 
@@ -174,10 +178,6 @@ object QueryBooster {
 }
 
 object FuzzyMatch {
-  private def normalSearch(fieldName: String, query: String, analyzer: StandardAnalyzer): Query = {
-    new QueryBuilder(analyzer).createBooleanQuery(fieldName, query)
-  }
-
   private def fuzzySearch(fieldName: String, query: String): Query = {
     val splitSearchParams = query.toLowerCase.split(" ")
     val queryBuilder      = new BooleanQuery.Builder()
@@ -186,6 +186,15 @@ object FuzzyMatch {
     queryBuilder.build()
   }
 
-  def apply(fieldName: String, query: String, analyzer: StandardAnalyzer, isFuzzy: Boolean = false): Query =
-    if (isFuzzy) fuzzySearch(fieldName, query) else normalSearch(fieldName, query, analyzer)
+  private def fuzzySearchAndBoostFirstTerm(fieldName: String, query: String): Query = {
+    val splitSearchParams = query.toLowerCase.split(" ")
+    val queryBuilder      = new BooleanQuery.Builder()
+
+    queryBuilder.add(new BoostQuery(new FuzzyQuery(new Term(fieldName, splitSearchParams.head)), 2), Occur.SHOULD)
+    splitSearchParams.tail.foreach(value => queryBuilder.add(new FuzzyQuery(new Term(fieldName, value)), Occur.SHOULD))
+    queryBuilder.build()
+  }
+
+  def apply(fieldName: String, query: String, analyzer: StandardAnalyzer, isBooster: Boolean = false): Query =
+    if (isBooster) fuzzySearchAndBoostFirstTerm(fieldName, query) else fuzzySearch(fieldName, query)
 }

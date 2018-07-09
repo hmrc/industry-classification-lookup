@@ -13,22 +13,12 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
   s"calling GET /search for $indexName index" when {
 
-
-    def buildQuery(query: String, indexName: String, maxResults: Option[Int] = None, page: Option[Int] = None, sector: Option[String] = None, queryType: Option[String]) = {
-      val maxParam = maxResults.fold("")(n => s"&pageResults=$n")
-      val indexNameParam = s"&indexName=$indexName"
-      val pageParam = page.fold("")(n => s"&page=$n")
-      val sectorParam = sector.fold("")(s => s"&sector=$s")
-      val queryTypeParam = queryType.fold("")(s => s"&queryType=$s")
-      buildClient(s"/search?query=$query$indexNameParam$maxParam$pageParam$sectorParam$queryTypeParam")
-    }
-
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, Some(QUERY_PARSER))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser = Some(true))
 
     "trying to search for a sic code should use the correct url" in {
       val query = "Dairy+farming"
-      val client = buildQuery(query, indexName = indexName, queryType=Some(QUERY_PARSER))
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryType=$QUERY_PARSER"
+      val client = buildQuery(query, indexName = indexName, queryParser=Some(true))
+      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -49,7 +39,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -75,7 +65,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Dairy+farming", indexName = indexName, Some(5), sector = Some("G"),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(5), sector = Some("G"),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -140,7 +130,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryType=Some(QUERY_BUILDER))
+      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryParser=Some(false))
 
       val response: WSResponse = client.get()
 
@@ -158,7 +148,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(QUERY_PARSER))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=Some(true))
 
       val response: WSResponse = client.get()
 
@@ -166,16 +156,30 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
       response.json shouldBe sicCodeLookupResult
     }
 
-    "supplying a query with no journey should error" in {
+    "supplying a query with no journey should default to query builder" in {
+      val sicCodeLookupResult = Json.obj(
+        "numFound" -> 4,
+        "nonFilteredFound" -> 4,
+        "results" -> Json.arr(
+          Json.obj("code" -> "01500", "desc" -> "Mixed farming"),
+          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle"),
+          Json.obj("code" -> "10500", "desc" -> "Manufacture of dairy products")
+        ),
+        "sectors" -> Json.arr(
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 1),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
+        )
+      )
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some("RubbishJourney"))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3), queryParser=None, queryBoostFirstTerm = None)
 
       setupSimpleAuthMocks()
 
       val response: WSResponse = client.get()
 
-      response.status shouldBe 500
-
+      response.status shouldBe 200
+      response.json shouldBe sicCodeLookupResult
     }
 
     "return a valid set of results when using Query booster" in {
@@ -201,7 +205,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Support silviculture", indexName = indexName, Some(5), queryType=Some(QUERY_BOOSTER))
+      val client = buildQuery("Support silviculture", indexName = indexName, Some(5), queryParser=None, queryBoostFirstTerm = Some(true))
 
       val response: WSResponse = client.get()
 
@@ -219,7 +223,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(QUERY_BOOSTER))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=None, queryBoostFirstTerm = Some(true))
 
       val response: WSResponse = client.get()
 
@@ -227,7 +231,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
       response.json shouldBe sicCodeLookupResult
     }
 
-    "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions (FUZZY QUERY)" in {
+    "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions, it performs a default fuzzy match on second search" in {
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 1,
         "nonFilteredFound" -> 1,
@@ -241,7 +245,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("sivicULture", indexName = indexName, Some(3), queryType=Some(FUZZY_QUERY))
+      val client = buildQuery("sivicULture", indexName = indexName, Some(3), queryParser=None, queryBoostFirstTerm = None)
 
       val response: WSResponse = client.get()
 
@@ -249,7 +253,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
       response.json shouldBe sicCodeLookupResult
     }
 
-    "supplying a valid query but getting no results and no facets should return the corresponding json (FUZZY QUERY)" in {
+    "supplying a valid query but getting no results and no facets should return the corresponding json, it performs a default fuzzy match on second search" in {
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 0,
         "nonFilteredFound" -> 0,
@@ -259,7 +263,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryType=Some(FUZZY_QUERY))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10), queryParser=None, queryBoostFirstTerm = None)
 
       val response: WSResponse = client.get()
 
