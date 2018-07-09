@@ -24,7 +24,7 @@ import play.api.Mode.Mode
 import services.{QueryType, SearchResult}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
+class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
   val mockConfig: ICLConfig = new ICLConfig {
     override protected def mode: Mode = ???
@@ -33,7 +33,8 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
   }
 
   trait Setup {
-    val index = new SIC8IndexConnectorImpl(mockConfig)
+    val onsIndex = new ONSSupplementSIC5IndexConnectorImpl(mockConfig)
+    val gdsIndex = new GDSRegisterSIC5IndexConnectorImpl(mockConfig)
   }
 
   val journey: String = QueryType.QUERY_BUILDER
@@ -41,15 +42,15 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
   "lookup" should {
 
     Map(
-      "01410003" -> "Dairy farming",
-      "01130024" -> "Sugar beet growing",
-      "28110023" -> "Engines for marine use (manufacture)",
-      "28930070" -> "Press for food and drink (manufacture)"
+      "01410" -> "Raising of dairy cattle",
+      "01130" -> "Growing of vegetables and melons, roots and tubers",
+      "28110" -> "Manufacture of engines and turbines, except aircraft, vehicle and cycle engines",
+      "28930" -> "Manufacture of machinery for food, beverage and tobacco processing"
     ) foreach {
       case ((searchCode, searchDesc)) =>
         s"find the correct single result document for code8 search with $searchCode" in new Setup {
 
-          val result: Option[SicCode] = index.lookup(searchCode)
+          val result: Option[SicCode] = gdsIndex.lookup(searchCode)
 
           result shouldBe defined
 
@@ -58,7 +59,7 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     }
 
     "Return None if the sic code isn't found" in new Setup {
-      index.lookup("ABCDE") shouldBe None
+      onsIndex.lookup("ABCDE") shouldBe None
     }
 
     // TODO - H2 test the multi-return scenario without altering the index
@@ -69,11 +70,11 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     case class ST(query: String, numMin: Int, topHit: SicCode)
 
     Seq(
-      ST("Dairy farming", 1, SicCode("01410003", "Dairy farming"))
+      ST("Dairy farming", 1, SicCode("01410", "Dairy farming"))
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
-        val result: SearchResult = index.search(data.query, queryType = Some(journey))
+        val result: SearchResult = onsIndex.search(data.query, queryType = Some(journey))
 
         val sics: Seq[SicCode] = result.results
         sics.length should be >= data.numMin
@@ -81,11 +82,11 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
         sics.head shouldBe data.topHit
 
         sics shouldBe Seq(
-          SicCode("01410003", "Dairy farming"),
-          SicCode("01420003", "Cattle farming"),
-          SicCode("03220009", "Frog farming"),
-          SicCode("01490008", "Fur farming"),
-          SicCode("01490026", "Snail farming")
+          SicCode("01410", "Dairy farming"),
+          SicCode("01430", "Stud farming"),
+          SicCode("01450", "Goat farming"),
+          SicCode("01450", "Sheep farming"),
+          SicCode("01460", "Pig farming")
         )
       }
     }
@@ -97,7 +98,7 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     ) foreach { case (query, maxResults) =>
       s"""should return $maxResults results when maxResult is specified when searching for "$query"""" in new Setup {
 
-        val result: SearchResult = index.search(query, maxResults, queryType = Some(journey))
+        val result: SearchResult = onsIndex.search(query, maxResults, queryType = Some(journey))
 
         val sics: Seq[SicCode] = result.results
         sics.length shouldBe maxResults
@@ -110,14 +111,14 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       val pageResults = 2
       val page = 2
 
-      val result: SearchResult = index.search(query, pageResults, page, None, Some(journey))
+      val result: SearchResult = onsIndex.search(query, pageResults, page, None, Some(journey))
 
       val sics: Seq[SicCode] = result.results
       sics.length shouldBe pageResults
 
       sics shouldBe Seq(
-        SicCode("03220009", "Frog farming"),
-        SicCode("01490008", "Fur farming")
+        SicCode("01450", "Goat farming"),
+        SicCode("01450", "Sheep farming")
       )
     }
 
@@ -127,23 +128,23 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
       val pageResults = 2
       val page: Int = -1
 
-      val result: SearchResult = index.search(query, pageResults, page, None, Some(journey))
+      val result: SearchResult = onsIndex.search(query, pageResults, page, None, Some(journey))
 
       val sics: Seq[SicCode] = result.results
       sics.length shouldBe pageResults
 
       sics shouldBe Seq(
-        SicCode("01410003", "Dairy farming"),
-        SicCode("01420003", "Cattle farming")
+        SicCode("01410", "Dairy farming"),
+        SicCode("01430", "Stud farming")
       )
     }
 
     Seq(
-      ST("Cress", 1, SicCode("01130008", "Cress growing"))
+      ST("Cress", 1, SicCode("01130", "Cress growing"))
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
-        val result: SearchResult = index.search(data.query, queryType = Some(journey))
+        val result: SearchResult = onsIndex.search(data.query, queryType = Some(journey))
 
         val sics: Seq[SicCode] = result.results
 
@@ -152,24 +153,24 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
         sics.head shouldBe data.topHit
 
         sics shouldBe Seq(
-          SicCode("01130008", "Cress growing")
+          SicCode("01130", "Cress growing")
         )
       }
     }
 
     "Should perform second search with a fuzzy match if first search has no match" in new Setup {
-      val result: SearchResult = index.search("XXX", queryType = Some(journey))
+      val result: SearchResult = onsIndex.search("XXX", queryType = Some(journey))
       result.results shouldBe Seq(
-        SicCode("20412028", "Wax (manufacture)"),
-        SicCode("25730005", "Axe (manufacture)"),
-        SicCode("69203001", "Tax consultancy"),
-        SicCode("32200024", "Musical box and music box mechanisms (manufacture)"),
-        SicCode("20590013", "Dental wax (manufacture)")
+        SicCode("20412", "Wax (manufacture)"),
+        SicCode("25730", "Axe (manufacture)"),
+        SicCode("69203", "Tax consultancy"),
+        SicCode("16240", "Box pallet (manufacture)"),
+        SicCode("19201", "Paraffin wax (manufacture)")
       )
     }
 
     "Should return nothing if first search and second search with fuzzy match has no match" in new Setup {
-      val result: SearchResult = index.search("XXXX", queryType = Some(journey))
+      val result: SearchResult = onsIndex.search("XXXX", queryType = Some(journey))
       result.results shouldBe Seq()
     }
   }
@@ -179,8 +180,8 @@ class HMRCSIC8IndexConnectorSpec extends UnitSpec with MockitoSugar {
     val journey: String = QueryType.QUERY_BOOSTER
 
     "return different top results for dairy + farming and farming + dairy " in new Setup {
-      val dairyFarmingResults = index.search("dairy farming", queryType = Some(journey))
-      val farmingDairyResults = index.search("farming dairy", queryType = Some(journey))
+      val dairyFarmingResults = onsIndex.search("dairy farming", queryType = Some(journey))
+      val farmingDairyResults = onsIndex.search("farming dairy", queryType = Some(journey))
 
       dairyFarmingResults.results.take(3) shouldNot   be(farmingDairyResults.results.take(3))
       dairyFarmingResults.results.length  shouldEqual farmingDairyResults.results.length

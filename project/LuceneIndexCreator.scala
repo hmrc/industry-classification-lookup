@@ -40,7 +40,7 @@ object LuceneIndexCreator {
   val indexBuildTask = Def.task {
     val root = (resourceManaged in Compile).value / "conf" / "index"
 
-    val builders: Seq[SICIndexBuilder] = Seq(HMRCSIC8Builder, GDSSicBuilder, ONSSicBuilder)
+    val builders: Seq[SICIndexBuilder] = Seq(GDSSicBuilder, ONSSicBuilder)
 
     val files = builders.map {
       // Perform the actual index build

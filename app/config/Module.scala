@@ -18,7 +18,7 @@ package config
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import connectors.{GDSRegisterSIC5IndexConnectorImpl, IndexConnector, ONSSupplementSIC5IndexConnectorImpl, SIC8IndexConnectorImpl}
+import connectors.{GDSRegisterSIC5IndexConnectorImpl, IndexConnector, ONSSupplementSIC5IndexConnectorImpl}
 import controllers._
 import services._
 import services.Indexes._
@@ -43,7 +43,6 @@ class Module extends AbstractModule {
   }
 
   private def bindIndexes() {
-    bind(classOf[IndexConnector]).annotatedWith(Names.named(HMRC_SIC8_INDEX)).to(classOf[SIC8IndexConnectorImpl]).asEagerSingleton()
     bind(classOf[IndexConnector]).annotatedWith(Names.named(GDS_REGISTER_SIC5_INDEX)).to(classOf[GDSRegisterSIC5IndexConnectorImpl]).asEagerSingleton()
     bind(classOf[IndexConnector]).annotatedWith(Names.named(ONS_SUPPLEMENT_SIC5_INDEX)).to(classOf[ONSSupplementSIC5IndexConnectorImpl]).asEagerSingleton()
   }
