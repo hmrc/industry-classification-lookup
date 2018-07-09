@@ -54,7 +54,6 @@ Request parameters:
 * `pageResults` - optional - the number of results to return per page - default number returned is `5`
 * `page` - optional - which page to return - default returns first page
 * `indexName` - optional - which index to use, must be one of these
-  * `hmrc-sic8` - _deprecated_ - an old HMRC SIC variant used for legacy VAT - do not use, will be removed shortly
   * `gds-register-sic5` - 5 digit codes from the GDS register
   * `ons-supplement-sic5` - ONS 5 digit codes with supplementary indices to help with searching
 * `sector` - optional - perform a facet search to restrict to results from a single industry sector
@@ -64,7 +63,7 @@ Notes:
 * If both `queryParser` and `queryBoostFirstTerm` are not provided, the default search will be a simple `query-builder`
 * A first search is executed with the parameters provided if no results are found, a second search is executed automatically with `fuzzy-query`
   * `fuzzy-query` - simple query (like `query-builder`), but if no results are found the terms are made _fuzzy_ - so that near matches are found, e.g. `ferm` would find `farm`
-  * `fuzzy-query` is not executed is `queryParser` is set to `true`
+  * `fuzzy-query` is not executed if `queryParser` is set to `true`
 
 Indexes:
 

@@ -44,10 +44,6 @@ class ONSSupplementSIC5IndexConnectorImpl @Inject()(val config: ICLConfig) exten
   override val name = ONS_SUPPLEMENT_SIC5_INDEX
 }
 
-class SIC8IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
-  override val name = HMRC_SIC8_INDEX
-}
-
 trait IndexConnector {
 
   val name: String

@@ -34,7 +34,7 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
   trait Setup {
     val service: LookupService = new LookupService {
       val config: ICLConfig = mockConfig
-      val indexes = Map(HMRC_SIC8_INDEX -> mockIndex, GDS_REGISTER_SIC5_INDEX -> mockIndex)
+      val indexes = Map(ONS_SUPPLEMENT_SIC5_INDEX -> mockIndex, GDS_REGISTER_SIC5_INDEX -> mockIndex)
     }
   }
 
@@ -123,7 +123,7 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
       when(mockIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false))).thenReturn(result)
 
-      service.search(query, HMRC_SIC8_INDEX) shouldBe result
+      service.search(query, ONS_SUPPLEMENT_SIC5_INDEX) shouldBe result
     }
   }
 }
