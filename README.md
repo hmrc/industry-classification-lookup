@@ -26,7 +26,7 @@ Responds with:
 
 Headers:
 
-* Authorization - a valid BEARER token for a signed in user
+* Authorization - a valid BEARER token for a signed in user.
 
 Example URLs:
 
