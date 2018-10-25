@@ -613,7 +613,7 @@
 47780	Other retail sale of new goods in specialised stores
 47781	Retail sale in commercial art galleries
 47782	Retail sale by opticians
-47789	Other retail sale of new goods in specialised stores (other than by opticians or commercial art galleries), n.e.c
+47789	Other retail sale of new goods in specialised stores (other than by opticians or commercial art galleries), not elsewhere classified
 47790	Retail sale of second-hand goods in stores
 47791	Retail sale of antiques including antique books, in stores
 47799	Retail sale of second-hand goods (other than antiques and antique books) in stores
