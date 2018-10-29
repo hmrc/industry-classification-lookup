@@ -294,7 +294,7 @@
 01490	Ostriches raising and breeding
 01490	Pet animal breeding, other than fish
 01490	Pet bird raising and breeding
-01490	Rabbit and other fur animal raising n.e.c
+01490	Rabbit and other fur animal raising not elsewhere classified
 01490	Rabbit breeding
 01490	Rabbit skin sorting
 01490	Raw fur skin production
@@ -330,7 +330,7 @@
 01610	Vermin destroying and trapping on agricultural land
 01621	Farm animal boarding and care
 01621	Farm animal boarding and care (except pets)
-01629	Support activities for animal production (other than farm animal boarding and care) n.e.c.
+01629	Support activities for animal production (other than farm animal boarding and care) not elsewhere classified.
 01629	Agistment services on a fee or contract basis 
 01629	Animal production support activities other than farm animal boarding and care
 01629	Animal propagation, growth and output - activities to promote these, on a fee or contract basis
@@ -723,7 +723,7 @@
 08930	Salt, extraction of, from underground including by dissolving and pumping
 08930	Sea salt production
 08930	White salt production
-08990	Other mining and quarrying n.e.c.
+08990	Other mining and quarrying not elsewhere classified.
 08990	Abrasive materials mining and quarrying
 08990	Asbestos mining and quarrying
 08990	Asphalt (natural) mining and quarrying
@@ -1142,11 +1142,11 @@
 10512	Curd production (manufacture)
 10512	Dairy preparation of cheese and butter (manufacture)
 10512	Processed cheese (manufacture)
-10519	Manufacture of milk products (other than liquid milk and cream, butter, cheese) n.e.c
+10519	Manufacture of milk products (other than liquid milk and cream, butter, cheese) not elsewhere classified
 10519	Casein production (manufacture)
 10519	Concentrated dried milk (manufacture)
 10519	Condensed milk (manufacture)
-10519	Dairy preparation of milk products n.e.c. (manufacture)
+10519	Dairy preparation of milk products not elsewhere classified. (manufacture)
 10519	Desserts with a milk base (manufacture)
 10519	Dried milk (manufacture)
 10519	Evaporated milk (manufacture)
@@ -1155,7 +1155,7 @@
 10519	Milk or cream in solid form (manufacture)
 10519	Milk powder (manufacture)
 10519	Milk production (evaporated, condensed, etc.) (manufacture)
-10519	Milk products other than liquid milk and cream, butter, cheese n.e.c. (manufacture)
+10519	Milk products other than liquid milk and cream, butter, cheese not elsewhere classified. (manufacture)
 10519	Rennet (not artificial) (manufacture)
 10519	Soft drinks (milk based) (manufacture)
 10519	Sweetened skimmed whey production (manufacture)
@@ -1463,7 +1463,7 @@
 10860	Low sodium foods (manufacture)
 10860	Low-sodium or sodium-free dietary salts (manufacture)
 10860	Milk based baby food (manufacture)
-10890	Manufacture of other food products n.e.c.
+10890	Manufacture of other food products not elsewhere classified.
 10890	Apple pomace and pectin (manufacture)
 10890	Artificial concentrates (manufacture)
 10890	Artificial honey (manufacture)
@@ -1570,7 +1570,7 @@
 11020	Wine production from self produced grapes
 11030	Manufacture of cider and other fruit wines
 11030	Apple wine making
-11030	Beverages made of fermented fruit n.e.c. (manufacture)
+11030	Beverages made of fermented fruit not elsewhere classified. (manufacture)
 11030	Cider (alcoholic) (manufacture)
 11030	Cider perry (manufacture)
 11030	Fruit wines other than cider and perry (manufacture)
@@ -1988,7 +1988,7 @@
 13300	Embroidery on made up textile goods
 13300	Ending and mending of textiles (manufacture)
 13300	Finishing of leather wearing apparel (manufacture)
-13300	Finishing of wearing apparel n.e.c. (manufacture)
+13300	Finishing of wearing apparel not elsewhere classified. (manufacture)
 13300	Flannel ending (manufacture)
 13300	Flannel filling (manufacture)
 13300	Flannel finishing (manufacture)
@@ -2240,7 +2240,7 @@
 13931	Tiles made of tufted carpet (manufacture)
 13931	Tufted carpet (manufacture)
 13931	Wilton carpet (manufacture)
-13939	Manufacture of carpets and rugs (other than woven or tufted) n.e.c.
+13939	Manufacture of carpets and rugs (other than woven or tufted) not elsewhere classified.
 13939	Bonded fibre carpets (manufacture)
 13939	Carpets (other than woven or tufted) (manufacture)
 13939	Carpets and rugs, other than woven or tufted (manufacture)
@@ -2388,7 +2388,7 @@
 13960	Woven conveyor belting (manufacture)
 13960	Woven machinery belting (manufacture)
 13960	Woven trimmings (manufacture)
-13990	Manufacture of other textiles n.e.c.
+13990	Manufacture of other textiles not elsewhere classified.
 13990	Baize (manufacture)
 13990	Banding (woven) (manufacture)
 13990	Bias binding (manufacture)
@@ -3192,7 +3192,7 @@
 16290	Wine racks made of wood (manufacture)
 16290	Wood carving (manufacture)
 16290	Wood marquetry (manufacture)
-16290	Wooden articles n.e.c. (manufacture)
+16290	Wooden articles not elsewhere classified. (manufacture)
 16290	Wooden cases for jewellery (manufacture)
 17110	Manufacture of pulp
 17110	Bleached paper pulp made by chemical dissolving (manufacture) 
@@ -3320,10 +3320,10 @@
 17219	Cases made of non-corrugated cardboard (manufacture)
 17219	Cases made of non-corrugated paper (manufacture)
 17219	Cigarette packets (manufacture)
-17219	Containers and canisters made of cardboard n.e.c. (manufacture)
-17219	Containers made of corrugated paper or paperboard n.e.c. (manufacture)
-17219	Containers made of paper and paperboard n.e.c. (manufacture)
-17219	Containers made of solid board n.e.c. (manufacture)
+17219	Containers and canisters made of cardboard not elsewhere classified. (manufacture)
+17219	Containers made of corrugated paper or paperboard not elsewhere classified. (manufacture)
+17219	Containers made of paper and paperboard not elsewhere classified. (manufacture)
+17219	Containers made of solid board not elsewhere classified. (manufacture)
 17219	Corrugated packing case (manufacture)
 17219	Cylinders made of board (open ended for posting documents) (manufacture)
 17219	Folding boxes made of board (manufacture)
@@ -3415,7 +3415,7 @@
 17240	Vinyl-coated wallpaper (manufacture)
 17240	Wallpaper and lining paper (manufacture)
 17290	Manufacture of other articles of paper and paperboard
-17290	Articles made of paper and paperboard n.e.c. (manufacture)
+17290	Articles made of paper and paperboard not elsewhere classified. (manufacture)
 17290	Blinds made of paper (manufacture)
 17290	Bobbins made of paper and paperboard (manufacture)
 17290	Bobbins, spools and cops made of paper and paperboard (manufacture)
@@ -3472,7 +3472,7 @@
 18121	Lithographic printing on labels or tags (manufacture)
 18121	Printed labels (manufacture)
 18121	Printing on labels or tags (manufacture)
-18129	Printing (other than printing of newspapers and printing on labels and tags) n.e.c.
+18129	Printing (other than printing of newspapers and printing on labels and tags) not elsewhere classified.
 18129	Advertising catalogue printing (manufacture)
 18129	Advertising printed matter printing (manufacture)
 18129	Album printing (manufacture)
@@ -4080,7 +4080,7 @@
 20170	Synthetic rubber and natural rubber mixtures (manufacture)
 20200	Manufacture of pesticides and other agrochemical products
 20200	Acaricide (manufacture)
-20200	Agro-chemical products n.e.c. (manufacture)
+20200	Agro-chemical products not elsewhere classified. (manufacture)
 20200	Anti-sprouting products (manufacture)
 20200	Biocides (manufacture)
 20200	Cattle dip (manufacture)
@@ -4339,7 +4339,7 @@
 20530	Perfume compounds (blended perfume concentrates) (manufacture)
 20530	Perfumery and flavour synthetic chemicals (manufacture)
 20530	Resinoids (manufacture)
-20590	Manufacture of other chemical products n.e.c.
+20590	Manufacture of other chemical products not elsewhere classified.
 20590	Activated carbon (manufacture)
 20590	Anti-freeze mixtures (excluding pure ethyl glycol) (manufacture)
 20590	Anti-knock compounds (manufacture)
@@ -5284,8 +5284,8 @@
 23650	Window frames made of fibre-cement (manufacture)
 23690	Manufacture of other articles of concrete, plaster and cement
 23690	Bas-relief and haut-relief made of concrete, plaster, cement or artificial stone (manufacture)
-23690	Cement products n.e.c. (manufacture)
-23690	Concrete articles n.e.c. (manufacture)
+23690	Cement products not elsewhere classified. (manufacture)
+23690	Concrete articles not elsewhere classified. (manufacture)
 23690	Flower pots made of concrete, plaster, cement or artificial stone (manufacture)
 23690	Furniture made of concrete, plaster, cement or artificial stone (manufacture)
 23690	Statuary made of concrete, plaster, cement or artificial stone (manufacture)
@@ -5349,7 +5349,7 @@
 23910	Sharpening stones made of bonded abrasives (manufacture)
 23910	Stones for sharpening or polishing (manufacture)
 23910	Vitrified bonded abrasives (manufacture)
-23990	Manufacture of other non-metallic mineral products n.e.c.
+23990	Manufacture of other non-metallic mineral products not elsewhere classified.
 23990	Artificial corundum (manufacture)
 23990	Asbestos carding (manufacture)
 23990	Asbestos felting (manufacture)
@@ -6404,7 +6404,7 @@
 25940	Threaded fasteners (manufacture)
 25940	Tubular rivets (manufacture)
 25940	Washers made of metal (manufacture)
-25990	Manufacture of other fabricated metal products n.e.c.
+25990	Manufacture of other fabricated metal products not elsewhere classified.
 25990	Anchor (manufacture)
 25990	Armoured doors (manufacture)
 25990	Art metal work (manufacture)
@@ -8026,7 +8026,7 @@
 28250	Ventilating unit (manufacture)
 28250	Ventilation equipment for domestic use (manufacture)
 28250	Ventilation equipment for non-domestic use (manufacture)
-28290	Manufacture of other general-purpose machinery n.e.c.
+28290	Manufacture of other general-purpose machinery not elsewhere classified.
 28290	Aeration plant for effluent treatment (manufacture)
 28290	Baling press (not agricultural) (manufacture)
 28290	Base exchange plant for water treatment (manufacture)
@@ -8084,7 +8084,7 @@
 28290	Labelling machinery (not for office use) (manufacture)
 28290	Levels (manufacture)
 28290	Lubricator (manufacture)
-28290	Machinery (not containing electrical connectors) n.e.c. parts (manufacture)
+28290	Machinery (not containing electrical connectors) not elsewhere classified. parts (manufacture)
 28290	Machinery for cleaning or drying bottles and for aerating beverages (manufacture)
 28290	Machinists precision tools (manufacture)
 28290	Measuring rods and tapes (manufacture)
@@ -8188,7 +8188,7 @@
 28302	Milking machine (manufacture)
 28302	Mowers for agricultural use (manufacture)
 28302	Mowers for lawns, parks and sports grounds (manufacture)
-28302	Parts of milking machines and dairy machinery, n.e.c. (manufacturing)
+28302	Parts of milking machines and dairy machinery, not elsewhere classified. (manufacturing)
 28302	Pick-up baler (manufacture)
 28302	Planter for agricultural use (manufacture)
 28302	Plough (manufacture)
@@ -8719,7 +8719,7 @@
 28960	Rubber working machinery (manufacture)
 28960	Transfer moulding press for rubber or plastics (manufacture)
 28960	Vulcanizing machines for working rubber and plastics (manufacture)
-28990	Manufacture of other special-purpose machinery n.e.c.
+28990	Manufacture of other special-purpose machinery not elsewhere classified.
 28990	Accumulator for hydraulic equipment (manufacture)
 28990	Aircraft carrier catapults and related equipment (manufacture)
 28990	Aircraft launching gear and related equipment (manufacture)
@@ -9295,7 +9295,7 @@
 30920	Wheel chair (manufacture)
 30920	Wheelchair (manufacture)
 30920	Wheels for pedal cycles (manufacture)
-30990	Manufacture of other transport equipment n.e.c.
+30990	Manufacture of other transport equipment not elsewhere classified.
 30990	Donkey-carts (manufacture)
 30990	Handcarts (manufacture)
 30990	Hearses drawn by animals (manufacture)
@@ -9650,7 +9650,7 @@
 32401	Pin-tables (manufacture)
 32401	Tables for casino games (manufacture)
 32401	Toys for professional and arcade use (manufacture)
-32409	Manufacture of games and toys (other than professional and arcade games and toys) n.e.c.
+32409	Manufacture of games and toys (other than professional and arcade games and toys) not elsewhere classified.
 32409	Action figures (manufacture)
 32409	Bagatelle board (manufacture)
 32409	Bicycles for children (manufacture)
@@ -9891,7 +9891,7 @@
 32910	Tooth brush (not electric) (manufacture)
 32910	Whitewash brush (manufacture)
 32910	Wire brush (manufacture)
-32990	Other manufacturing n.e.c.
+32990	Other manufacturing not elsewhere classified.
 32990	Amber turning (manufacture)
 32990	Artificial flowers and fruit made of paper (manufacture)
 32990	Artificial flowers and fruit made of plastic (manufacture)
@@ -10076,7 +10076,7 @@
 33120	Repair and maintenance of forestry and logging machinery (manufacture)
 33120	Repair and maintenance of furnaces and furnace burners (manufacture)
 33120	Repair and maintenance of gas turbines (manufacture)
-33120	Repair and maintenance of general purpose machinery n.e.c. (manufacture)
+33120	Repair and maintenance of general purpose machinery not elsewhere classified. (manufacture)
 33120	Repair and maintenance of industrial process furnaces (manufacture)
 33120	Repair and maintenance of industrial refrigeration equipment, air purifying equipment (manufacture)
 33120	Repair and maintenance of industrial type air conditioning (manufacture)
@@ -10106,7 +10106,7 @@
 33120	Repair and maintenance of pumps (manufacture)
 33120	Repair and maintenance of railway diesel engines (manufacture)
 33120	Repair and maintenance of reprographic machinery
-33120	Repair and maintenance of special purpose machinery n.e.c. (manufacture)
+33120	Repair and maintenance of special purpose machinery not elsewhere classified. (manufacture)
 33120	Repair and maintenance of steam turbines (manufacture)
 33120	Repair and maintenance of taps (manufacture)
 33120	Repair and maintenance of valves (manufacture)
@@ -10194,7 +10194,7 @@
 33190	Repair and maintenance of millstones, grindstones, polishing stones and the like (manufacture)
 33190	Repair and maintenance of other rubber products (excluding tyres) (manufacture)
 33190	Repair and maintenance of plastic tubes etc. And systems thereof in industrial plants (manufacture)
-33190	Repair and maintenance of wooden products n.e.c.(manufacture)
+33190	Repair and maintenance of wooden products not elsewhere classified.(manufacture)
 33190	Repair and rebuilding of organs (in factory) (manufacture)
 33190	Repair of camping goods made of canvas (manufacture)
 33190	Repair of fishing nets (manufacture)
@@ -10224,7 +10224,7 @@
 33200	Installation of drilling platforms and the like (manufacture)
 33200	Installation of earth-moving and excavating equipment (manufacture)
 33200	Installation of electric motors, generators and transformers (manufacture)
-33200	Installation of electrical equipment for engines and vehicles n.e.c. (manufacture)
+33200	Installation of electrical equipment for engines and vehicles not elsewhere classified. (manufacture)
 33200	Installation of electricity distribution and control apparatus (manufacture)
 33200	Installation of electronic valves and tubes and other electronic components (manufacture )
 33200	Installation of engines and turbines (except aircraft, vehicle and cycle) (manufacture)
@@ -10233,7 +10233,7 @@
 33200	Installation of factory assembly lines (manufacture)
 33200	Installation of fasteners, screw machine products, chain and springs (manufacture)
 33200	Installation of furnaces and furnace burners (manufacture)
-33200	Installation of general purpose machinery n.e.c. (manufacture)
+33200	Installation of general purpose machinery not elsewhere classified. (manufacture)
 33200	Installation of industrial irradiation and electromedical equipment (manufacture) 
 33200	Installation of industrial machinery and equipment (manufacture)
 33200	Installation of industrial mainframe and similar computers (manufacture)
@@ -10267,7 +10267,7 @@
 33200	Installation of pumps (manufacture)
 33200	Installation of radio and television transmitters (manufacture)
 33200	Installation of seats in aircraft, ships, trains and the like
-33200	Installation of special purpose machinery n.e.c. (manufacture)
+33200	Installation of special purpose machinery not elsewhere classified. (manufacture)
 33200	Installation of steam generators (not central heating boilers) incl. related pipework (manufacture)
 33200	Installation of steel drums and similar (manufacture)
 33200	Installation of taps and valves (manufacture)
@@ -10609,7 +10609,7 @@
 42910	River work construction
 42910	Water project construction
 42910	Waterway construction
-42990	Construction of other civil engineering projects n.e.c.
+42990	Construction of other civil engineering projects not elsewhere classified.
 42990	Civil engineering construction
 42990	Civil engineering contractor
 42990	Construction of chemical plants (except buildings)
@@ -10729,7 +10729,7 @@
 43290	Cavity wall insulation
 43290	Fencing contractor (not agricultural)
 43290	Fireproofing work
-43290	Installation in buildings of fittings and fixtures n.e.c.
+43290	Installation in buildings of fittings and fixtures not elsewhere classified.
 43290	Installation of automated and revolving doors
 43290	Installation of blinds and awnings
 43290	Installation of elevators
@@ -10755,7 +10755,7 @@
 43310	Stucco application in buildings
 43320	Joinery installation
 43320	Builder and joiner
-43320	Carpenter n.e.c.
+43320	Carpenter not elsewhere classified.
 43320	Carpentry (not structural)
 43320	Completion of ceilings
 43320	Installation (erection) work of self-manufactured builders' ware of metal
@@ -10837,7 +10837,7 @@
 43991	Renting of scaffolds and work platforms with erection and dismantling
 43991	Scaffolding hiring and erecting
 43991	Scaffolds and work platform erecting and dismantling
-43999	Specialised construction activities (other than scaffold erection) n.e.c.
+43999	Specialised construction activities (other than scaffold erection) not elsewhere classified.
 43999	Aerial mast (self supporting) erection
 43999	Boring (civil engineering)
 43999	Brick furnace construction
@@ -11364,7 +11364,7 @@
 46330	Cream (wholesale)
 46330	Dairy produce exporter (wholesale)
 46330	Dairy produce importer (wholesale)
-46330	Dairy produce n.e.c (wholesale)
+46330	Dairy produce not elsewhere classified (wholesale)
 46330	Edible oils and fats (wholesale)
 46330	Edible oils and fats exporter (wholesale)
 46330	Edible oils and fats importer (wholesale)
@@ -11442,8 +11442,8 @@
 46380	Fish distribution (wholesale)
 46380	Fishmonger (wholesale)
 46380	Flour (wholesale)
-46380	Food n.e.c. including fish, crustaceans and molluscs exporter (wholesale)
-46380	Food n.e.c. including fish, crustaceans and molluscs importer (wholesale)
+46380	Food not elsewhere classified. including fish, crustaceans and molluscs exporter (wholesale)
+46380	Food not elsewhere classified. including fish, crustaceans and molluscs importer (wholesale)
 46380	Herrings (wholesale)
 46380	Honey (wholesale)
 46380	Meat for domestic animals (wholesale)
@@ -11547,7 +11547,7 @@
 46431	Recorded audio and video tapes, CDs, DVDs and the equipment on which these are played (wholesale)
 46431	Tapes (recorded) (wholesale)
 46431	Videos (recorded) (wholesale)
-46439	Wholesale of radio and television goods and of electrical household appliances (other than of gramophone records, audio tapes, compact discs and video tapes and the equipment on which these are played) n.e.c.
+46439	Wholesale of radio and television goods and of electrical household appliances (other than of gramophone records, audio tapes, compact discs and video tapes and the equipment on which these are played) not elsewhere classified.
 46439	Burglar and fire alarms for household use (wholesale)
 46439	Clothes washing and drying machines for domestic use (wholesale)
 46439	Co-axial cable and co-axial conductors for domestic use (wholesale)
@@ -11571,8 +11571,8 @@
 46439	Photographic goods importer (wholesale)
 46439	Plugs, sockets and other apparatus for protecting electrical circuits for domestic use (wholesale)
 46439	Primary cells and primary batteries for domestic use (wholesale)
-46439	Radio, television and electrical household equipment n.e.c. exporter (wholesale)
-46439	Radio, television and electrical household goods n.e.c. importer (wholesale)
+46439	Radio, television and electrical household equipment not elsewhere classified. exporter (wholesale)
+46439	Radio, television and electrical household goods not elsewhere classified. importer (wholesale)
 46439	Radios and televisions (wholesale)
 46439	Refrigerators and freezers for domestic use (wholesale)
 46439	Shavers and hair clippers with self-contained motors (wholesale)
@@ -11606,13 +11606,13 @@
 46460	Catgut and similar materials (wholesale)
 46460	Chemically pure sugars, sugar ethers and sugar esters and their salts (wholesale)
 46460	Contraceptive chemical preparations based on hormones or spermicides (wholesale)
-46460	Diagnostic reagents n.e.c. (wholesale)
+46460	Diagnostic reagents not elsewhere classified. (wholesale)
 46460	Druggists' sundries (wholesale)
 46460	Druggists' sundriesman (wholesale)
 46460	Drugs (wholesale)
 46460	Electro-diagnostic apparatus for medical use (wholesale)
 46460	First aid boxes (wholesale)
-46460	Glands, other organs and their extracts and other human or animal substances n.e.c. (wholesale)
+46460	Glands, other organs and their extracts and other human or animal substances not elsewhere classified. (wholesale)
 46460	Glycoside, vegetable alkaloids and their salts, ethers, esters and other derivatives (wholesale)
 46460	Hearing aids (wholesale)
 46460	Hormones and their derivatives (wholesale)
@@ -11669,7 +11669,7 @@
 46491	Musical instruments (wholesale)
 46491	Musical instruments exporter (wholesale)
 46491	Musical instruments importer (wholesale)
-46499	Wholesale of household goods (other than musical instruments) n.e.c.
+46499	Wholesale of household goods (other than musical instruments) not elsewhere classified.
 46499	Air heaters and hot air distributors (non-electric) (wholesale)
 46499	Artificial flowers, foliage and fruit (wholesale)
 46499	Baby carriages (wholesale)
@@ -11699,8 +11699,8 @@
 46499	Greeting cards (wholesale)
 46499	Gymnasium and athletic articles and equipment (wholesale)
 46499	Handbags (wholesale)
-46499	Household goods n.e.c. exporter (wholesale)
-46499	Household goods n.e.c. Importer (wholesale)
+46499	Household goods not elsewhere classified. exporter (wholesale)
+46499	Household goods not elsewhere classified. Importer (wholesale)
 46499	Household non-electrical appliances (wholesale)
 46499	Inflatable boats for pleasure or sports (wholesale)
 46499	Inflatable vessels for pleasure or sports (wholesale)
@@ -11950,10 +11950,10 @@
 46690	Liquid dielectric transformers (wholesale)
 46690	Locomotives (wholesale)
 46690	Machinery and apparatus for filtering or purifying gases (wholesale)
-46690	Machinery n.e.c. For use in trade, navigation and other services (wholesale)
-46690	Machinery n.e.c., for industrial use (except mining, construction, textile) (wholesale) 
-46690	Machinery n.e.c., for industrial use (except mining, construction, textile) exporter (wholesale)
-46690	Machinery n.e.c., for industrial use (except mining, construction, textile) importer (wholesale)
+46690	Machinery not elsewhere classified. For use in trade, navigation and other services (wholesale)
+46690	Machinery not elsewhere classified., for industrial use (except mining, construction, textile) (wholesale)
+46690	Machinery not elsewhere classified., for industrial use (except mining, construction, textile) exporter (wholesale)
+46690	Machinery not elsewhere classified., for industrial use (except mining, construction, textile) importer (wholesale)
 46690	Machines and appliances for testing the mechanical properties of materials (wholesale)
 46690	Magnetic lifting heads (wholesale)
 46690	Marine propulsion engines (wholesale)
@@ -11995,7 +11995,7 @@
 46690	Ships and boats propellers and blades (wholesale)
 46690	Snow-ploughs and blowers (wholesale)
 46690	Spark ignition and compression ignition engines (except motor vehicle and outboard) (wholesale)
-46690	Special purpose machinery n.e.c. (wholesale)
+46690	Special purpose machinery not elsewhere classified. (wholesale)
 46690	Speed indicators and tachometers (wholesale)
 46690	Static converters (wholesale)
 46690	Steam and sand blasting machinery and appliances (excluding agricultural) (wholesale)
@@ -12069,7 +12069,7 @@
 46720	Copper (wholesale)
 46720	Ferrous and non-ferrous metal ores (wholesale)
 46720	Ferrous and non-ferrous metals in primary forms (wholesale)
-46720	Ferrous and non-ferrous semi-finished metal products n.e.c. (wholesale)
+46720	Ferrous and non-ferrous semi-finished metal products not elsewhere classified. (wholesale)
 46720	Galvanised sheets (wholesale)
 46720	Gold and other precious metals (wholesale)
 46720	Iron (wholesale)
@@ -12317,8 +12317,8 @@
 46900	Educational supplies (except furniture) (wholesale)
 46900	Feathers (wholesale)
 46900	General dealer (wholesale)
-46900	Goods n.e.c. exporter (wholesale)
-46900	Goods n.e.c. importer (wholesale)
+46900	Goods not elsewhere classified. exporter (wholesale)
+46900	Goods not elsewhere classified. importer (wholesale)
 46900	Industrial materials (general or undefined) (wholesale)
 46900	Machinery (undefined) (wholesale)
 46900	Machinery stockist (undefined) (wholesale)
@@ -12435,7 +12435,7 @@
 47421	Installation of car telephones (retail)
 47421	Mobile telephones (retail)
 47421	Mobile telephones for motor vehicles (retail)
-47429	Retail sale of telecommunications equipment (other than mobile telephones) n.e.c., in specialised stores
+47429	Retail sale of telecommunications equipment (other than mobile telephones) not elsewhere classified., in specialised stores
 47429	Telecommunications equipment other than mobile telephones (retail)
 47430	Retail sale of audio and video equipment in specialised stores
 47430	Audio equipment (retail)
@@ -12521,7 +12521,7 @@
 47591	Musical scores (retail)
 47591	Pianofortes (retail)
 47591	Sheet music (retail)
-47599	Retail sale of furniture, lighting equipment and other household articles (other than musical instruments) n.e.c., in specialised stores
+47599	Retail sale of furniture, lighting equipment and other household articles (other than musical instruments) not elsewhere classified., in specialised stores
 47599	Beds (retail)
 47599	China (retail)
 47599	Cork goods (retail)
@@ -12533,7 +12533,7 @@
 47599	Gas appliances (retail)
 47599	Glassware (retail)
 47599	House furnisher (retail)
-47599	Household articles and equipment n.e.c. (retail)
+47599	Household articles and equipment not elsewhere classified. (retail)
 47599	Household furnishing articles made of textile materials (retail)
 47599	Household furniture (retail)
 47599	Household non-electrical appliances (retail)
@@ -12637,7 +12637,7 @@
 47730	Pharmacy (retail)
 47741	Retail sale of hearing aids in specialised stores
 47741	Hearing aids (retail)
-47749	Retail sale of medical and orthopaedic goods (other than hearing aids) n.e.c., in specialised stores
+47749	Retail sale of medical and orthopaedic goods (other than hearing aids) not elsewhere classified., in specialised stores
 47749	Invalid carriages with or without motor (retail)
 47749	Medical goods (retail)
 47749	Orthopaedic appliances (retail)
@@ -12671,7 +12671,7 @@
 47782	Dispensing optician (retail)
 47782	Dispensing optometrist (retail)
 47782	Spectacles (retail)
-47789	Other retail sale of new goods in specialised stores (other than by opticians or commercial art galleries), n.e.c
+47789	Other retail sale of new goods in specialised stores (other than by opticians or commercial art galleries), not elsewhere classified
 47789	Ammunition (retail)
 47789	Baby carriages (retail)
 47789	Cleaning materials (retail)
@@ -12806,7 +12806,7 @@
 49320	Motor bike taxi service
 49320	Private hire car with driver
 49320	Taxi cab service
-49390	Other passenger land transport n.e.c.
+49390	Other passenger land transport not elsewhere classified.
 49390	Airline coach service (scheduled)
 49390	Airport shuttles
 49390	Animal drawn vehicle transport
@@ -12821,7 +12821,7 @@
 49390	Lift operator
 49390	Motor coach service
 49390	Motor coach with driver (private hire)
-49390	Non-scheduled passenger transport n.e.c.
+49390	Non-scheduled passenger transport not elsewhere classified.
 49390	Operation of teleferics, funiculars 
 49390	Passenger transport by animal-drawn vehicles
 49390	Passenger transport by man-drawn vehicles
@@ -12984,7 +12984,7 @@
 52101	Granary for water transport activities
 52101	Refrigerated warehouses operation for water transport activities 
 52101	Repository for water transport activities
-52101	Storage facilities n.e.c. for water transport activities 
+52101	Storage facilities not elsewhere classified. for water transport activities
 52101	Storage of goods in foreign trade zones for water transport activities 
 52101	Storage tanks operation for water transport activities 
 52101	Tea warehouse for water transport activities
@@ -13004,7 +13004,7 @@
 52102	Grain warehouse for air transport activities
 52102	Granary for air transport activities
 52102	Refrigerated warehouses operation for air transport activities 
-52102	Storage facilities n.e.c. for air transport activities 
+52102	Storage facilities not elsewhere classified. for air transport activities
 52102	Storage of goods in foreign trade zones for air transport activities 
 52102	Storage tanks operation for air transport activities 
 52102	Tea warehouse for air transport activities
@@ -13025,7 +13025,7 @@
 52103	Granary for land transport activities
 52103	Refrigerated warehouses operation for land transport activities 
 52103	Safe deposit company
-52103	Storage facilities n.e.c. for land transport activities 
+52103	Storage facilities not elsewhere classified. for land transport activities
 52103	Storage of goods in foreign trade zones for land transport activities 
 52103	Storage tanks operation for land transport activities 
 52103	Tea warehouse for land transport activities
@@ -13037,7 +13037,7 @@
 52213	Operation of bus and coach passenger facilities at bus and coach stations
 52213	Bus and coach passenger facilities at bus and coach stations
 52213	Terminal facilities operation (land transport)
-52219	Other service activities incidental to land transportation, n.e.c. (not including operation of rail freight terminals, passenger facilities at railway stations or passenger facilities at bus and coach stations)
+52219	Other service activities incidental to land transportation, not elsewhere classified. (not including operation of rail freight terminals, passenger facilities at railway stations or passenger facilities at bus and coach stations)
 52219	Automobile association road patrols
 52219	Bicycle parking operations
 52219	Bridge operation
@@ -13219,7 +13219,7 @@
 55202	Youth hostels
 55202	Mountain refuges
 55202	Youth hostel
-55209	Other holiday and other short stay accommodation (not including holiday centres and villages or youth hostels) n.e.c.
+55209	Other holiday and other short stay accommodation (not including holiday centres and villages or youth hostels) not elsewhere classified.
 55209	Apartment letting (self catering) other than holiday centres and holiday villages or youth hostels
 55209	Chalets, not holiday centres, holiday villages or youth hostels (self catering short-stay lodging)
 55209	Children's and other holiday homes
@@ -13407,7 +13407,7 @@
 58190	On-line catalogue publishing 
 58190	On-line forms publishing
 58190	On-line greeting cards and postcards publishing
-58190	On-line publishing n.e.c.
+58190	On-line publishing not elsewhere classified.
 58190	On-line publishing of posters and reproductions of works of art 
 58190	On-line publishing of statistics and other information
 58190	On-line publishing photos and engravings
@@ -13416,7 +13416,7 @@
 58190	Poster publishing
 58190	Printed matter publishing 
 58190	Publishers (other than of newspapers, books and periodicals) 
-58190	Publishing of stamps, banknotes, advertising material, catalogues and other printed matter n.e.c.
+58190	Publishing of stamps, banknotes, advertising material, catalogues and other printed matter not elsewhere classified.
 58190	Reproduction of works of art publishing
 58190	Timetable publishing 
 58210	Publishing of computer games
@@ -13611,7 +13611,7 @@
 63120	Web search portals
 63910	News agency activities
 63910	Stock market reporting service
-63990	Other information service activities n.e.c.
+63990	Other information service activities not elsewhere classified.
 63990	Information search services on a fee or contract basis
 63990	News clipping service
 63990	Press clipping service
@@ -13642,12 +13642,12 @@
 64205	Bank holding companies
 64205	Holding company activities for banks
 64205	Holding company in financial services sector
-64209	Activities of other holding companies (not including agricultural, production, construction, distribution and financial services holding companies) n.e.c.
+64209	Activities of other holding companies (not including agricultural, production, construction, distribution and financial services holding companies) not elsewhere classified.
 64209	Activities of service trades holding companies not engaged in management
 64209	Holding company in catering sector
 64209	Holding company in property sector
 64209	Holding company in transport sector
-64209	Holding company n.e.c.
+64209	Holding company not elsewhere classified.
 64301	Activities of investment trusts
 64301	Investment fund activities
 64301	Investment trusts activities
@@ -13678,7 +13678,7 @@
 64922	Activities of mortgage finance companies
 64922	Mortgage finance companies' activities (other than banks and building societies)
 64922	Ship mortgage finance company
-64929	Other credit granting (not including credit granting by non-deposit taking finance houses and other specialist consumer credit grantors and activities of mortgage finance companies) n.e.c.
+64929	Other credit granting (not including credit granting by non-deposit taking finance houses and other specialist consumer credit grantors and activities of mortgage finance companies) not elsewhere classified.
 64929	Banking institutions in Channel Islands and Isle of Man activities (not in UK banking sector)
 64929	Banks not authorised by the FSA as deposit taking
 64929	Channel Islands and Isle of Man banking institutes
@@ -13701,8 +13701,8 @@
 64992	Discount company (e.g. Debt factoring)
 64992	Factoring company (buying book debts)
 64992	Invoice discounting
-64999	Other financial service activities, except insurance and pension funding, (not including security dealing on own account and factoring) n.e.c.
-64999	Financial intermediation n.e.c. 
+64999	Other financial service activities, except insurance and pension funding, (not including security dealing on own account and factoring) not elsewhere classified.
+64999	Financial intermediation not elsewhere classified.
 64999	Securitisation activities
 64999	Swaps, options and other hedging arrangements
 64999	Underwriter (stock and share issues)
@@ -13839,7 +13839,7 @@
 68202	Letting and operating of conference and exhibition centres
 68202	Conference centre letting (self owned)
 68202	Exhibition centre letting (self owned)
-68209	Letting and operating of own or leased real estate (other than Housing Association real estate and conference and exhibition services) n.e.c.
+68209	Letting and operating of own or leased real estate (other than Housing Association real estate and conference and exhibition services) not elsewhere classified.
 68209	Agricultural land letting
 68209	Apartment buildings letting
 68209	Caravan residential site letting
@@ -13894,14 +13894,14 @@
 69102	Attorney
 69102	Lawyer
 69102	Solicitor (own account)
-69109	Activities of patent and copyright agents; other legal activities (other than those of barristers and solicitors) n.e.c.
+69109	Activities of patent and copyright agents; other legal activities (other than those of barristers and solicitors) not elsewhere classified.
 69109	Arbitrators legal activities
 69109	Bailiffs activities
 69109	Copyrights preparation
 69109	Deeds preparation
 69109	Law agent
 69109	Law writing
-69109	Legal activities n.e.c.
+69109	Legal activities not elsewhere classified.
 69109	Legal documentation and certification activities
 69109	Legal examiner activities
 69109	Legal services in connection with the disposal of assets by auction
@@ -14259,7 +14259,7 @@
 74203	Restoration, copying and retouching of photographs
 74203	Slide and negative duplicating
 74203	Slide mounting
-74209	Other photographic activities (not including portrait and other specialist photography and film processing) n.e.c.
+74209	Other photographic activities (not including portrait and other specialist photography and film processing) not elsewhere classified.
 74209	Fashion photography
 74209	Photographing of live events such as weddings, graduations, conventions, fashion shows, etc.
 74209	Photography for commercials, publishers or tourism purposes
@@ -14280,7 +14280,7 @@
 74901	Noise control consultancy activities
 74902	Quantity surveying activities
 74902	Cost draughtsman (quantity surveyor)
-74909	Other professional, scientific and technical activities (not including environmental consultancy or quantity surveying) n.e.c.
+74909	Other professional, scientific and technical activities (not including environmental consultancy or quantity surveying) not elsewhere classified.
 74909	Agents and agencies in entertainment 
 74909	Agents and agencies in motion picture theatrical production 
 74909	Agents and agencies in placement of artworks with publishers 
@@ -14451,7 +14451,7 @@
 77352	Air transport equipment for freight rental (without operator)
 77352	Aircraft hire for freight (without crew)
 77352	Freight air transport equipment operational leasing (without operator)
-77390	Renting and leasing of other machinery, equipment and tangible goods n.e.c.
+77390	Renting and leasing of other machinery, equipment and tangible goods not elsewhere classified.
 77390	Accommodation container renting
 77390	Amusement machine hire
 77390	Animal rental (herds, racehorses) 
@@ -14510,7 +14510,7 @@
 78101	Motion picture, television and other theatrical casting
 78101	Casting activities for motion pictures, television and theatre
 78101	Casting agencies and bureaux
-78109	Activities of employment placement agencies (other than motion picture, television and other theatrical casting) n.e.c.
+78109	Activities of employment placement agencies (other than motion picture, television and other theatrical casting) not elsewhere classified.
 78109	Employment consultants
 78109	Employment placement agencies 
 78109	Executive employment placement and search activities 
@@ -14556,7 +14556,7 @@
 79909	Ticket sales for other recreational activities
 79909	Time-share exchange services
 79909	Tourism promotion activities
-79909	Tourist assistance activities n.e.c.
+79909	Tourist assistance activities not elsewhere classified.
 79909	Tourist board or information service
 79909	Visitor assistance services
 80100	Private security activities
@@ -14626,7 +14626,7 @@
 81223	Furnace cleaning
 81223	Incinerator cleaning
 81223	Stove cleaning
-81229	Building and industrial cleaning activities (other than window cleaning, specialised cleaning and furnace and chimney cleaning services) n.e.c.
+81229	Building and industrial cleaning activities (other than window cleaning, specialised cleaning and furnace and chimney cleaning services) not elsewhere classified.
 81229	Cleaning of industrial machinery
 81229	Exterior cleaning of buildings 
 81291	Disinfecting and extermination services
@@ -14644,13 +14644,13 @@
 81291	Vermin destroying (not agricultural)
 81291	Wood rot preventative treatment service
 81291	Wood worm preventative treatment service
-81299	Cleaning services (other than disinfecting and extermination services) n.e.c.
+81299	Cleaning services (other than disinfecting and extermination services) not elsewhere classified.
 81299	Aeroplane cleaning (non-specialised)
 81299	Airport runways clearing of snow and ice
 81299	Bottle cleaning
 81299	Bus cleaning (non- specialised)
 81299	Cleaning of the inside of road and sea tankers
-81299	Cleaning services n.e.c.
+81299	Cleaning services not elsewhere classified.
 81299	Highway cleaning of snow and ice
 81299	Hygiene contracting
 81299	Industrial equipment cleaning (non-specialised)
@@ -14728,11 +14728,11 @@
 82920	Packing of medicaments into edible capsules
 82920	Parcel packing and gift wrapping on a fee or contract basis
 82920	Security packaging of pharmaceutical preparations
-82990	Other business support service activities n.e.c.
+82990	Other business support service activities not elsewhere classified.
 82990	Agricultural showground
 82990	Bar code imprinting services
 82990	Broadcasting transmission rights agent
-82990	Business activities n.e.c.
+82990	Business activities not elsewhere classified.
 82990	Charity crowd funding
 82990	Court reporting services
 82990	Fashion agent
@@ -15050,7 +15050,7 @@
 85530	School of motoring
 85530	Ship licence tuition (not commercial certificates)
 85530	Shipping schools not issuing commercial certificates and permits
-85590	Other education n.e.c.
+85590	Other education not elsewhere classified.
 85590	Academic tutoring
 85590	Adult education centre
 85590	Adult education residential college
@@ -15064,14 +15064,14 @@
 85590	Lifeguard training
 85590	Mentally handicapped adult training
 85590	National institute for adult continuing education
-85590	Other adult and other education n.e.c.
+85590	Other adult and other education not elsewhere classified.
 85590	Private training providers
 85590	Professional examination review courses
 85590	Public speaking training
 85590	Religious instruction
 85590	Speed reading instruction
 85590	Survival training
-85590	Teacher n.e.c.
+85590	Teacher not elsewhere classified.
 85590	Workers' Educational Association
 85600	Educational support activities
 85600	Educational consulting
@@ -15384,7 +15384,7 @@
 88910	Day nursery (non-charitable)
 88910	Playgroup (charitable)
 88910	Playgroup (non-charitable)
-88990	Other social work activities without accommodation n.e.c.
+88990	Other social work activities without accommodation not elsewhere classified.
 88990	Adoption activities (charitable)
 88990	Adoption activities (non-charitable)
 88990	Benevolent society (charitable services)
@@ -15674,7 +15674,7 @@
 93191	Activities of racehorse owners
 93191	Racehorse owner
 93191	The seeking of sponsorship, appearance money and prize money for horse racing
-93199	Other sports activities (not including activities of racehorse owners) n.e.c.
+93199	Other sports activities (not including activities of racehorse owners) not elsewhere classified.
 93199	Athletes
 93199	Boxing
 93199	Boxing promoter
@@ -15727,7 +15727,7 @@
 93290	Coin-operated games arcade (other than gaming machines)
 93290	Common (local authority or municipally owned)
 93290	Dance hall
-93290	Entertainment activities n.e.c.
+93290	Entertainment activities not elsewhere classified.
 93290	Fairs and shows of a recreational nature
 93290	Firework displays
 93290	Hampton Court Gardens and Park
@@ -15750,7 +15750,7 @@
 93290	Public park
 93290	Punch and Judy show
 93290	Puppet shows
-93290	Recreational activities n.e.c.
+93290	Recreational activities not elsewhere classified.
 93290	Regent's Park and Primrose Hill
 93290	Renting of leisure and pleasure equipment as an integral part of recreational facilities
 93290	Richmond Park
@@ -15898,7 +15898,7 @@
 94920	Social Democratic and Labour Party
 94920	Unionist parties
 94920	Young people's auxiliaries associated with a political party
-94990	Activities of other membership organisations n.e.c.
+94990	Activities of other membership organisations not elsewhere classified.
 94990	Animal protection organisations
 94990	Art clubs
 94990	Associations for the pursuit of a cultural or recreational activity or hobby 
@@ -15939,7 +15939,7 @@
 94990	Legal Aid Society
 94990	Literature and book club
 94990	Lodge activities
-94990	Membership organisations n.e.c.
+94990	Membership organisations not elsewhere classified.
 94990	Motorists' organisation (not road patrol or touring service)
 94990	Music club
 94990	National council for civil liberties
@@ -16051,7 +16051,7 @@
 95230	Repair of shoes
 95240	Repair of furniture and home furnishings
 95240	Repair and restoration of chairs and seats
-95240	Repair and restoration of furniture n.e.c.
+95240	Repair and restoration of furniture not elsewhere classified.
 95240	Repair and restoration of mattresses
 95240	Repair and restoration of other kitchen furniture
 95240	Repair and restoration of other office and shop furniture
@@ -16155,7 +16155,7 @@
 96040	Spas
 96040	Steam baths
 96040	Turkish baths
-96090	Other personal service activities n.e.c.
+96090	Other personal service activities not elsewhere classified.
 96090	Artists' model
 96090	Astrologer
 96090	Blood pressure machine operation (coin operated)
