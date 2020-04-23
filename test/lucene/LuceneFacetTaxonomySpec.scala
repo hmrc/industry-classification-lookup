@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import org.apache.lucene.facet.{FacetField, FacetsCollector, FacetsConfig}
 import org.apache.lucene.index._
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.play.PlaySpec
 
-class LuceneFacetTaxonomySpec extends UnitSpec {
+class LuceneFacetTaxonomySpec extends PlaySpec {
 
   "Wibble" should {
 
@@ -82,7 +82,7 @@ class LuceneFacetTaxonomySpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
     }
 
     "search for lucene and get results plus facets for results" in {
@@ -102,13 +102,13 @@ class LuceneFacetTaxonomySpec extends UnitSpec {
       searcher.search(q, MultiCollector.wrap(tdc, fc))
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
-      results.scoreDocs.map{
+      results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSet shouldBe Set("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSet mustBe Set("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
 
 
       val facets = new FastTaxonomyFacetCounts(taxoReader, facetConfig, fc)
@@ -117,7 +117,7 @@ class LuceneFacetTaxonomySpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
     }
   }
 }

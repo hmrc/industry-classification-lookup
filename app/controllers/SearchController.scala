@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,25 @@
 
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
 import config.ICLConfig
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.LookupService
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SearchControllerImpl @Inject()(val lookupService: LookupService,
-                                     val config: ICLConfig,
-                                     val authConnector: AuthConnector) extends SearchController {
+class SearchController @Inject()(lookupService: LookupService,
+                                 config: ICLConfig,
+                                 val authConnector: AuthConnector,
+                                 controllerComponents: ControllerComponents
+                                ) extends BackendController(controllerComponents) with AuthorisedFunctions {
+
   val defaultIndex = config.getConfigString("index.default")
-}
-
-trait SearchController extends BaseController with AuthorisedFunctions {
-
-  val lookupService: LookupService
-  val defaultIndex: String
 
   def search(query: String,
              indexName: Option[String],

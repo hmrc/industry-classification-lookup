@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,23 @@ package connectors
 
 import config.ICLConfig
 import models.SicCode
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
-import play.api.Mode.Mode
 import services.{QueryType, SearchResult}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
+class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
+  val mockConfig: Configuration = mock[Configuration]
+  val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
 
-  val mockConfig: ICLConfig = new ICLConfig {
-    override protected def mode: Mode = ???
-    override protected def runModeConfiguration: Configuration = ???
+  val mockICLConfig: ICLConfig = new ICLConfig(mockServicesConfig, mockConfig) {
     override def getConfigString(x: String) = "target/scala-2.11/resource_managed/main/conf/index"
   }
 
   trait Setup {
-    val onsIndex = new ONSSupplementSIC5IndexConnectorImpl(mockConfig)
-    val gdsIndex = new GDSRegisterSIC5IndexConnectorImpl(mockConfig)
+    val onsIndex = new ONSSupplementSIC5IndexConnector(mockICLConfig)
+    val gdsIndex = new GDSRegisterSIC5IndexConnector(mockICLConfig)
   }
 
   val journey: String = QueryType.QUERY_BUILDER
@@ -52,14 +52,14 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
           val result: Option[SicCode] = gdsIndex.lookup(searchCode)
 
-          result shouldBe defined
+          result mustBe defined
 
-          result.get shouldBe SicCode(searchCode, searchDesc)
+          result.get mustBe SicCode(searchCode, searchDesc)
         }
     }
 
     "Return None if the sic code isn't found" in new Setup {
-      onsIndex.lookup("ABCDE") shouldBe None
+      onsIndex.lookup("ABCDE") mustBe None
     }
 
     // TODO - H2 test the multi-return scenario without altering the index
@@ -77,11 +77,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
         val result: SearchResult = onsIndex.search(data.query, queryType = Some(journey))
 
         val sics: Seq[SicCode] = result.results
-        sics.length should be >= data.numMin
+        sics.length must be >= data.numMin
 
-        sics.head shouldBe data.topHit
+        sics.head mustBe data.topHit
 
-        sics shouldBe Seq(
+        sics mustBe Seq(
           SicCode("01410", "Dairy farming"),
           SicCode("01430", "Stud farming"),
           SicCode("01450", "Goat farming"),
@@ -101,7 +101,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
         val result: SearchResult = onsIndex.search(query, maxResults, queryType = Some(journey))
 
         val sics: Seq[SicCode] = result.results
-        sics.length shouldBe maxResults
+        sics.length mustBe maxResults
       }
     }
 
@@ -114,9 +114,9 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
       val result: SearchResult = onsIndex.search(query, pageResults, page, None, Some(journey))
 
       val sics: Seq[SicCode] = result.results
-      sics.length shouldBe pageResults
+      sics.length mustBe pageResults
 
-      sics shouldBe Seq(
+      sics mustBe Seq(
         SicCode("01450", "Goat farming"),
         SicCode("01450", "Sheep farming")
       )
@@ -131,9 +131,9 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
       val result: SearchResult = onsIndex.search(query, pageResults, page, None, Some(journey))
 
       val sics: Seq[SicCode] = result.results
-      sics.length shouldBe pageResults
+      sics.length mustBe pageResults
 
-      sics shouldBe Seq(
+      sics mustBe Seq(
         SicCode("01410", "Dairy farming"),
         SicCode("01430", "Stud farming")
       )
@@ -148,11 +148,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
         val sics: Seq[SicCode] = result.results
 
-        sics.length should be >= data.numMin
+        sics.length must be >= data.numMin
 
-        sics.head shouldBe data.topHit
+        sics.head mustBe data.topHit
 
-        sics shouldBe Seq(
+        sics mustBe Seq(
           SicCode("01130", "Cress growing")
         )
       }
@@ -160,7 +160,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
     "Should perform second search with a fuzzy match if first search has no match" in new Setup {
       val result: SearchResult = onsIndex.search("XXX", queryType = Some(journey))
-      result.results shouldBe Seq(
+      result.results mustBe Seq(
         SicCode("20412", "Wax (manufacture)"),
         SicCode("25730", "Axe (manufacture)"),
         SicCode("69203", "Tax consultancy"),
@@ -171,7 +171,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
 
     "Should return nothing if first search and second search with fuzzy match has no match" in new Setup {
       val result: SearchResult = onsIndex.search("XXXX", queryType = Some(journey))
-      result.results shouldBe Seq()
+      result.results mustBe Seq()
     }
   }
 
@@ -183,8 +183,8 @@ class ONSSupplementSIC5IndexConnectorSpec extends UnitSpec with MockitoSugar {
       val dairyFarmingResults = onsIndex.search("dairy farming", queryType = Some(journey))
       val farmingDairyResults = onsIndex.search("farming dairy", queryType = Some(journey))
 
-      dairyFarmingResults.results.take(3) shouldNot   be(farmingDairyResults.results.take(3))
-      dairyFarmingResults.results.length  shouldEqual farmingDairyResults.results.length
+      dairyFarmingResults.results.take(3) mustNot be(farmingDairyResults.results.take(3))
+      dairyFarmingResults.results.length mustEqual farmingDairyResults.results.length
     }
   }
 }

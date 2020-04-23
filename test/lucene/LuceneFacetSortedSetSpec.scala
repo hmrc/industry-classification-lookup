@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, 
 import org.apache.lucene.index._
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.play.PlaySpec
 
-class LuceneFacetSortedSetSpec extends UnitSpec {
+class LuceneFacetSortedSetSpec extends PlaySpec {
 
   "Wibble" should {
 
@@ -83,7 +83,7 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
     }
 
     "search for lucene and get results plus facets for results" in {
@@ -98,13 +98,13 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
       searcher.search(q, MultiCollector.wrap(tdc, fc))
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSet shouldBe Set("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSet mustBe Set("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
 
       val facets = new SortedSetDocValuesFacetCounts(state, fc)
 
@@ -112,7 +112,7 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
     }
 
     "search twice for 'lucene' to get facets and then for results with a drill down into Sector 2" in {
@@ -132,20 +132,20 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
 
       val ddq = new DrillDownQuery(facetConfig, q)
       ddq.add("sector", "Sector 2")
       searcher.search(ddq, tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 1
+      results.totalHits mustBe 1
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSet shouldBe Set("Lucene for Dummies 2")
+      }.toSet mustBe Set("Lucene for Dummies 2")
     }
 
     "Calculate facets over whole index, drill sideways" in {
@@ -166,7 +166,7 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
     }
 
     "Calculate facets over whole index, drill sideways into 'Sector 2'" in {
@@ -183,13 +183,13 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
       val result = ds.search(q, tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 2
+      results.totalHits mustBe 2
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSet shouldBe Set("Lucene for Dummies 2", "Managing Gigabytes")
+      }.toSet mustBe Set("Lucene for Dummies 2", "Managing Gigabytes")
 
       val facets = result.facets
 
@@ -197,7 +197,7 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 2, "Sector 3" -> 1)
     }
 
     "Calculate facets for 'lucene', drill sideways into 'Sector 2'" in {
@@ -214,13 +214,13 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
       val result = ds.search(ddq, tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 1
+      results.totalHits mustBe 1
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSet shouldBe Set("Lucene for Dummies 2")
+      }.toSet mustBe Set("Lucene for Dummies 2")
 
       val facets = result.facets
 
@@ -228,7 +228,7 @@ class LuceneFacetSortedSetSpec extends UnitSpec {
         lv => lv.label -> lv.value
       }
 
-      facetResult.toSeq shouldBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
+      facetResult.toSeq mustBe Seq("Sector 1" -> 2, "Sector 2" -> 1)
     }
   }
 }

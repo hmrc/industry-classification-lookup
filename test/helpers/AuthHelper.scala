@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@ package helpers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
-trait AuthHelper extends UnitSpec with MockitoSugar {
-  val mockAuthConnector : AuthConnector
+trait AuthHelper extends PlaySpec with MockitoSugar {
+  val mockAuthConnector: AuthConnector
 
-  def mockAuthorisedRequest[T](future : Future[T]): OngoingStubbing[Future[T]] = {
+  def mockAuthorisedRequest[T](future: Future[T]): OngoingStubbing[Future[T]] = {
     when(mockAuthConnector.authorise[T](any(), any())(any(), any())).thenReturn(future)
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package lucene
 import org.apache.lucene.analysis.TokenStream
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.analysis.tokenattributes.{PositionIncrementAttribute, PositionLengthAttribute, TermToBytesRefAttribute}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.play.PlaySpec
 
-
-class AnalyzerBehaviourSpec extends UnitSpec {
+class AnalyzerBehaviourSpec extends PlaySpec {
 
   trait Setup {
     val analyzer = new StandardAnalyzer()
+
     def generateTokens(searchString: String) = {
       val tokens = analyzer.tokenStream("foo", searchString)
       tokens.addAttribute(classOf[PositionIncrementAttribute])
@@ -33,12 +33,16 @@ class AnalyzerBehaviourSpec extends UnitSpec {
       tokens.reset()
       tokens
     }
+
     def tokensToSeq(tokens: TokenStream): Seq[String] = {
       def next(tokens: TokenStream) = tokens.incrementToken() match {
         case false => None
         case true => Some(tokens.getAttribute(classOf[TermToBytesRefAttribute]).toString)
       }
-      next(tokens).fold(Seq[String]()){ Seq(_) ++ tokensToSeq(tokens) }
+
+      next(tokens).fold(Seq[String]()) {
+        Seq(_) ++ tokensToSeq(tokens)
+      }
     }
   }
 
@@ -55,7 +59,7 @@ class AnalyzerBehaviourSpec extends UnitSpec {
       case (query, tokens) => {
         s"return $tokens for search term '$query'" in new Setup {
           val tok = generateTokens(query)
-          tokensToSeq(tok) shouldBe tokens
+          tokensToSeq(tok) mustBe tokens
           tok.close()
         }
       }

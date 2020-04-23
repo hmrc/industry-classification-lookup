@@ -17,13 +17,13 @@
 package helpers
 
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.ws.{WSClient, WSRequest}
-import uk.gov.hmrc.play.test.UnitSpec
 
-trait IntegrationSpecBase extends UnitSpec with WireMockSpec with GuiceOneServerPerSuite
+trait IntegrationSpecBase extends PlaySpec with WireMockSpec with GuiceOneServerPerSuite
   with BeforeAndAfterEach with BeforeAndAfterAll {
 
   val wiremockPort = 11111

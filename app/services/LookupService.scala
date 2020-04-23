@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
 
 package services
 
-import javax.inject.{Inject, Named, Singleton}
-
-import config.ICLConfig
-import connectors.IndexConnector
+import connectors.{GDSRegisterSIC5IndexConnector, ONSSupplementSIC5IndexConnector}
+import javax.inject.{Inject, Singleton}
 import models.SicCode
 import play.api.libs.json.{Format, Json}
 
@@ -30,23 +28,17 @@ object Indexes {
 
 import services.Indexes._
 
-class LookupServiceImpl @Inject()(val config: ICLConfig,
-                                  @Named(GDS_REGISTER_SIC5_INDEX) val gdsIndex: IndexConnector,
-                                  @Named(ONS_SUPPLEMENT_SIC5_INDEX) val onsIndex: IndexConnector
-                                 ) extends LookupService {
+@Singleton
+class LookupService @Inject()(gdsIndex: GDSRegisterSIC5IndexConnector,
+                              onsIndex: ONSSupplementSIC5IndexConnector) {
   val indexes = Map(
-    GDS_REGISTER_SIC5_INDEX   -> gdsIndex,
+    GDS_REGISTER_SIC5_INDEX -> gdsIndex,
     ONS_SUPPLEMENT_SIC5_INDEX -> onsIndex
   )
-}
 
-trait LookupService {
-
-  val config: ICLConfig
-  val indexes: Map[String, IndexConnector]
 
   def lookup(sicCodes: List[String]): List[SicCode] = {
-    sicCodes flatMap(code => indexes(GDS_REGISTER_SIC5_INDEX).lookup(code))
+    sicCodes flatMap (code => indexes(GDS_REGISTER_SIC5_INDEX).lookup(code))
   }
 
   def search(query: String,
@@ -59,7 +51,7 @@ trait LookupService {
     val queryType: Option[String] = (queryParser, queryBoostFirstTerm) match {
       case (Some(true), _) => Some("query-parser")
       case (_, Some(true)) => Some("query-boost-first-term")
-      case _               => Some("query-builder")
+      case _ => Some("query-builder")
     }
 
     indexes(indexName).search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, queryType)
@@ -67,13 +59,19 @@ trait LookupService {
 }
 
 case class FacetResults(code: String, name: String, count: Int)
-object FacetResults { implicit val formats: Format[FacetResults] = Json.format[FacetResults] }
+
+object FacetResults {
+  implicit val formats: Format[FacetResults] = Json.format[FacetResults]
+}
 
 case class SearchResult(numFound: Long, nonFilteredFound: Long = 0, results: Seq[SicCode], sectors: Seq[FacetResults])
-object SearchResult { implicit val formats: Format[SearchResult] = Json.format[SearchResult] }
+
+object SearchResult {
+  implicit val formats: Format[SearchResult] = Json.format[SearchResult]
+}
 
 object QueryType {
   val QUERY_BUILDER = "query-builder"
-  val QUERY_PARSER  = "query-parser"
+  val QUERY_PARSER = "query-parser"
   val QUERY_BOOSTER = "query-boost-first-term"
 }

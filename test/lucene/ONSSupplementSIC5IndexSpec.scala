@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
 
           val result = searcher.search(qp.parse(searchTerm.query), searchTerm.numMin)
 
-          result.totalHits.toInt should be >= searchTerm.numMin
+          result.totalHits.toInt must be >= searchTerm.numMin
 
           val results = result.scoreDocs.toSeq map {
             result =>
@@ -52,13 +52,13 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
               (code, description)
           }
 
-          results.head shouldBe searchTerm.topHit
+          results.head mustBe searchTerm.topHit
 
           // TODO look at improving these checks to assert the results are expected
           if (searchTerm.expectedDesc.nonEmpty) {
             results exists {
               case (_, description) => searchTerm.expectedDesc forall description.contains
-            } shouldBe true
+            } mustBe true
           }
         }
       }
@@ -94,8 +94,8 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
           val page2TopDoc = searcher.doc(page2SearchResult.scoreDocs(0).doc)
           val page2Result = (page2TopDoc.get(FIELD_CODE), page2TopDoc.get(FIELD_DESC))
 
-          page2SearchResult.totalHits shouldBe initialHits
-          page2Result shouldBe p2ExpectedResult
+          page2SearchResult.totalHits mustBe initialHits
+          page2Result mustBe p2ExpectedResult
 
           // search for the 3rd page using a collector
           val p3Collector = TopScoreDocCollector.create(1000) // consider whether 1000 is too high
@@ -104,8 +104,8 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
           val page3TopDoc = searcher.doc(page3SearchResult.scoreDocs(0).doc)
           val page3Result = (page3TopDoc.get(FIELD_CODE), page3TopDoc.get(FIELD_DESC))
 
-          page3SearchResult.totalHits shouldBe initialHits
-          page3Result shouldBe p3ExpectedResult
+          page3SearchResult.totalHits mustBe initialHits
+          page3Result mustBe p3ExpectedResult
         }
       }
     }
@@ -129,11 +129,11 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
       val expectedResult = Seq("B" -> 18, "C" -> 12, "A" -> 5, "N" -> 4, "R" -> 4, "J" -> 2, "H" -> 1, "O" -> 1, "P" -> 1)
       val resultsCount = expectedResult.map(_._2).sum
 
-      facetResult.toSeq shouldBe expectedResult
+      facetResult.toSeq mustBe expectedResult
 
       withSearcher { ws =>
         val results: TopDocs = ws.search(searchTerm, 20)
-        results.totalHits shouldBe resultsCount
+        results.totalHits mustBe resultsCount
       }
     }
   }
