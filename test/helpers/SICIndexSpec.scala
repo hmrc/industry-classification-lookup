@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
 import org.apache.lucene.index.{DirectoryReader, IndexReader}
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, NIOFSDirectory}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.play.PlaySpec
 
-trait SICIndexSpec extends UnitSpec {
+trait SICIndexSpec extends PlaySpec {
 
   val indexName: String
 
@@ -80,4 +80,5 @@ trait SICIndexSpec extends UnitSpec {
   }
 
   case class ST(query: String, numMin: Int, topHit: (String, String), expectedDesc: Seq[String])
+
 }

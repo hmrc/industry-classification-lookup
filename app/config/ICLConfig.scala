@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,17 @@
 
 package config
 
-import javax.inject.Inject
-
-import com.typesafe.config.ConfigRenderOptions
-import play.api.Mode.Mode
+import com.typesafe.config.{ConfigObject, ConfigRenderOptions}
+import javax.inject.{Inject, Singleton}
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-class ICLConfigImpl @Inject()(config: Configuration, injEnv: Environment) extends ICLConfig {
-  override protected def runModeConfiguration: Configuration = config
-  override protected def mode: Mode = injEnv.mode
-}
+@Singleton
+class ICLConfig @Inject()(config: ServicesConfig, configuration: Configuration) {
+  def getConfigString(key: String): String = config.getString(key)
 
-trait ICLConfig extends ServicesConfig {
-  def getConfigString(key: String): String = runModeConfiguration.getString(key).getOrElse(throw ConfigNotFoundException(key))
-
-  def getConfigObject(key: String): JsValue = runModeConfiguration.getObject(key).map{ obj =>
+  def getConfigObject(key: String): JsValue = configuration.getOptional[ConfigObject](key).map { obj =>
     val jsonValid = obj.render(ConfigRenderOptions.concise())
     Json.parse(jsonValid)
   }.getOrElse(throw ConfigNotFoundException(key))
@@ -40,4 +34,5 @@ trait ICLConfig extends ServicesConfig {
   private case class ConfigNotFoundException(key: String) extends Throwable {
     override def getMessage: String = s"[Config] Could not find config key $key"
   }
+
 }

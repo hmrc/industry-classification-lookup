@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,24 @@
  * limitations under the License.
  */
 
-package connectors
+package connectors.utils
 
 import java.nio.file.FileSystems
 
-import javax.inject.Inject
 import config.ICLConfig
 import models.SicCode
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
 import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
-import org.apache.lucene.index.{DirectoryReader, Term}
+import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.search.BooleanClause.Occur
-import org.apache.lucene.search._
+import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.QueryBuilder
 import play.api.Logger
-import services.{FacetResults, QueryType, SearchResult}
-import services.Indexes._
 import services.QueryType.QUERY_PARSER
-
-class GDSRegisterSIC5IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
-  override val name = GDS_REGISTER_SIC5_INDEX
-}
-
-class ONSSupplementSIC5IndexConnectorImpl @Inject()(val config: ICLConfig) extends IndexConnector {
-  override val name = ONS_SUPPLEMENT_SIC5_INDEX
-}
+import services.{FacetResults, SearchResult}
 
 trait IndexConnector {
 
@@ -162,35 +151,3 @@ trait IndexConnector {
   }
 }
 
-object QueryBooster {
-  def apply(fieldName: String, query: String, boostFactor: Float): Query = {
-    val splitSearchParams = query.toLowerCase.split(" ")
-    val queryBuilder      = new BooleanQuery.Builder()
-
-    queryBuilder.add(new BoostQuery(new TermQuery(new Term(fieldName, splitSearchParams.head)), boostFactor), Occur.SHOULD)
-    splitSearchParams.tail.foreach(value => queryBuilder.add(new TermQuery(new Term(fieldName, value)), Occur.SHOULD))
-    queryBuilder.build()
-  }
-}
-
-object FuzzyMatch {
-  private def fuzzySearch(fieldName: String, query: String): Query = {
-    val splitSearchParams = query.toLowerCase.split(" ")
-    val queryBuilder      = new BooleanQuery.Builder()
-
-    splitSearchParams.foreach(value => queryBuilder.add(new FuzzyQuery(new Term(fieldName, value)), Occur.SHOULD))
-    queryBuilder.build()
-  }
-
-  private def fuzzySearchAndBoostFirstTerm(fieldName: String, query: String): Query = {
-    val splitSearchParams = query.toLowerCase.split(" ")
-    val queryBuilder      = new BooleanQuery.Builder()
-
-    queryBuilder.add(new BoostQuery(new FuzzyQuery(new Term(fieldName, splitSearchParams.head)), 2), Occur.SHOULD)
-    splitSearchParams.tail.foreach(value => queryBuilder.add(new FuzzyQuery(new Term(fieldName, value)), Occur.SHOULD))
-    queryBuilder.build()
-  }
-
-  def apply(fieldName: String, query: String, analyzer: StandardAnalyzer, isBooster: Boolean = false): Query =
-    if (isBooster) fuzzySearchAndBoostFirstTerm(fieldName, query) else fuzzySearch(fieldName, query)
-}

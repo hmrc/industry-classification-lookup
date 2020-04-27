@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,14 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.{Document, Field, StringField, TextField}
 import org.apache.lucene.index._
 import org.apache.lucene.queryparser.classic.QueryParser
-import org.apache.lucene.queryparser.flexible.standard.builders.FuzzyQueryNodeBuilder
 import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
 import org.apache.lucene.util.QueryBuilder
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.play.PlaySpec
 
 
-class Lucene101Spec extends UnitSpec {
+class Lucene101Spec extends PlaySpec {
 
   "Wibble" should {
 
@@ -65,7 +64,7 @@ class Lucene101Spec extends UnitSpec {
 
       val result = searcher.search(qp.parse("Lucene^2 OR Science"), 5)
 
-      result.totalHits shouldBe 3
+      result.totalHits mustBe 3
 
       result.scoreDocs.toSeq map {
         result =>
@@ -73,7 +72,7 @@ class Lucene101Spec extends UnitSpec {
           val title = doc.get("title")
           val isbn = doc.get("isbn") //getFields("isbn").head.stringValue()
           (isbn, title)
-      } shouldBe Seq(("193398817", "Lucene in Action"), ("55320055Z", "Lucene for Dummies"), ("9900333X", "The Art of Computer Science"))
+      } mustBe Seq(("193398817", "Lucene in Action"), ("55320055Z", "Lucene for Dummies"), ("9900333X", "The Art of Computer Science"))
     }
 
     "foo2" in {
@@ -95,7 +94,7 @@ class Lucene101Spec extends UnitSpec {
 
       val result = searcher.search(query, 5)
 
-      result.totalHits shouldBe 2
+      result.totalHits mustBe 2
 
       result.scoreDocs.toSeq map {
         result =>
@@ -104,7 +103,7 @@ class Lucene101Spec extends UnitSpec {
           //getFields("title").head.stringValue()
           val isbn = doc.get("isbn") //getFields("isbn").head.stringValue()
           (isbn, title)
-      } shouldBe Seq(("193398817", "Lucene in Action"), ("55320055Z", "Lucene for Dummies"))
+      } mustBe Seq(("193398817", "Lucene in Action"), ("55320055Z", "Lucene for Dummies"))
     }
 
     "boost the first search term" in {
@@ -119,12 +118,12 @@ class Lucene101Spec extends UnitSpec {
 
       val result = searcher.search(query.build(), 5)
 
-      result.totalHits shouldBe 2
+      result.totalHits mustBe 2
 
       result.scoreDocs.map { res =>
         val doc = searcher.doc(res.doc)
         doc.get("title")
-      }.toSeq shouldBe Seq("Lucene for Dummies", "The Art of Computer Science")
+      }.toSeq mustBe Seq("Lucene for Dummies", "The Art of Computer Science")
     }
 
     "boost the first search term (each parameter added separately)" in {
@@ -133,7 +132,7 @@ class Lucene101Spec extends UnitSpec {
       val reader: IndexReader = DirectoryReader.open(index)
       val searcher = new IndexSearcher(reader)
 
-      val searchParameter  = "dummies managing computer"
+      val searchParameter = "dummies managing computer"
       val splitSearchParams = searchParameter.split(" ")
 
       val query = new BooleanQuery.Builder()
@@ -143,12 +142,12 @@ class Lucene101Spec extends UnitSpec {
 
       val result = searcher.search(query.build(), 5)
 
-      result.totalHits shouldBe 3
+      result.totalHits mustBe 3
 
       result.scoreDocs.map { res =>
         val doc = searcher.doc(res.doc)
         doc.get("title")
-      }.toSeq shouldBe Seq("Lucene for Dummies", "Managing Gigabytes", "The Art of Computer Science")
+      }.toSeq mustBe Seq("Lucene for Dummies", "Managing Gigabytes", "The Art of Computer Science")
     }
 
     "boost the first search term (first param in own boost and the rest in same TermQuery)" in {
@@ -157,7 +156,7 @@ class Lucene101Spec extends UnitSpec {
       val reader: IndexReader = DirectoryReader.open(index)
       val searcher = new IndexSearcher(reader)
 
-      val searchParameter  = "dummies managing computer"
+      val searchParameter = "dummies managing computer"
       val splitSearchParams = searchParameter.split(" ")
 
       val query = new BooleanQuery.Builder()
@@ -167,12 +166,12 @@ class Lucene101Spec extends UnitSpec {
 
       val result = searcher.search(query.build(), 5)
 
-      result.totalHits shouldBe 1
+      result.totalHits mustBe 1
 
       result.scoreDocs.map { res =>
         val doc = searcher.doc(res.doc)
         doc.get("title")
-      }.toSeq shouldBe Seq("Lucene for Dummies")
+      }.toSeq mustBe Seq("Lucene for Dummies")
     }
 
     "fuzzy search and boost first term" in {
@@ -181,7 +180,7 @@ class Lucene101Spec extends UnitSpec {
       val reader: IndexReader = DirectoryReader.open(index)
       val searcher = new IndexSearcher(reader)
 
-      val searchParameter  = "scence lucne gigbytes"
+      val searchParameter = "scence lucne gigbytes"
       val splitSearchParams = searchParameter.split(" ")
 
       val query = new BooleanQuery.Builder()
@@ -190,12 +189,12 @@ class Lucene101Spec extends UnitSpec {
 
       val result = searcher.search(query.build(), 5)
 
-      result.totalHits shouldBe 4
+      result.totalHits mustBe 4
 
       result.scoreDocs.map { res =>
         val doc = searcher.doc(res.doc)
         doc.get("title")
-      }.toSeq shouldBe Seq("The Art of Computer Science", "Managing Gigabytes", "Lucene in Action", "Lucene for Dummies")
+      }.toSeq mustBe Seq("The Art of Computer Science", "Managing Gigabytes", "Lucene in Action", "Lucene for Dummies")
     }
 
     "fuzzzzzzzy" should {
@@ -220,18 +219,18 @@ class Lucene101Spec extends UnitSpec {
 
         val result = searcher.search(query, 5)
 
-        result.totalHits shouldBe 0
+        result.totalHits mustBe 0
 
         val secondQuery = FuzzyMatch("title", "dumbies", isFuzzy = true)
 
         val resultTwo = searcher.search(secondQuery, 5)
 
-        resultTwo.totalHits shouldBe 1
+        resultTwo.totalHits mustBe 1
 
         resultTwo.scoreDocs.map { res =>
           val doc = searcher.doc(res.doc)
           doc.get("title")
-        }.toSeq shouldBe Seq("Lucene for Dummies")
+        }.toSeq mustBe Seq("Lucene for Dummies")
       }
 
       "kick in if the initial search returned no results (dumbies Gigggabytes)" in {
@@ -247,7 +246,7 @@ class Lucene101Spec extends UnitSpec {
 
           private def fuzzySearch(fieldName: String, query: String): Query = {
             val splitSearchParams = query.toLowerCase.split(" ")
-            val queryBuilder      = new BooleanQuery.Builder()
+            val queryBuilder = new BooleanQuery.Builder()
 
             splitSearchParams.foreach(value => queryBuilder.add(new FuzzyQuery(new Term(fieldName, value)), Occur.SHOULD))
             queryBuilder.build()
@@ -261,18 +260,18 @@ class Lucene101Spec extends UnitSpec {
 
         val result = searcher.search(query, 5)
 
-        result.totalHits shouldBe 0
+        result.totalHits mustBe 0
 
         val secondQuery = FuzzyMatch("title", "dumbies Gigggabytes", isFuzzy = true)
 
         val resultTwo = searcher.search(secondQuery, 5)
 
-        resultTwo.totalHits shouldBe 2
+        resultTwo.totalHits mustBe 2
 
         resultTwo.scoreDocs.map { res =>
           val doc = searcher.doc(res.doc)
           doc.get("title")
-        }.toSeq shouldBe Seq("Lucene for Dummies", "Managing Gigabytes")
+        }.toSeq mustBe Seq("Lucene for Dummies", "Managing Gigabytes")
       }
     }
   }

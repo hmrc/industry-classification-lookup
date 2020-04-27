@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package helpers
+package connectors
 
-import java.util.concurrent.TimeUnit.SECONDS
+import config.ICLConfig
+import connectors.utils.IndexConnector
+import javax.inject.{Inject, Singleton}
+import services.Indexes._
 
-import akka.util.Timeout
-import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-
-trait ControllerSpec extends PlaySpec with MockitoSugar {
-
-  private val FIVE = 5L
-  private implicit val timeout: Timeout = Timeout(FIVE, SECONDS)
-
+@Singleton
+class GDSRegisterSIC5IndexConnector @Inject()(val config: ICLConfig) extends IndexConnector {
+  override val name = GDS_REGISTER_SIC5_INDEX
 }
+
+
+

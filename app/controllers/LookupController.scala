@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,25 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-import config.ICLConfig
-import models.SicCode
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.LookupService
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class LookupControllerImpl @Inject()(val lookupService: LookupService,
-                                     val config: ICLConfig,
-                                     val authConnector: AuthConnector) extends LookupController {
-}
+class LookupController @Inject()(lookupService: LookupService,
+                                 val authConnector: AuthConnector,
+                                 controllerComponents: ControllerComponents)
+  extends BackendController(controllerComponents) with AuthorisedFunctions {
 
-trait LookupController extends BaseController with AuthorisedFunctions {
-
-  val lookupService: LookupService
-
-  def lookup(sicCodes: String): Action[AnyContent] = Action.async{ implicit request =>
+  def lookup(sicCodes: String): Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       lookupService.lookup(sicCodes.split(",").toList) match {
-        case Nil  => Future.successful(NoContent)
+        case Nil => Future.successful(NoContent)
         case list => Future.successful(Ok(Json.toJson(list.distinct)))
       }
     }

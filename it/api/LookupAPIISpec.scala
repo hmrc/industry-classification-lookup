@@ -19,6 +19,7 @@ package api
 import helpers.IntegrationSpecBase
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
+import play.api.test.Helpers._
 
 class LookupAPIISpec extends IntegrationSpecBase {
 
@@ -28,17 +29,17 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
     val sicCodeLookupResult = Json.parse(
       s"""
-        |[
-        | {
-        |   "code":"$sicCode",
-        |   "desc":"Growing of cereals (except rice), leguminous crops and oil seeds"
-        | }
-        |]
+         |[
+         | {
+         |   "code":"$sicCode",
+         |   "desc":"Growing of cereals (except rice), leguminous crops and oil seeds"
+         | }
+         |]
       """.stripMargin)
 
     "trying to lookup a sic code should use the correct url" in {
       val client = buildClient(s"/lookup/$sicCode")
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/lookup/$sicCode"
+      client.url mustBe s"http://localhost:$port/industry-classification-lookup/lookup/$sicCode"
     }
 
     "supplying a valid sic code should return a 200 and the sic code description as json" in {
@@ -47,10 +48,10 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
       setupSimpleAuthMocks()
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying an invalid sic code should return a 404" in {
@@ -59,9 +60,9 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
       setupSimpleAuthMocks()
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 204
+      response.status mustBe 204
     }
   }
 }

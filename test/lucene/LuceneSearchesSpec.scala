@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +18,25 @@ package lucene
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.{Document, Field, StringField, TextField}
-import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetCounts, SortedSetDocValuesFacetField}
-import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
+import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetField}
+import org.apache.lucene.facet.{FacetsCollector, FacetsConfig}
 import org.apache.lucene.index._
 import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, RAMDirectory}
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatestplus.play.PlaySpec
 
-class LuceneSearchesSpec extends UnitSpec {
+class LuceneSearchesSpec extends PlaySpec {
 
   "LuceneSearchesSpec" should {
 
     val analyzer = new StandardAnalyzer();
 
     def buildIndex() = {
-      val config            = new IndexWriterConfig(analyzer)
-      val index: Directory  = new RAMDirectory()
-      val indexWriter       = new IndexWriter(index, config)
-      val facetConfig       = new FacetsConfig()
+      val config = new IndexWriterConfig(analyzer)
+      val index: Directory = new RAMDirectory()
+      val indexWriter = new IndexWriter(index, config)
+      val facetConfig = new FacetsConfig()
 
       def addDoc(title: String, isbn: String, sector: String) {
         val doc = new Document
@@ -81,13 +81,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(q, tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSeq mustBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
     }
 
     "Simple multi-term AND search" in {
@@ -104,13 +104,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(bq.build(), tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 2
+      results.totalHits mustBe 2
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSeq mustBe Seq("Lucene for Dummies", "Lucene for Dummies 2")
     }
 
     "Simple multi-term OR search" in {
@@ -127,13 +127,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(bq.build(), tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("The Art of Computer Science", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSeq mustBe Seq("The Art of Computer Science", "Lucene for Dummies", "Lucene for Dummies 2")
     }
 
     "Simple multi-term OR search, boost dummies" in {
@@ -150,13 +150,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(bq.build(), tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("Lucene for Dummies", "Lucene for Dummies 2", "The Art of Computer Science")
+      }.toSeq mustBe Seq("Lucene for Dummies", "Lucene for Dummies 2", "The Art of Computer Science")
     }
 
 
@@ -176,13 +176,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(builder.build(), tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 4
+      results.totalHits mustBe 4
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("The Art of Computer Science", "Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSeq mustBe Seq("The Art of Computer Science", "Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
     }
 
     "Simple fuzzy query" in {
@@ -197,13 +197,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(q, tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSeq mustBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
     }
 
     "Simple prefix query" in {
@@ -218,13 +218,13 @@ class LuceneSearchesSpec extends UnitSpec {
       searcher.search(q, tdc)
 
       val results = tdc.topDocs(0, 5)
-      results.totalHits shouldBe 3
+      results.totalHits mustBe 3
 
       results.scoreDocs.map {
         result =>
           val doc = searcher.doc(result.doc)
           doc.get("title")
-      }.toSeq shouldBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
+      }.toSeq mustBe Seq("Lucene in Action", "Lucene for Dummies", "Lucene for Dummies 2")
     }
 
 

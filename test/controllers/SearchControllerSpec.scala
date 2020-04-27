@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,29 @@
 
 package controllers
 
+import config.ICLConfig
 import helpers.{AuthHelper, ControllerSpec}
 import models.SicCode
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import services.{LookupService, SearchResult}
-import uk.gov.hmrc.auth.core.{AuthConnector, PlayAuthConnector}
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+
+import scala.concurrent.Future
 
 class SearchControllerSpec extends ControllerSpec with AuthHelper {
 
   val mockLookupService: LookupService = mock[LookupService]
+  val mockICLConfig: ICLConfig = mock[ICLConfig]
   override val mockAuthConnector: PlayAuthConnector = mock[PlayAuthConnector]
 
   trait Setup {
-    val controller: SearchController = new SearchController {
-      val lookupService: LookupService = mockLookupService
-      val authConnector : AuthConnector = mockAuthConnector
-      val defaultIndex = "bar"
+    val controller: SearchController = new SearchController(mockLookupService, mockICLConfig, mockAuthConnector, stubControllerComponents()) {
+      override val defaultIndex: String = "bar"
     }
   }
 
@@ -57,21 +60,21 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
       when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(sicCodeLookupResult)
-      mockAuthorisedRequest({})
+      mockAuthorisedRequest(Future.successful({}))
 
-      val result: Result = controller.search(query, Some("foo"), None, None)(FakeRequest())
-      status(result) shouldBe 200
-      bodyAsJson(result) shouldBe sicCodeResultAsJson
+      val result: Future[Result] = controller.search(query, Some("foo"), None, None)(FakeRequest())
+      status(result) mustBe 200
+      contentAsJson(result) mustBe sicCodeResultAsJson
     }
 
     "return a 404 when no description is returned from LookupService" in new Setup {
       when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(SearchResult(0, 0, Seq(), Seq()))
-      mockAuthorisedRequest({})
+      mockAuthorisedRequest(Future.successful({}))
 
-      val result: Result = controller.search(query, Some("foo"), None, None)(FakeRequest())
-      status(result) shouldBe 200
-      bodyAsJson(result) shouldBe Json.obj(
+      val result: Future[Result] = controller.search(query, Some("foo"), None, None)(FakeRequest())
+      status(result) mustBe 200
+      contentAsJson(result) mustBe Json.obj(
         "numFound" -> 0,
         "nonFilteredFound" -> 0,
         "results" -> Json.arr(),
@@ -82,11 +85,11 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     "Use the default index when one isn't specified" in new Setup {
       when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
         .thenReturn(sicCodeLookupResult)
-      mockAuthorisedRequest({})
+      mockAuthorisedRequest(Future.successful({}))
 
-      val result: Result = controller.search(query, None, None, None)(FakeRequest())
-      status(result) shouldBe 200
-      bodyAsJson(result) shouldBe sicCodeResultAsJson
+      val result: Future[Result] = controller.search(query, None, None, None)(FakeRequest())
+      status(result) mustBe 200
+      contentAsJson(result) mustBe sicCodeResultAsJson
     }
 
   }

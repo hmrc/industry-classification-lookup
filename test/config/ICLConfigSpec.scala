@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,22 @@
 
 package config
 
-import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import play.api.{Configuration, Environment}
-import play.api.Mode.Mode
-import play.api.libs.json.{JsValue, Json}
+import com.typesafe.config.ConfigObject
 import org.mockito.ArgumentMatchers.{eq => eqTo}
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import play.api.ConfigLoader.configObjectLoader
+import play.api.Configuration
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class ICLConfigSpec extends PlaySpec with MockitoSugar {
   val mockConfig: Configuration = mock[Configuration]
-  val mockEnv: Environment = mock[Environment]
+  val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
 
   trait Setup {
-    val msConfig: ICLConfig = new ICLConfig {
-      override protected def mode: Mode = mockEnv.mode
-      override protected def runModeConfiguration: Configuration = mockConfig
-    }
+    val msConfig: ICLConfig = new ICLConfig(mockServicesConfig, mockConfig)
   }
 
   "getConfigObject" should {
@@ -48,11 +47,11 @@ class ICLConfigSpec extends PlaySpec with MockitoSugar {
       )
     )
 
-    val confObject = Configuration.from(map).getObject(key)
+    val confObject = Configuration.from(map).getOptional[ConfigObject](key)
 
     "return a config object as json given a key" in new Setup {
 
-      when(mockConfig.getObject(eqTo(key))).thenReturn(confObject)
+      when(mockConfig.getOptional[ConfigObject](eqTo(key))(eqTo(configObjectLoader))).thenReturn(confObject)
 
       val retrievedConfig: JsValue = msConfig.getConfigObject(key)
 
@@ -71,7 +70,7 @@ class ICLConfigSpec extends PlaySpec with MockitoSugar {
 
     "throw an unchecked exception when the config object isn't found using the supplied key" in new Setup {
 
-      when(mockConfig.getObject(eqTo(key))).thenReturn(None)
+      when(mockConfig.getOptional[ConfigObject](eqTo(key))(eqTo(configObjectLoader))).thenReturn(None)
 
       val ex: Throwable = intercept[Throwable](msConfig.getConfigObject(key))
 

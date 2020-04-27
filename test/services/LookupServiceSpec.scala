@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,24 @@
 package services
 
 import config.ICLConfig
-import connectors.IndexConnector
+import connectors.{GDSRegisterSIC5IndexConnector, ONSSupplementSIC5IndexConnector}
 import models.SicCode
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsObject, Json}
 import services.Indexes._
-import uk.gov.hmrc.play.test.UnitSpec
 
-class LookupServiceSpec extends UnitSpec with MockitoSugar {
+class LookupServiceSpec extends PlaySpec with MockitoSugar {
 
   val mockConfig: ICLConfig = mock[ICLConfig]
-  val mockIndex: IndexConnector = mock[IndexConnector]
+  val mockONSIndex: ONSSupplementSIC5IndexConnector = mock[ONSSupplementSIC5IndexConnector]
+  val mockGDSIndex: GDSRegisterSIC5IndexConnector = mock[GDSRegisterSIC5IndexConnector]
 
   trait Setup {
-    val service: LookupService = new LookupService {
-      val config: ICLConfig = mockConfig
-      val indexes = Map(ONS_SUPPLEMENT_SIC5_INDEX -> mockIndex, GDS_REGISTER_SIC5_INDEX -> mockIndex)
+    val service: LookupService = new LookupService(mockGDSIndex, mockONSIndex) {
+      override val indexes = Map(ONS_SUPPLEMENT_SIC5_INDEX -> mockONSIndex, GDS_REGISTER_SIC5_INDEX -> mockGDSIndex)
     }
   }
 
@@ -62,13 +62,13 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockIndex.lookup(any())).thenReturn(
+      when(mockGDSIndex.lookup(any())).thenReturn(
         None,
         None
       )
 
       val result = service.lookup(searchList)
-      result shouldBe List.empty[SicCode]
+      result mustBe List.empty[SicCode]
     }
 
     "return a list of flattened codes (all matching)" in new Setup {
@@ -77,13 +77,13 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockIndex.lookup(any())).thenReturn(
+      when(mockGDSIndex.lookup(any())).thenReturn(
         Some(SicCode(sicCode, "test description")),
         Some(SicCode(sicCode, "test description"))
       )
 
       val result = service.lookup(searchList)
-      result shouldBe List(SicCode(sicCode, "test description"), SicCode(sicCode, "test description"))
+      result mustBe List(SicCode(sicCode, "test description"), SicCode(sicCode, "test description"))
     }
 
     "return a list of flattened codes (single result passed in)" in new Setup {
@@ -92,12 +92,12 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockIndex.lookup(any())).thenReturn(
+      when(mockGDSIndex.lookup(any())).thenReturn(
         Some(SicCode(sicCode, "test description"))
       )
 
       val result = service.lookup(searchList)
-      result shouldBe List(SicCode(sicCode, "test description"))
+      result mustBe List(SicCode(sicCode, "test description"))
     }
 
     "return a list of flattened codes (some matching)" in new Setup {
@@ -106,13 +106,13 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockIndex.lookup(any())).thenReturn(
+      when(mockGDSIndex.lookup(any())).thenReturn(
         Some(SicCode(sicCode, "test description")),
         None
       )
 
       val result = service.lookup(searchList)
-      result shouldBe List(SicCode(sicCode, "test description"))
+      result mustBe List(SicCode(sicCode, "test description"))
     }
   }
 
@@ -121,9 +121,9 @@ class LookupServiceSpec extends UnitSpec with MockitoSugar {
     "return the results of the index query" in new Setup {
       val query = "Foo"
       val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
-      when(mockIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false))).thenReturn(result)
+      when(mockONSIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false))).thenReturn(result)
 
-      service.search(query, ONS_SUPPLEMENT_SIC5_INDEX) shouldBe result
+      service.search(query, ONS_SUPPLEMENT_SIC5_INDEX) mustBe result
     }
   }
 }

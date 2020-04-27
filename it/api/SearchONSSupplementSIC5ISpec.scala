@@ -4,8 +4,8 @@ package api
 import helpers.SICSearchHelper
 import play.api.libs.json.{JsArray, JsObject, Json}
 import play.api.libs.ws.WSResponse
+import play.api.test.Helpers._
 import services.Indexes.ONS_SUPPLEMENT_SIC5_INDEX
-import services.QueryType._
 
 
 class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
@@ -14,12 +14,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
   s"calling GET /search for $indexName index" when {
 
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser=Some(true))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser = Some(true))
 
     "trying to search for a sic code should use the correct url" in {
       val query = "Dairy+farming"
-      val client = buildQuery(query, indexName = indexName, queryParser=Some(true))
-      client.url shouldBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true"
+      val client = buildQuery(query, indexName = indexName, queryParser = Some(true))
+      client.url mustBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -41,12 +41,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3),queryParser=Some(true))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(3), queryParser = Some(true))
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying the query 'Dairy+farming' with the sector query string 'N' should return a 200" +
@@ -68,12 +68,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("Dairy+farming", indexName = indexName, Some(5), sector = Some("N"),queryParser=Some(true))
+      val client = buildQuery("Dairy+farming", indexName = indexName, Some(5), sector = Some("N"), queryParser = Some(true))
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a valid query and requesting page 3 should return a 200 and the sic code descriptions skipping pages 1 & 2" in {
@@ -81,12 +81,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
       setupSimpleAuthMocks()
 
       // get results from the beginning to the end of page 3
-      val pages1to3 = buildQueryAll("support", 15, 1).get().json
+      val pages1to3 = await(buildQueryAll("support", 15, 1).get()).json
       val p1to3docs = pages1to3.as[JsObject].value("results").as[JsArray]
 
       val sicCodeLookupResult = Json.obj(
-        "numFound"          -> 48,
-        "nonFilteredFound"  -> 48,
+        "numFound" -> 48,
+        "nonFilteredFound" -> 48,
         "results" -> Json.arr(
           p1to3docs.value(10),
           p1to3docs.value(11),
@@ -109,10 +109,10 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       val client = buildQueryAll("support", 5, 3)
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
@@ -139,12 +139,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryParser=Some(true))
+      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryParser = Some(true))
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a valid query but getting no results and no facets should return the corresponding json" in {
@@ -157,12 +157,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=Some(true))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10), queryParser = Some(true))
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a query with no journey should default to query builder" in {
@@ -188,14 +188,14 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
         )
       )
-      val client = buildQuery("support silviculture", indexName = indexName, Some(3),queryParser=None, queryBoostFirstTerm = None)
+      val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryParser = None, queryBoostFirstTerm = None)
 
       setupSimpleAuthMocks()
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
 
     }
 
@@ -225,10 +225,10 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       val client = buildQuery("support Silviculture", indexName = indexName, Some(3), queryParser = None, queryBoostFirstTerm = Some(true))
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json   shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a valid query but getting no results and no facets should return the corresponding json (QUERY BOOSTER)" in {
@@ -241,12 +241,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=Some(true))
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10), queryParser = Some(true))
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions (FUZZY QUERY)" in {
@@ -263,12 +263,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("SiviculturE", indexName = indexName, Some(3), queryParser=None, queryBoostFirstTerm = None)
+      val client = buildQuery("SiviculturE", indexName = indexName, Some(3), queryParser = None, queryBoostFirstTerm = None)
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
 
     "supplying a valid query but getting no results and no facets should return the corresponding json (FUZZY QUERY)" in {
@@ -281,12 +281,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       setupSimpleAuthMocks()
 
-      val client = buildQuery("testtesttest", indexName = indexName, Some(10),queryParser=None, queryBoostFirstTerm = None)
+      val client = buildQuery("testtesttest", indexName = indexName, Some(10), queryParser = None, queryBoostFirstTerm = None)
 
-      val response: WSResponse = client.get()
+      val response: WSResponse = await(client.get())
 
-      response.status shouldBe 200
-      response.json shouldBe sicCodeLookupResult
+      response.status mustBe 200
+      response.json mustBe sicCodeLookupResult
     }
   }
 
