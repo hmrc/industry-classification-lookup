@@ -25,8 +25,7 @@ import org.apache.lucene.facet.sortedset.SortedSetDocValuesFacetField
 import org.apache.lucene.index.{IndexWriter, IndexWriterConfig}
 import org.apache.lucene.store.{Directory, NIOFSDirectory}
 import sbt.Keys._
-import sbt.Path.richFile
-import sbt.{Append, Compile, ConsoleLogger, Def, File, TaskKey}
+import sbt.{Append, Compile, ConsoleLogger, Def, File, SettingKey, TaskKey, fileToRichFile}
 import com.typesafe.sbt.SbtNativePackager.Universal
 import com.typesafe.sbt.packager.MappingsHelper.contentOf
 
@@ -59,9 +58,7 @@ object LuceneIndexCreator {
 
     resourceGenerators in Compile += indexBuildTask,
 
-    mappings in Universal <++= (packageBin in Compile, resourceManaged in Compile) map { (_, managed) => {
-      contentOf( managed )
-    } },
+    mappings in Universal ++= contentOf((resourceManaged in Compile).value),
 
     // clean the old location where indexes were stored
     cleanFiles += baseDirectory { base => base / "conf"/ "index" }.value
