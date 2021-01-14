@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-import java.io.File
-
-import sbt.Path.richFile
-
 // Build the index for the GDS Register five digit variant constructed from the 2003 & 2007 lists
 object GDSSicBuilder extends SICIndexBuilder {
 

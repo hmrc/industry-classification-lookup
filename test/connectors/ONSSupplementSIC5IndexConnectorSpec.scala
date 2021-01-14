@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
   val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
 
   val mockICLConfig: ICLConfig = new ICLConfig(mockServicesConfig, mockConfig) {
-    override def getConfigString(x: String) = "target/scala-2.11/resource_managed/main/conf/index"
+    override def getConfigString(x: String) = "target/scala-2.12/resource_managed/main/conf/index"
   }
 
   trait Setup {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ trait SICIndexSpec extends PlaySpec {
 
   val analyzer = new StandardAnalyzer(stopSet)
 
-  lazy val indexPath = FileSystems.getDefault.getPath("target", "scala-2.11", "resource_managed", "main", "conf", "index", indexName)
+  lazy val indexPath = FileSystems.getDefault.getPath("target", "scala-2.12", "resource_managed", "main", "conf", "index", indexName)
 
   def openIndex() = new NIOFSDirectory(indexPath)
 

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import TestPhases.oneForkedJvmPerTest
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import scoverage.ScoverageKeys
@@ -43,18 +42,11 @@ lazy val microservice = Project(appName, file("."))
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    scalaVersion                                  := "2.11.11",
+    scalaVersion                                  := "2.12.12",
     libraryDependencies                           ++= AppDependencies(),
-    dependencyOverrides ++= Set(
-      "com.typesafe.akka" %% "akka-actor" % "2.5.23",
-      "com.typesafe.akka" %% "akka-protobuf" % "2.5.23",
-      "com.typesafe.akka" %% "akka-slf4j" % "2.5.23",
-      "com.typesafe.akka" %% "akka-stream" % "2.5.23"
-    ),
     retrieveManaged                               := true,
     evictionWarningOptions in update              := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     Keys.fork in IntegrationTest                  := false,
-    testGrouping in IntegrationTest               := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
     parallelExecution in IntegrationTest          := false,
     resolvers                                     += Resolver.bintrayRepo("hmrc", "releases"),
     resolvers                                     += Resolver.jcenterRepo,
