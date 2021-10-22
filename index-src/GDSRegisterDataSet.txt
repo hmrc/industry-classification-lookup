@@ -737,7 +737,7 @@
 63120	Web portals
 63900	Other information service activities
 63910	News agency activities
-63990	Other information service activities not elsewhere classified
+63990	Distance sales of Goods (below the UK VAT threshold) for OSS purposes
 64000	Financial service activities, except insurance and pension funding
 64100	Monetary intermediation
 64110	Central banking

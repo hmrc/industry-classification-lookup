@@ -13617,6 +13617,7 @@
 63990	Press clipping service
 63990	Press cutting agency
 63990	Telephone based information services
+63990	Distance sales of Goods (below the UK VAT threshold) for OSS purposes
 64110	Central banking
 64110	Bank of England
 64191	Banks
