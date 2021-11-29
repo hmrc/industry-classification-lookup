@@ -22,7 +22,7 @@ private object AppDependencies {
 }
 
 object LuceneDependencies {
-  private val luceneVersion             = "7.1.0"
+  private val luceneVersion = "7.1.0"
 
   def apply() = Seq(
     "org.apache.lucene" % "lucene-core" % luceneVersion,
@@ -32,37 +32,35 @@ object LuceneDependencies {
 }
 
 object MainDependencies {
-  private val authClientVersion        = "5.6.0-play-26"
-  private val bootstrapPlayVersion   = "5.0.0"
-  private val playReactiveMongoVersion = "8.0.0-play-26"
+  private val bootstrapPlayVersion = "5.16.0"
+  private val playReactiveMongoVersion = "8.0.0-play-28"
 
   def apply() = Seq(
-    "uk.gov.hmrc" %% "bootstrap-backend-play-26" % bootstrapPlayVersion,
+    "uk.gov.hmrc" %% "bootstrap-backend-play-28" % bootstrapPlayVersion,
     "uk.gov.hmrc" %% "simple-reactivemongo" % playReactiveMongoVersion,
-    "uk.gov.hmrc" %% "auth-client" % authClientVersion
   )
 }
 
 trait TestDependencies {
-  val scalaTestPlusVersion  = "3.1.3"
-  val pegdownVersion        = "1.6.0"
-  val mockitoCoreVersion    = "3.3.3"
-  val wiremockVersion       = "2.26.3"
+  val scalaTestPlusVersion = "5.1.0"
+  val mockitoCoreVersion = "4.1.0"
+  val wiremockVersion = "2.31.0"
 
   val scope: Configuration
   val test: Seq[ModuleID]
 
   lazy val coreTestDependencies = Seq(
-    "org.scalatestplus.play"  %%  "scalatestplus-play"  % scalaTestPlusVersion  % scope,
-    "org.pegdown"             %   "pegdown"             % pegdownVersion        % scope,
-    "com.typesafe.play"       %%  "play-test"           % PlayVersion.current   % scope
+    "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
+    "com.vladsch.flexmark" % "flexmark-all" % "0.36.8" % scope,
+    "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
   )
 }
 
 object UnitTestDependencies extends TestDependencies {
   override val scope = Test
-  override val test  = coreTestDependencies ++ Seq(
-    "org.mockito" % "mockito-core" % mockitoCoreVersion % scope
+  override val test = coreTestDependencies ++ Seq(
+    "org.mockito" % "mockito-core" % mockitoCoreVersion % scope,
+    "org.scalatestplus" %% "mockito-3-4" % "3.2.10.0" % scope
   )
 
   def apply() = test
@@ -70,8 +68,8 @@ object UnitTestDependencies extends TestDependencies {
 
 object IntegrationTestDependencies extends TestDependencies {
   override val scope = IntegrationTest
-  override val test  =  coreTestDependencies ++ Seq(
-    "com.github.tomakehurst"  %  "wiremock-jre8" % wiremockVersion  % scope
+  override val test = coreTestDependencies ++ Seq(
+    "com.github.tomakehurst" % "wiremock-jre8-standalone" % wiremockVersion % scope
   )
 
   def apply() = test

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import java.nio.file.{FileSystem, FileSystems, Path}
-
-import org.apache.commons.io.FileUtils
+import com.typesafe.sbt.SbtNativePackager.Universal
+import com.typesafe.sbt.packager.MappingsHelper.contentOf
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document._
@@ -25,9 +24,7 @@ import org.apache.lucene.facet.sortedset.SortedSetDocValuesFacetField
 import org.apache.lucene.index.{IndexWriter, IndexWriterConfig}
 import org.apache.lucene.store.{Directory, NIOFSDirectory}
 import sbt.Keys._
-import sbt.{Append, Compile, ConsoleLogger, Def, File, SettingKey, TaskKey, fileToRichFile}
-import com.typesafe.sbt.SbtNativePackager.Universal
-import com.typesafe.sbt.packager.MappingsHelper.contentOf
+import sbt.{Append, Compile, ConsoleLogger, Def, File, TaskKey, fileToRichFile}
 
 object LuceneIndexCreator {
 
@@ -78,11 +75,6 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
   type AddDocument = SicDocument => Boolean
 
   val log = ConsoleLogger()
-  private val fs: FileSystem = FileSystems.getDefault
-
-  def clean(rootPath: Path) {
-    FileUtils.deleteDirectory(rootPath.toFile)
-  }
 
   def buildIndex(rootPath: File): File = {
     val sic8Path = rootPath / name
@@ -91,7 +83,7 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
     val index: Directory = new NIOFSDirectory(indexSic8Path);
 
     // Only build if missing
-    if( index.listAll().size == 0 ) {
+    if( index.listAll().length == 0 ) {
 
       log.info(s"""Building new index "$name" into ${indexSic8Path.toAbsolutePath}""")
 

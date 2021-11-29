@@ -16,24 +16,25 @@
 
 package connectors.utils
 
-import java.nio.file.FileSystems
-
 import config.ICLConfig
 import models.SicCode
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
-import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
 import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
+import org.apache.lucene.facet.{DrillDownQuery, DrillSideways, FacetsCollector, FacetsConfig}
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.QueryBuilder
-import play.api.Logger
-import services.QueryType.QUERY_PARSER
+import play.api.Logging
+import services.QueryType.{QUERY_BOOSTER, QUERY_BUILDER, QUERY_PARSER}
 import services.{FacetResults, SearchResult}
 
-trait IndexConnector {
+import java.nio.file.FileSystems
+import collection.JavaConverters._
+
+trait IndexConnector extends Logging {
 
   val name: String
   val FIELD_CODE = "code"
@@ -46,7 +47,6 @@ trait IndexConnector {
   val indexLocation = config.getConfigString("index.path")
 
   val analyzer: StandardAnalyzer = {
-    import scala.collection.JavaConverters._
     val stopWords = List(
       "a", "an", "and", "are", "as", "at", "be", "but", "by",
       "for", "if", "in", "into", "is", // "it",
@@ -59,7 +59,7 @@ trait IndexConnector {
   }
 
   def index(indexName: String): NIOFSDirectory = {
-    val path = FileSystems.getDefault().getPath(indexLocation, indexName)
+    val path = FileSystems.getDefault.getPath(indexLocation, indexName)
     new NIOFSDirectory(path)
   }
 
@@ -79,7 +79,7 @@ trait IndexConnector {
 
     results.totalHits match {
       case 0 =>
-        Logger.info(s"Search for SIC code $sicCode found nothing")
+        logger.info(s"Search for SIC code $sicCode found nothing")
         None
       case _ => Some(extractSic(results.scoreDocs(0)))
     }
@@ -113,14 +113,14 @@ trait IndexConnector {
     results.totalHits match {
       case 0 =>
         if(!queryType.contains(QUERY_PARSER) && !isFuzzyExecuted) {
-          Logger.info(s"""Search for SIC codes with query "$query" found nothing performing fuzzy search""")
+          logger.info(s"""Search for SIC codes with query "$query" found nothing performing fuzzy search""")
           search(query, pageResults, page, sector, queryType, true)
         } else {
-          Logger.info(s"""Search for SIC codes with query "$query" found nothing""")
+          logger.info(s"""Search for SIC codes with query "$query" found nothing""")
           SearchResult(0, 0, Seq(), Seq())
         }
       case n =>
-        Logger.info(s"""Search for SIC codes with query "$query" found $n results""")
+        logger.info(s"""Search for SIC codes with query "$query" found $n results""")
         val sics = results.scoreDocs.toSeq map extractSic
         val facetResults: Seq[FacetResults] = {
           result.facets.getTopChildren(1000, FIELD_SECTOR).labelValues.toSeq map { lv =>
@@ -133,7 +133,6 @@ trait IndexConnector {
   }
 
   private[connectors] def buildQuery(query: String, queryType: Option[String] = None, isFuzzySearchNeeded: Boolean): Query = {
-    import services.QueryType._
     if (isFuzzySearchNeeded) {
       FuzzyMatch(FIELD_SEARCH_TERMS, query, analyzer, queryType.contains(QUERY_BOOSTER))
     } else {

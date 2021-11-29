@@ -1,0 +1,1 @@
+sbt "run 9875 -Dapplication.router=testOnlyDoNotUseInAppConf.Routes -Dconfig.resource=application.conf"
