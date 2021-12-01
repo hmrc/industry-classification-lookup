@@ -884,7 +884,7 @@
 80200	Security systems service activities
 80300	Investigation activities
 81000	Services to buildings and landscape activities
-81100	Combined facilities support activities
+81100	Combined facilities support activities (This includes 98000 - Residents property management from the Companies House public record)
 81200	Cleaning activities
 81210	General cleaning of buildings
 81220	Other building and industrial cleaning activities
@@ -1009,7 +1009,6 @@
 96040	Physical well-being activities
 96090	Other personal service activities not elsewhere classified
 97000	Activities of households as employers of domestic personnel
-98000	Undifferentiated goods- and services-producing activities of private households for own use
 98100	Undifferentiated goods-producing activities of private households for own use
 98200	Undifferentiated service-producing activities of private households for own use
 99000	Activities of extraterritorial organisations and bodies
