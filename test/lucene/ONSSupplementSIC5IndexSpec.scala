@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
     Seq(
       ST("Sloe growing", 4,
         ("01240", "Sloe growing"), Seq("growing")),
-      ST("Growing of cereals (except rice), leguminous crops and oil seeds", 4,
-        ("01110", "Growing of cereals (except rice), leguminous crops and oil seeds"), Seq("Growing")),
-      ST("Growing of rice", 4, ("01120", "Growing of rice"), Seq("Growing"))
+      ST("Barley growing", 4,
+        ("01110", "Barley growing"), Seq("growing")),
+      ST("Rice growing", 4, ("01120", "Rice growing"), Seq("growing"))
     ).foreach { searchTerm =>
       s"""return at least ${searchTerm.numMin} result when searching for "${searchTerm.query}"  with a top hit of ${searchTerm.topHit}""" in {
         withSearcher { searcher =>
@@ -126,7 +126,7 @@ class ONSSupplementSIC5IndexSpec extends SICIndexSpec {
         lv => lv.label -> lv.value
       }
 
-      val expectedResult = Seq("B" -> 18, "C" -> 12, "A" -> 5, "N" -> 4, "R" -> 4, "J" -> 2, "H" -> 1, "O" -> 1, "P" -> 1)
+      val expectedResult = Seq("B" -> 16, "C" -> 12, "N" -> 3, "R" -> 3, "A" -> 2, "J" -> 2, "O" -> 1, "P" -> 1)
       val resultsCount = expectedResult.map(_._2).sum
 
       facetResult.toSeq mustBe expectedResult

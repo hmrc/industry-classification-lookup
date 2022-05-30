@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,11 @@ class GDSRegisterSIC5IndexSpec extends SICIndexSpec {
 
   "GDS Sic search" should {
     Map(
-      "01000" -> "Crop and animal production, hunting and related service activities",
-      "01100" -> "Growing of non-perennial crops",
       "01110" -> "Growing of cereals (except rice), leguminous crops and oil seeds",
       "01120" -> "Growing of rice",
-      "99000" -> "Activities of extraterritorial organisations and bodies"
+      "01130" -> "Growing of vegetables and melons, roots and tubers",
+      "01140" -> "Growing of sugar cane",
+      "99000" -> "Activities of extraterritorial organizations and bodies"
     ).foreach {
       case (searchCode, searchDesc) =>
         s"find the correct single result document for $indexName search with $searchCode" in {
@@ -57,9 +57,9 @@ class GDSRegisterSIC5IndexSpec extends SICIndexSpec {
     }
 
     Seq(
-      ST("Crop and animal production, hunting and related service activities", 1,
-        ("01000", "Crop and animal production, hunting and related service activities"), Seq("activities")),
-      ST("Growing of rice", 4, ("01120", "Growing of rice"), Seq("Growing"))
+      ST("Growing of cereals (except rice), leguminous crops and oil seeds", 1,
+        ("01110", "Growing of cereals (except rice), leguminous crops and oil seeds"), Seq("leguminous")),
+      ST("Growing of sugar cane", 4, ("01140", "Growing of sugar cane"), Seq("Growing"))
     ).foreach { searchTerm =>
       s"""return at least ${searchTerm.numMin} result when searching for "${searchTerm.query}"  with a top hit of ${searchTerm.topHit}""" in {
         withSearcher { searcher =>
@@ -91,8 +91,7 @@ class GDSRegisterSIC5IndexSpec extends SICIndexSpec {
 
     Seq(
       "Support",
-      "Growing",
-      "activities"
+      "Growing"
     ).foreach { queryString =>
       s"""return page 2 & 3 results when searching for "$queryString" """ in {
         withSearcher { searcher =>
@@ -151,7 +150,7 @@ class GDSRegisterSIC5IndexSpec extends SICIndexSpec {
         lv => lv.label -> lv.value
       }
 
-      val expectedResult = Seq("N" -> 6, "A" -> 5, "B" -> 3, "H" -> 3, "P" -> 1, "R" -> 1)
+      val expectedResult = Seq("A" -> 3, "N" -> 3, "B" -> 2, "H" -> 1, "P" -> 1, "R" -> 1)
       val resultsCount = expectedResult.map(_._2).sum
 
       facetResult mustBe expectedResult

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -161,11 +161,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
     "Should perform second search with a fuzzy match if first search has no match" in new Setup {
       val result: SearchResult = onsIndex.search("XXX", queryType = Some(journey))
       result.results mustBe Seq(
-        SicCode("20412", "Wax (manufacture)"),
         SicCode("25730", "Axe (manufacture)"),
         SicCode("69203", "Tax consultancy"),
         SicCode("16240", "Box pallet (manufacture)"),
-        SicCode("19201", "Paraffin wax (manufacture)")
+        SicCode("19201", "Paraffin wax (manufacture)"),
+        SicCode("20412", "Polishing wax (manufacture)")
       )
     }
 
