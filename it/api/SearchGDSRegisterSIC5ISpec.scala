@@ -23,16 +23,15 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 4,
-        "nonFilteredFound" -> 4,
+        "numFound" -> 3,
+        "nonFilteredFound" -> 3,
         "results" -> Json.arr(
           Json.obj("code" -> "01500", "desc" -> "Mixed farming"),
           Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle"),
-          Json.obj("code" -> "10500", "desc" -> "Manufacture of dairy products")
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 1),
           Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
         )
       )
@@ -52,13 +51,12 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 1,
-        "nonFilteredFound" -> 4,
+        "nonFilteredFound" -> 3,
         "results" -> Json.arr(
           Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 1),
           Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
         )
       )
@@ -82,20 +80,16 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
       val p1to3docs = pages1to3.as[JsObject].value("results").as[JsArray]
 
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 19,
-        "nonFilteredFound" -> 19,
+        "numFound" -> 11,
+        "nonFilteredFound" -> 11,
         "results" -> Json.arr(
-          p1to3docs.value(10),
-          p1to3docs.value(11),
-          p1to3docs.value(12),
-          p1to3docs.value(13),
-          p1to3docs.value(14)
+          p1to3docs.value(10)
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 6),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 5),
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 3),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 3),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1),
           Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 1)
         )
@@ -107,22 +101,24 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       response.status mustBe 200
       response.json mustBe sicCodeLookupResult
+
+      println(s"response.json = ${response.json}")
     }
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 20,
-        "nonFilteredFound" -> 20,
+        "numFound" -> 12,
+        "nonFilteredFound" -> 12,
         "results" -> Json.arr(
           Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
           Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "52200", "desc" -> "Support activities for transportation")
+          Json.obj("code" -> "85600", "desc" -> "Educational support services")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 6),
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 3),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 3),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 4),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1),
           Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 1)
         )
@@ -158,16 +154,15 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
     "supplying a query with no journey should default to query builder" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 4,
-        "nonFilteredFound" -> 4,
+        "numFound" -> 3,
+        "nonFilteredFound" -> 3,
         "results" -> Json.arr(
           Json.obj("code" -> "01500", "desc" -> "Mixed farming"),
           Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle"),
-          Json.obj("code" -> "10500", "desc" -> "Manufacture of dairy products")
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 1),
           Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
         )
       )
@@ -184,20 +179,20 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
     "return a valid set of results when using Query booster" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 20,
-        "nonFilteredFound" -> 20,
+        "numFound" -> 12,
+        "nonFilteredFound" -> 12,
         "results" -> Json.arr(
           Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "52200", "desc" -> "Support activities for transportation"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support activities"),
-          Json.obj("code" -> "82000", "desc" -> "Office administrative, office support and other business support activities"),
-          Json.obj("code" -> "01610", "desc" -> "Support activities for crop production")
+          Json.obj("code" -> "85600", "desc" -> "Educational support services"),
+          Json.obj("code" -> "01610", "desc" -> "Support activities for crop production"),
+          Json.obj("code" -> "52290", "desc" -> "Other transportation support activities"),
+          Json.obj("code" -> "90020", "desc" -> "Support activities to performing arts")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 6),
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 3),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 3),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 4),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1),
           Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 1)
         )

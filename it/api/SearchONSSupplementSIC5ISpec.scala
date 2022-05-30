@@ -24,15 +24,15 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 46,
-        "nonFilteredFound" -> 46,
+        "numFound" -> 44,
+        "nonFilteredFound" -> 44,
         "results" -> Json.arr(
           Json.obj("code" -> "01410", "desc" -> "Dairy farming"),
           Json.obj("code" -> "01430", "desc" -> "Stud farming"),
           Json.obj("code" -> "01450", "desc" -> "Goat farming")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 28),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 26),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
           Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 8),
           Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
@@ -54,12 +54,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
       val sicCodeLookupResult = Json.obj(
         "numFound" -> 1,
-        "nonFilteredFound" -> 46,
+        "nonFilteredFound" -> 44,
         "results" -> Json.arr(
           Json.obj("code" -> "77390", "desc" -> "Dairy machinery rental (non agricultural)")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 28),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 26),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 9),
           Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 8),
           Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 1)
@@ -85,8 +85,8 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
       val p1to3docs = pages1to3.as[JsObject].value("results").as[JsArray]
 
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 48,
-        "nonFilteredFound" -> 48,
+        "numFound" -> 40,
+        "nonFilteredFound" -> 40,
         "results" -> Json.arr(
           p1to3docs.value(10),
           p1to3docs.value(11),
@@ -95,13 +95,12 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           p1to3docs.value(14)
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 16),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 5),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 3),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
           Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
         )
@@ -117,21 +116,20 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 49,
-        "nonFilteredFound" -> 49,
+        "numFound" -> 41,
+        "nonFilteredFound" -> 41,
         "results" -> Json.arr(
           Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)")
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 16),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 3),
           Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
         )
@@ -169,21 +167,20 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
 
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 49,
-        "nonFilteredFound" -> 49,
+        "numFound" -> 41,
+        "nonFilteredFound" -> 41,
         "results" -> Json.arr(
           Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)")
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 16),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 3),
           Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
         )
@@ -201,21 +198,20 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
     "return a valid set of results when using Query booster" in {
       val sicCodeLookupResult = Json.obj(
-        "numFound" -> 49,
-        "nonFilteredFound" -> 49,
+        "numFound" -> 41,
+        "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
           Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support activities")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 18),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 16),
           Json.obj("code" -> "C", "name" -> "Manufacturing", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 6),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 4),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 4),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 3),
           Json.obj("code" -> "J", "name" -> "Information And Communication", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
           Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "count" -> 1),
           Json.obj("code" -> "P", "name" -> "Education", "count" -> 1)
         )
