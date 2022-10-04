@@ -58,7 +58,7 @@ class LookupService @Inject()(gdsIndex: GDSRegisterSIC5IndexConnector,
   }
 }
 
-case class FacetResults(code: String, name: String, count: Int)
+case class FacetResults(code: String, name: String, nameCy: String, count: Int)
 
 object FacetResults {
   implicit val formats: Format[FacetResults] = Json.format[FacetResults]

@@ -31,8 +31,8 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
-          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 2),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "TestG", "count" -> 1)
         )
       )
 
@@ -56,8 +56,8 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
-          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 2),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "TestG", "count" -> 1)
         )
       )
 
@@ -86,12 +86,12 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           p1to3docs.value(10)
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 3),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "count" -> 1),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "nameCy" -> "TestH", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 1)
         )
       )
 
@@ -115,12 +115,12 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "85600", "desc" -> "Educational support services")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 4),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "count" -> 1),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 4),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "nameCy" -> "TestH", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 1)
         )
       )
 
@@ -162,8 +162,8 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 2),
-          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 2),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "TestG", "count" -> 1)
         )
       )
 
@@ -189,12 +189,12 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "90020", "desc" -> "Support activities to performing arts")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 4),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "count" -> 3),
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "count" -> 2),
-          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "count" -> 1),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 4),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 2),
+          Json.obj("code" -> "H", "name" -> "Transportation And Storage", "nameCy" -> "TestH", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 1)
         )
       )
 
@@ -234,7 +234,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 1)
         )
       )
 

@@ -32,7 +32,7 @@ import services.QueryType.{QUERY_BOOSTER, QUERY_BUILDER, QUERY_PARSER}
 import services.{FacetResults, SearchResult}
 
 import java.nio.file.FileSystems
-import collection.JavaConverters._
+import scala.collection.JavaConverters._
 
 trait IndexConnector extends Logging {
 
@@ -124,7 +124,7 @@ trait IndexConnector extends Logging {
         val sics = results.scoreDocs.toSeq map extractSic
         val facetResults: Seq[FacetResults] = {
           result.facets.getTopChildren(1000, FIELD_SECTOR).labelValues.toSeq map { lv =>
-            FacetResults(lv.label, getSectorName(lv.label), lv.value.intValue())
+            FacetResults(lv.label, getSectorName(lv.label), getSectorName(lv.label, isWelsh = true), lv.value.intValue())
           }
         }
         val nonFilteredCount = facetResults.map(_.count).sum
@@ -145,8 +145,9 @@ trait IndexConnector extends Logging {
     }
   }
 
-  private[connectors] def getSectorName(sectorCode: String): String = {
-    config.getConfigString(s"sic.sector.${sectorCode.toUpperCase}")
+  private[connectors] def getSectorName(sectorCode: String, isWelsh: Boolean = false): String = {
+    if(isWelsh) {config.getConfigString(s"sic.sectorCy.${sectorCode.toUpperCase}")}
+    else {config.getConfigString(s"sic.sector.${sectorCode.toUpperCase}")}
   }
 }
 
