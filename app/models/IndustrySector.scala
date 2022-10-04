@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class IndustrySector(code: String, desc: String)
+case class IndustrySector(code: String, desc: String, descCy: String)
 
 object IndustrySector {
   implicit val formats: Format[IndustrySector] = Json.format[IndustrySector]
