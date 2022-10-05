@@ -32,10 +32,10 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "01450", "desc" -> "Goat farming")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 26),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "TestC", "count" -> 9),
-          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "TestG", "count" -> 8),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 26),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "Gweithgynhyrchu", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "Masnach Gyfanwerthu a Manwerthu; Atgyweirio Ceir a Beiciau Modur", "count" -> 8),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "Gweithgareddau mewn perthynas â Gwasanaethau Cymorth a Gweinyddol", "count" -> 1)
         )
       )
 
@@ -59,10 +59,10 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "77390", "desc" -> "Dairy machinery rental (non agricultural)")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 26),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "TestC", "count" -> 9),
-          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "TestG", "count" -> 8),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 26),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "Gweithgynhyrchu", "count" -> 9),
+          Json.obj("code" -> "G", "name" -> "Wholesale And Retail Trade; Repair Of Motor Vehicles And Motorcycles", "nameCy" -> "Masnach Gyfanwerthu a Manwerthu; Atgyweirio Ceir a Beiciau Modur", "count" -> 8),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "Gweithgareddau mewn perthynas â Gwasanaethau Cymorth a Gweinyddol", "count" -> 1)
         )
       )
 
@@ -95,14 +95,14 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           p1to3docs.value(14)
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 16),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "TestC", "count" -> 12),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 3),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 2),
-          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "TestJ", "count" -> 2),
-          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "TestO", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1)
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "Gweithgynhyrchu", "count" -> 12),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "Gweithgareddau mewn perthynas â Gwasanaethau Cymorth a Gweinyddol", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "Celfyddydau, Adloniant a Hamdden", "count" -> 3),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
+          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "Gwybodaeth a Chyfathrebu", "count" -> 2),
+          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "Gweinyddiaeth Gyhoeddus ac Amddiffyn; Nawdd Cymdeithasol Gorfodol", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "Addysg", "count" -> 1)
         )
       )
 
@@ -124,14 +124,14 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 16),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "TestC", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 3),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 3),
-          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "TestJ", "count" -> 2),
-          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "TestO", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1)
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "Gweithgynhyrchu", "count" -> 12),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "Gweithgareddau mewn perthynas â Gwasanaethau Cymorth a Gweinyddol", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "Celfyddydau, Adloniant a Hamdden", "count" -> 3),
+          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "Gwybodaeth a Chyfathrebu", "count" -> 2),
+          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "Gweinyddiaeth Gyhoeddus ac Amddiffyn; Nawdd Cymdeithasol Gorfodol", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "Addysg", "count" -> 1)
         )
       )
 
@@ -175,14 +175,14 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 16),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "TestC", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 3),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 3),
-          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "TestJ", "count" -> 2),
-          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "TestO", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1)
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "Gweithgynhyrchu", "count" -> 12),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "Gweithgareddau mewn perthynas â Gwasanaethau Cymorth a Gweinyddol", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "Celfyddydau, Adloniant a Hamdden", "count" -> 3),
+          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "Gwybodaeth a Chyfathrebu", "count" -> 2),
+          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "Gweinyddiaeth Gyhoeddus ac Amddiffyn; Nawdd Cymdeithasol Gorfodol", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "Addysg", "count" -> 1)
         )
       )
       val client = buildQuery("support silviculture", indexName = indexName, Some(3), queryParser = None, queryBoostFirstTerm = None)
@@ -206,14 +206,14 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "85600", "desc" -> "Educational support activities")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "TestB", "count" -> 16),
-          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "TestC", "count" -> 12),
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 3),
-          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "TestN", "count" -> 3),
-          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "TestR", "count" -> 3),
-          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "TestJ", "count" -> 2),
-          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "TestO", "count" -> 1),
-          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "TestP", "count" -> 1)
+          Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
+          Json.obj("code" -> "C", "name" -> "Manufacturing", "nameCy" -> "Gweithgynhyrchu", "count" -> 12),
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 3),
+          Json.obj("code" -> "N", "name" -> "Administrative And Support Service Activities", "nameCy" -> "Gweithgareddau mewn perthynas â Gwasanaethau Cymorth a Gweinyddol", "count" -> 3),
+          Json.obj("code" -> "R", "name" -> "Arts, Entertainment And Recreation", "nameCy" -> "Celfyddydau, Adloniant a Hamdden", "count" -> 3),
+          Json.obj("code" -> "J", "name" -> "Information And Communication", "nameCy" -> "Gwybodaeth a Chyfathrebu", "count" -> 2),
+          Json.obj("code" -> "O", "name" -> "Public Administration And Defence; Compulsory Social Security", "nameCy" -> "Gweinyddiaeth Gyhoeddus ac Amddiffyn; Nawdd Cymdeithasol Gorfodol", "count" -> 1),
+          Json.obj("code" -> "P", "name" -> "Education", "nameCy" -> "Addysg", "count" -> 1)
         )
       )
 
@@ -253,7 +253,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
           Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities")
         ),
         "sectors" -> Json.arr(
-          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "TestA", "count" -> 1)
+          Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 1)
         )
       )
 
