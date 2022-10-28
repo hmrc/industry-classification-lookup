@@ -44,35 +44,38 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
 
   "search" should {
 
+    val lang = "en"
     val query = "12345678"
     val desc = "test description"
-    val sicCodeLookupResult = SearchResult(1, 1, Seq(SicCode(query, desc)), Seq())
+    val descCy = "test welsh description"
+    val sicCodeLookupResult = SearchResult(1, 1, Seq(SicCode(query, desc, descCy)), Seq())
     val sicCodeResultAsJson = Json.obj(
       "numFound" -> 1,
       "nonFilteredFound" -> 1,
       "results" -> Json.arr(Json.obj(
         "code" -> query,
-        "desc" -> desc
+        "desc" -> desc,
+        "descCy" -> descCy
       )),
       "sectors" -> Json.arr()
     )
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang)))
         .thenReturn(sicCodeLookupResult)
       mockAuthorisedRequest(Future.successful({}))
 
-      val result: Future[Result] = controller.search(query, Some("foo"), None, None)(FakeRequest())
+      val result: Future[Result] = controller.search(query, Some("foo"), None, None, lang = lang)(FakeRequest())
       status(result) mustBe 200
       contentAsJson(result) mustBe sicCodeResultAsJson
     }
 
     "return a 404 when no description is returned from LookupService" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang)))
         .thenReturn(SearchResult(0, 0, Seq(), Seq()))
       mockAuthorisedRequest(Future.successful({}))
 
-      val result: Future[Result] = controller.search(query, Some("foo"), None, None)(FakeRequest())
+      val result: Future[Result] = controller.search(query, Some("foo"), None, None, lang = lang)(FakeRequest())
       status(result) mustBe 200
       contentAsJson(result) mustBe Json.obj(
         "numFound" -> 0,
@@ -83,11 +86,11 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     }
 
     "Use the default index when one isn't specified" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None)))
+      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang)))
         .thenReturn(sicCodeLookupResult)
       mockAuthorisedRequest(Future.successful({}))
 
-      val result: Future[Result] = controller.search(query, None, None, None)(FakeRequest())
+      val result: Future[Result] = controller.search(query, None, None, None, lang = lang)(FakeRequest())
       status(result) mustBe 200
       contentAsJson(result) mustBe sicCodeResultAsJson
     }

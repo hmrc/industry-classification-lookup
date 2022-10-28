@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.{Format, Json}
 
-case class SicCode(code: String, desc: String)
+case class SicCode(code: String, desc: String, descCy: String = "")
 
 object SicCode {
   implicit val formats: Format[SicCode] = Json.format[SicCode]

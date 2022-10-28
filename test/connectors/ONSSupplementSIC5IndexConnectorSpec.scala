@@ -47,14 +47,14 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
       "28110" -> "Manufacture of engines and turbines, except aircraft, vehicle and cycle engines",
       "28930" -> "Manufacture of machinery for food, beverage and tobacco processing"
     ) foreach {
-      case ((searchCode, searchDesc)) =>
+      case (searchCode, searchDesc) =>
         s"find the correct single result document for code8 search with $searchCode" in new Setup {
 
           val result: Option[SicCode] = gdsIndex.lookup(searchCode)
 
           result mustBe defined
 
-          result.get mustBe SicCode(searchCode, searchDesc)
+          result.get mustBe SicCode(searchCode, searchDesc, searchDesc)
         }
     }
 
@@ -70,7 +70,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
     case class ST(query: String, numMin: Int, topHit: SicCode)
 
     Seq(
-      ST("Dairy farming", 1, SicCode("01410", "Dairy farming"))
+      ST("Dairy farming", 1, SicCode("01410", "Dairy farming", "Dairy farming"))
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
@@ -82,11 +82,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
         sics.head mustBe data.topHit
 
         sics mustBe Seq(
-          SicCode("01410", "Dairy farming"),
-          SicCode("01430", "Stud farming"),
-          SicCode("01450", "Goat farming"),
-          SicCode("01450", "Sheep farming"),
-          SicCode("01460", "Pig farming")
+          SicCode("01410", "Dairy farming", "Dairy farming"),
+          SicCode("01430", "Stud farming", "Stud farming"),
+          SicCode("01450", "Goat farming", "Goat farming"),
+          SicCode("01450", "Sheep farming", "Sheep farming"),
+          SicCode("01460", "Pig farming", "Pig farming")
         )
       }
     }
@@ -117,8 +117,8 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
       sics.length mustBe pageResults
 
       sics mustBe Seq(
-        SicCode("01450", "Goat farming"),
-        SicCode("01450", "Sheep farming")
+        SicCode("01450", "Goat farming", "Goat farming"),
+        SicCode("01450", "Sheep farming", "Sheep farming")
       )
     }
 
@@ -134,13 +134,13 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
       sics.length mustBe pageResults
 
       sics mustBe Seq(
-        SicCode("01410", "Dairy farming"),
-        SicCode("01430", "Stud farming")
+        SicCode("01410", "Dairy farming", "Dairy farming"),
+        SicCode("01430", "Stud farming", "Stud farming")
       )
     }
 
     Seq(
-      ST("Cress", 1, SicCode("01130", "Cress growing"))
+      ST("Cress", 1, SicCode("01130", "Cress growing", "Cress growing"))
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
@@ -153,7 +153,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
         sics.head mustBe data.topHit
 
         sics mustBe Seq(
-          SicCode("01130", "Cress growing")
+          SicCode("01130", "Cress growing", "Cress growing")
         )
       }
     }
@@ -161,11 +161,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
     "Should perform second search with a fuzzy match if first search has no match" in new Setup {
       val result: SearchResult = onsIndex.search("XXX", queryType = Some(journey))
       result.results mustBe Seq(
-        SicCode("25730", "Axe (manufacture)"),
-        SicCode("69203", "Tax consultancy"),
-        SicCode("16240", "Box pallet (manufacture)"),
-        SicCode("19201", "Paraffin wax (manufacture)"),
-        SicCode("20412", "Polishing wax (manufacture)")
+        SicCode("25730", "Axe (manufacture)", "Axe (manufacture)"),
+        SicCode("69203", "Tax consultancy", "Tax consultancy"),
+        SicCode("16240", "Box pallet (manufacture)", "Box pallet (manufacture)"),
+        SicCode("19201", "Paraffin wax (manufacture)", "Paraffin wax (manufacture)"),
+        SicCode("20412", "Polishing wax (manufacture)", "Polishing wax (manufacture)")
       )
     }
 
@@ -180,8 +180,8 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
     val journey: String = QueryType.QUERY_BOOSTER
 
     "return different top results for dairy + farming and farming + dairy " in new Setup {
-      val dairyFarmingResults = onsIndex.search("dairy farming", queryType = Some(journey))
-      val farmingDairyResults = onsIndex.search("farming dairy", queryType = Some(journey))
+      val dairyFarmingResults: SearchResult = onsIndex.search("dairy farming", queryType = Some(journey))
+      val farmingDairyResults: SearchResult = onsIndex.search("farming dairy", queryType = Some(journey))
 
       dairyFarmingResults.results.take(3) mustNot be(farmingDairyResults.results.take(3))
       dairyFarmingResults.results.length mustEqual farmingDairyResults.results.length

@@ -25,6 +25,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
   "calling GET /lookup" when {
 
+    val lang = "en"
     val sicCode = "01110"
 
     val sicCodeLookupResult = Json.parse(
@@ -32,19 +33,20 @@ class LookupAPIISpec extends IntegrationSpecBase {
          |[
          | {
          |   "code":"$sicCode",
-         |   "desc":"Growing of cereals (except rice), leguminous crops and oil seeds"
+         |   "desc":"Growing of cereals (except rice), leguminous crops and oil seeds",
+         |   "descCy":"Growing of cereals (except rice), leguminous crops and oil seeds"
          | }
          |]
       """.stripMargin)
 
     "trying to lookup a sic code should use the correct url" in {
-      val client = buildClient(s"/lookup/$sicCode")
-      client.url mustBe s"http://localhost:$port/industry-classification-lookup/lookup/$sicCode"
+      val client = buildClient(s"/lookup/$sicCode?lang=$lang")
+      client.url mustBe s"http://localhost:$port/industry-classification-lookup/lookup/$sicCode?lang=$lang"
     }
 
     "supplying a valid sic code should return a 200 and the sic code description as json" in {
       val sicCode = "01110"
-      val client = buildClient(s"/lookup/$sicCode")
+      val client = buildClient(s"/lookup/$sicCode?lang=$lang")
 
       setupSimpleAuthMocks()
 
@@ -56,7 +58,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
 
     "supplying an invalid sic code should return a 404" in {
       val invalidSicCode = "abc123"
-      val client = buildClient(s"/lookup/$invalidSicCode")
+      val client = buildClient(s"/lookup/$invalidSicCode?lang=$lang")
 
       setupSimpleAuthMocks()
 

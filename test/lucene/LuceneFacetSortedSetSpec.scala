@@ -29,16 +29,16 @@ class LuceneFacetSortedSetSpec extends PlaySpec {
 
   "Wibble" should {
 
-    val analyzer = new StandardAnalyzer();
+    val analyzer = new StandardAnalyzer()
 
     def buildIndex() = {
-      val config = new IndexWriterConfig(analyzer);
-      val index: Directory = new RAMDirectory();
-      val w = new IndexWriter(index, config);
+      val config = new IndexWriterConfig(analyzer)
+      val index: Directory = new RAMDirectory()
+      val w = new IndexWriter(index, config)
 
       val facetConfig = new FacetsConfig()
 
-      def addDoc(title: String, isbn: String, sector: String) {
+      def addDoc(title: String, isbn: String, sector: String): Unit = {
         val doc = new Document
         doc.add(new TextField("title", title, Field.Store.YES))
         doc.add(new StringField("isbn", isbn, Field.Store.YES))
@@ -46,13 +46,13 @@ class LuceneFacetSortedSetSpec extends PlaySpec {
         w.addDocument(facetConfig.build(doc))
       }
 
-      addDoc("Lucene in Action", "193398817", "Sector 1");
-      addDoc("Lucene for Dummies", "55320055Z", "Sector 1");
-      addDoc("Lucene for Dummies 2", "55320055Z", "Sector 2");
-      addDoc("Managing Gigabytes", "55063554A", "Sector 2");
-      addDoc("The Art of Computer Science", "9900333X", "Sector 3");
+      addDoc("Lucene in Action", "193398817", "Sector 1")
+      addDoc("Lucene for Dummies", "55320055Z", "Sector 1")
+      addDoc("Lucene for Dummies 2", "55320055Z", "Sector 2")
+      addDoc("Managing Gigabytes", "55063554A", "Sector 2")
+      addDoc("The Art of Computer Science", "9900333X", "Sector 3")
 
-      w.close();
+      w.close()
 
       index
     }
@@ -71,7 +71,7 @@ class LuceneFacetSortedSetSpec extends PlaySpec {
 
     "Calculate facets over whole index" in {
 
-      val (searcher, state, facetConfig) = setupSearch()
+      val (searcher, state, _) = setupSearch()
 
       val collector = new FacetsCollector()
 
@@ -88,7 +88,7 @@ class LuceneFacetSortedSetSpec extends PlaySpec {
 
     "search for lucene and get results plus facets for results" in {
 
-      val (searcher, state, facetConfig) = setupSearch()
+      val (searcher, state, _) = setupSearch()
 
       val q = new TermQuery(new Term("title", "lucene"))
 
@@ -152,8 +152,6 @@ class LuceneFacetSortedSetSpec extends PlaySpec {
 
       val (searcher, state, facetConfig) = setupSearch()
 
-      val fc = new FacetsCollector()
-
       val q = new DrillDownQuery(facetConfig)
       q.add("sector", "Sector 2")
 
@@ -174,7 +172,6 @@ class LuceneFacetSortedSetSpec extends PlaySpec {
       val (searcher, state, facetConfig) = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val q = new DrillDownQuery(facetConfig)
       q.add("sector", "Sector 2")

@@ -17,6 +17,7 @@
 package services
 
 import config.ICLConfig
+import connectors.utils.IndexConnector
 import connectors.{GDSRegisterSIC5IndexConnector, ONSSupplementSIC5IndexConnector}
 import models.SicCode
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -28,18 +29,21 @@ import services.Indexes._
 
 class LookupServiceSpec extends PlaySpec with MockitoSugar {
 
+  val lang: String = "en"
   val mockConfig: ICLConfig = mock[ICLConfig]
   val mockONSIndex: ONSSupplementSIC5IndexConnector = mock[ONSSupplementSIC5IndexConnector]
   val mockGDSIndex: GDSRegisterSIC5IndexConnector = mock[GDSRegisterSIC5IndexConnector]
 
   trait Setup {
     val service: LookupService = new LookupService(mockGDSIndex, mockONSIndex) {
-      override val indexes = Map(ONS_SUPPLEMENT_SIC5_INDEX -> mockONSIndex, GDS_REGISTER_SIC5_INDEX -> mockGDSIndex)
+      override val indexes: Map[String, IndexConnector] =
+        Map(ONS_SUPPLEMENT_SIC5_INDEX -> mockONSIndex, GDS_REGISTER_SIC5_INDEX -> mockGDSIndex)
     }
   }
 
   "lookup" should {
     val sicCode = "12345678"
+    val sicCodeResult = SicCode(sicCode, "test description", "test welsh description")
     val sicCodeLookupResult = Json.parse(
       s"""
          |{
@@ -57,7 +61,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
       """.stripMargin).as[JsObject]
 
     "return an Empty list" in new Setup {
-      val searchList = List("invalid", "invalid2")
+      val searchList: List[String] = List("invalid", "invalid2")
 
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
@@ -67,52 +71,40 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
         None
       )
 
-      val result = service.lookup(searchList)
-      result mustBe List.empty[SicCode]
+      service.lookup(searchList) mustBe List.empty[SicCode]
     }
 
     "return a list of flattened codes (all matching)" in new Setup {
-      val searchList = List(sicCode, sicCode)
+      val searchList: List[String] = List(sicCode, sicCode)
 
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(
-        Some(SicCode(sicCode, "test description")),
-        Some(SicCode(sicCode, "test description"))
-      )
+      when(mockGDSIndex.lookup(any())).thenReturn(Some(sicCodeResult), Some(sicCodeResult))
 
-      val result = service.lookup(searchList)
-      result mustBe List(SicCode(sicCode, "test description"), SicCode(sicCode, "test description"))
+      service.lookup(searchList) mustBe List(sicCodeResult, sicCodeResult)
     }
 
     "return a list of flattened codes (single result passed in)" in new Setup {
-      val searchList = List(sicCode)
+      val searchList: List[String] = List(sicCode)
 
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(
-        Some(SicCode(sicCode, "test description"))
-      )
+      when(mockGDSIndex.lookup(any())).thenReturn(Some(sicCodeResult))
 
-      val result = service.lookup(searchList)
-      result mustBe List(SicCode(sicCode, "test description"))
+      service.lookup(searchList) mustBe List(sicCodeResult)
     }
 
     "return a list of flattened codes (some matching)" in new Setup {
-      val searchList = List(sicCode, "invalid")
+      val searchList: List[String] = List(sicCode, "invalid")
 
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(
-        Some(SicCode(sicCode, "test description")),
-        None
-      )
+      when(mockGDSIndex.lookup(any())).thenReturn(Some(sicCodeResult), None)
 
-      val result = service.lookup(searchList)
-      result mustBe List(SicCode(sicCode, "test description"))
+      service.lookup(searchList) mustBe List(sicCodeResult)
     }
   }
 
@@ -120,10 +112,10 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
 
     "return the results of the index query" in new Setup {
       val query = "Foo"
-      val result = SearchResult(1, 1, Seq(SicCode("12345", "test description")), Seq())
-      when(mockONSIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false))).thenReturn(result)
+      val result: SearchResult = SearchResult(1, 1, Seq(SicCode("12345", "test description", "test welsh description")), Seq())
+      when(mockONSIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false), eqTo(lang))).thenReturn(result)
 
-      service.search(query, ONS_SUPPLEMENT_SIC5_INDEX) mustBe result
+      service.search(query, ONS_SUPPLEMENT_SIC5_INDEX, lang = lang) mustBe result
     }
   }
 }

@@ -9,16 +9,18 @@ import services.Indexes.GDS_REGISTER_SIC5_INDEX
 
 class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
+  val lang: String = "en"
   val indexName: String = GDS_REGISTER_SIC5_INDEX
 
   s"calling GET /search for $indexName index" when {
 
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser = Some(true))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) =
+      buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser = Some(true))
 
     "trying to search for a sic code should use the correct url" in {
       val query = "Dairy+farming"
       val client = buildQuery(query, indexName = indexName, queryParser = Some(true))
-      client.url mustBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true"
+      client.url mustBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true&lang=$lang"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -26,9 +28,9 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 3,
         "nonFilteredFound" -> 3,
         "results" -> Json.arr(
-          Json.obj("code" -> "01500", "desc" -> "Mixed farming"),
-          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle"),
-          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
+          Json.obj("code" -> "01500", "desc" -> "Mixed farming", "descCy" -> "Mixed farming"),
+          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle", "descCy" -> "Raising of dairy cattle"),
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
@@ -53,7 +55,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 3,
         "results" -> Json.arr(
-          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
@@ -101,8 +103,6 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
 
       response.status mustBe 200
       response.json mustBe sicCodeLookupResult
-
-      println(s"response.json = ${response.json}")
     }
 
     "supplying a valid query with maxResult should return a 200 and fewer sic code descriptions" in {
@@ -110,9 +110,9 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 12,
         "nonFilteredFound" -> 12,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support services")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities"),
+          Json.obj("code" -> "02400", "desc" -> "Support services to forestry", "descCy" -> "Support services to forestry"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support services", "descCy" -> "Educational support services")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 4),
@@ -157,9 +157,9 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 3,
         "nonFilteredFound" -> 3,
         "results" -> Json.arr(
-          Json.obj("code" -> "01500", "desc" -> "Mixed farming"),
-          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle"),
-          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats")
+          Json.obj("code" -> "01500", "desc" -> "Mixed farming", "descCy" -> "Mixed farming"),
+          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle", "descCy" -> "Raising of dairy cattle"),
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Wholesale of dairy products, eggs and edible oils and fats")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
@@ -182,11 +182,11 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 12,
         "nonFilteredFound" -> 12,
         "results" -> Json.arr(
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support services"),
-          Json.obj("code" -> "01610", "desc" -> "Support activities for crop production"),
-          Json.obj("code" -> "52290", "desc" -> "Other transportation support activities"),
-          Json.obj("code" -> "90020", "desc" -> "Support activities to performing arts")
+          Json.obj("code" -> "02400", "desc" -> "Support services to forestry", "descCy" -> "Support services to forestry"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support services", "descCy" -> "Educational support services"),
+          Json.obj("code" -> "01610", "desc" -> "Support activities for crop production", "descCy" -> "Support activities for crop production"),
+          Json.obj("code" -> "52290", "desc" -> "Other transportation support activities", "descCy" -> "Other transportation support activities"),
+          Json.obj("code" -> "90020", "desc" -> "Support activities to performing arts", "descCy" -> "Support activities to performing arts")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 4),
@@ -231,7 +231,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 1,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 1)

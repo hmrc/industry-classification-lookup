@@ -31,25 +31,26 @@ class Lucene101Spec extends PlaySpec {
 
   "Wibble" should {
 
-    val analyzer = new StandardAnalyzer();
+    val analyzer = new StandardAnalyzer()
 
-    def buildIndex() = {
-      val config = new IndexWriterConfig(analyzer);
-      def addDoc(w: IndexWriter, title: String, isbn: String) {
+    def buildIndex(): Directory = {
+      val config = new IndexWriterConfig(analyzer)
+
+      def addDoc(w: IndexWriter, title: String, isbn: String): Unit = {
         val doc = new Document
         doc.add(new TextField("title", title, Field.Store.YES))
         doc.add(new StringField("isbn", isbn, Field.Store.YES))
         w.addDocument(doc)
       }
 
-      val index: Directory = new RAMDirectory();
+      val index: Directory = new RAMDirectory()
 
-      val w = new IndexWriter(index, config);
-      addDoc(w, "Lucene in Action", "193398817");
-      addDoc(w, "Lucene for Dummies", "55320055Z");
-      addDoc(w, "Managing Gigabytes", "55063554A");
-      addDoc(w, "The Art of Computer Science", "9900333X");
-      w.close();
+      val w = new IndexWriter(index, config)
+      addDoc(w, "Lucene in Action", "193398817")
+      addDoc(w, "Lucene for Dummies", "55320055Z")
+      addDoc(w, "Managing Gigabytes", "55063554A")
+      addDoc(w, "The Art of Computer Science", "9900333X")
+      w.close()
 
       index
     }
@@ -210,7 +211,6 @@ class Lucene101Spec extends PlaySpec {
           }
 
           def apply(fieldName: String, query: String, isFuzzy: Boolean): Query = {
-            val splitSearchParams = query.toLowerCase.split(" ")
             new FuzzyQuery(new Term(fieldName, query))
           }
         }
