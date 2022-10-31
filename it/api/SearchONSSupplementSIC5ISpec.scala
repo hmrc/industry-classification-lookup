@@ -10,16 +10,18 @@ import services.Indexes.ONS_SUPPLEMENT_SIC5_INDEX
 
 class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
 
+  val lang: String = "en"
   val indexName: String = ONS_SUPPLEMENT_SIC5_INDEX
 
   s"calling GET /search for $indexName index" when {
 
-    def buildQueryAll(query: String, maxResults: Int, page: Int) = buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser = Some(true))
+    def buildQueryAll(query: String, maxResults: Int, page: Int) =
+      buildQuery(query, indexName, Some(maxResults), Some(page), None, queryParser = Some(true))
 
     "trying to search for a sic code should use the correct url" in {
       val query = "Dairy+farming"
       val client = buildQuery(query, indexName = indexName, queryParser = Some(true))
-      client.url mustBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true"
+      client.url mustBe s"http://localhost:$port/industry-classification-lookup/search?query=$query&indexName=$indexName&queryParser=true&lang=$lang"
     }
 
     "supplying the query 'Dairy+farming' should return a 200 and the sic code descriptions as json" in {
@@ -27,9 +29,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 44,
         "nonFilteredFound" -> 44,
         "results" -> Json.arr(
-          Json.obj("code" -> "01410", "desc" -> "Dairy farming"),
-          Json.obj("code" -> "01430", "desc" -> "Stud farming"),
-          Json.obj("code" -> "01450", "desc" -> "Goat farming")
+          Json.obj("code" -> "01410", "desc" -> "Dairy farming", "descCy" -> "Dairy farming"),
+          Json.obj("code" -> "01430", "desc" -> "Stud farming", "descCy" -> "Stud farming"),
+          Json.obj("code" -> "01450", "desc" -> "Goat farming", "descCy" -> "Goat farming")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 26),
@@ -56,7 +58,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 44,
         "results" -> Json.arr(
-          Json.obj("code" -> "77390", "desc" -> "Dairy machinery rental (non agricultural)")
+          Json.obj("code" -> "77390", "desc" -> "Dairy machinery rental (non agricultural)", "descCy" -> "Dairy machinery rental (non agricultural)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 26),
@@ -119,9 +121,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 41,
         "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities"),
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Foot support (manufacture)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Instep support (manufacture)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
@@ -170,9 +172,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 41,
         "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities"),
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Foot support (manufacture)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Instep support (manufacture)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
@@ -201,9 +203,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 41,
         "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support activities")
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Foot support (manufacture)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Instep support (manufacture)"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support activities", "descCy" -> "Educational support activities")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
@@ -250,7 +252,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 1,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 1)

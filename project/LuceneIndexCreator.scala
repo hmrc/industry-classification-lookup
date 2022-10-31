@@ -16,8 +16,9 @@
 
 import com.typesafe.sbt.SbtNativePackager.Universal
 import com.typesafe.sbt.packager.MappingsHelper.contentOf
-import org.apache.lucene.analysis.CharArraySet
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper
 import org.apache.lucene.analysis.standard.StandardAnalyzer
+import org.apache.lucene.analysis.{Analyzer, CharArraySet}
 import org.apache.lucene.document._
 import org.apache.lucene.facet.FacetsConfig
 import org.apache.lucene.facet.sortedset.SortedSetDocValuesFacetField
@@ -25,6 +26,8 @@ import org.apache.lucene.index.{IndexWriter, IndexWriterConfig}
 import org.apache.lucene.store.{Directory, NIOFSDirectory}
 import sbt.Keys._
 import sbt.{Append, Compile, ConsoleLogger, Def, File, TaskKey, fileToRichFile}
+
+import scala.io.Source
 
 object LuceneIndexCreator {
 
@@ -62,15 +65,42 @@ object LuceneIndexCreator {
   )
 }
 
-case class SicDocument(code: String, description: String, searchTerms: String)
+case class SicDocument(
+                        code: String,
+                        description: String,
+                        searchTerms: String,
+                        descriptionCy: String,
+                        searchTermsCy: String
+                      )
 
 trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
+
+  val LANG_EN = "en"
+  val LANG_CY = "cy"
+  val FIELD_SEARCH_TERMS = "searchTerms"
+  val FIELD_SEARCH_TERMS_CY = "searchTermsCy"
 
   // Override this with the name of the index
   val name: String
 
+  def getIndexSource: Source
+
   // Implement this method, calling the passed in addDocument Function for each new Indexed document required
-  def produceDocuments(addDocument: AddDocument): Int
+  def produceDocuments(addDocument: ONSSicBuilder.AddDocument): Int = {
+    var docsAdded = 0
+    val source = getIndexSource
+    for (line <- source.getLines()) {
+      val split = line.split("\t")
+      val code = split(0)
+      val desc = split(1)
+      val descCy = split(2)
+      addDocument(SicDocument(code, desc, desc, descCy, descCy))
+      docsAdded += 1
+    }
+    source.close()
+
+    docsAdded
+  }
 
   type AddDocument = SicDocument => Boolean
 
@@ -80,7 +110,7 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
     val sic8Path = rootPath / name
     val indexSic8Path = sic8Path.toPath
 
-    val index: Directory = new NIOFSDirectory(indexSic8Path);
+    val index: Directory = new NIOFSDirectory(indexSic8Path)
 
     // Only build if missing
     if( index.listAll().length == 0 ) {
@@ -89,12 +119,22 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
 
       val startTime = System.currentTimeMillis()
 
-      val stopSet = {
+      val analyzer = {
         import scala.collection.JavaConverters._
-        new CharArraySet(STOP_WORDS.asJava, true)
+        val analyzer: String => Analyzer = (lang: String) => {
+          val stopWords = lang match {
+            case LANG_EN => STOP_WORDS.asJava
+            case LANG_CY => STOP_WORDS_CY.asJava
+          }
+          new StandardAnalyzer(new CharArraySet(stopWords, true))
+        }
+
+        new PerFieldAnalyzerWrapper(
+          new StandardAnalyzer(),
+          Map(FIELD_SEARCH_TERMS -> analyzer(LANG_EN), FIELD_SEARCH_TERMS_CY -> analyzer(LANG_CY)).asJava
+        )
       }
 
-      val analyzer = new StandardAnalyzer(stopSet)
       val config = new IndexWriterConfig(analyzer)
       val facetConfig = new FacetsConfig()
 
@@ -107,17 +147,19 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
       w.commit() // flush the contents
       w.close()
 
-      log.info(s"""Index "${name}" successfully built, $numIndexDocs in the index (adding ${numAdded} took ${System.currentTimeMillis - startTime}ms).""")
+      log.info(s"""Index "$name" successfully built, $numIndexDocs in the index (adding $numAdded took ${System.currentTimeMillis - startTime}ms).""")
     }
 
     sic8Path
   }
 
-  def addDoc(w: IndexWriter, facetConfig: FacetsConfig)(sicDoc: SicDocument) = {
+  def addDoc(w: IndexWriter, facetConfig: FacetsConfig)(sicDoc: SicDocument): Boolean = {
     val doc = new Document
     doc.add(new StringField("code", sicDoc.code, Field.Store.YES))
     doc.add(new StoredField("description", sicDoc.description))
+    doc.add(new StoredField("descriptionCy", sicDoc.descriptionCy))
     doc.add(new TextField("searchTerms", sicDoc.searchTerms, Field.Store.NO))
+    doc.add(new TextField("searchTermsCy", sicDoc.searchTermsCy, Field.Store.NO))
     doc.add(new SortedSetDocValuesFacetField("sector", returnIndustrySector(sicDoc.code)))
     w.addDocument(facetConfig.build(doc))
     true
@@ -127,13 +169,15 @@ trait SICIndexBuilder extends IndustryCodeMapping with StopWords {
 }
 
 trait StopWords {
-  val STOP_WORDS = List(
+  val STOP_WORDS: List[String] = List(
     "a", "an", "and", "are", "as", "at", "be", "but", "by",
     "for", "if", "in", "into", "is", // "it",
     "no", "not", "of", "on", "or", "such",
     "that", "the", "their", "then", "there", "these",
     "they", "this", "to", "was", "will", "with"
   )
+
+  val STOP_WORDS_CY: List[String] = List()
 }
 
 trait IndustryCodeMapping {

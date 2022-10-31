@@ -27,6 +27,7 @@ object LuceneDependencies {
   def apply() = Seq(
     "org.apache.lucene" % "lucene-core" % luceneVersion,
     "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
+    "org.apache.lucene" % "lucene-analyzers-common" % luceneVersion,
     "org.apache.lucene" % "lucene-facet" % luceneVersion
   )
 }

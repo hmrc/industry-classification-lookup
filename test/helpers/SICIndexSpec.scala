@@ -16,8 +16,7 @@
 
 package helpers
 
-import java.nio.file.FileSystems
-
+import java.nio.file.{FileSystems, Path}
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
@@ -34,10 +33,10 @@ trait SICIndexSpec extends PlaySpec {
   val FIELD_DESC = "description"
   val FIELD_SEARCH_TERMS = "searchTerms"
 
-  val industryCodeMapping = Map("01" -> "A", "02" -> "A", "03" -> "A",
+  val industryCodeMapping: Map[String, String] = Map("01" -> "A", "02" -> "A", "03" -> "A",
     "05" -> "B", "06" -> "B", "07" -> "B", "08" -> "B", "09" -> "B")
 
-  val stopWords = List(
+  val stopWords: List[String] = List(
     "a", "an", "and", "are", "as", "at", "be", "but", "by",
     "for", "if", "in", "into", "is", // "it",
     "no", "not", "of", "on", "or", "such",
@@ -45,14 +44,15 @@ trait SICIndexSpec extends PlaySpec {
     "they", "this", "to", "was", "will", "with"
   )
 
-  val stopSet = {
+  val stopSet: CharArraySet = {
     import scala.collection.JavaConverters._
     new CharArraySet(stopWords.asJava, false)
   }
 
   val analyzer = new StandardAnalyzer(stopSet)
 
-  lazy val indexPath = FileSystems.getDefault.getPath("target", "scala-2.12", "resource_managed", "main", "conf", "index", indexName)
+  lazy val indexPath: Path =
+    FileSystems.getDefault.getPath("target", "scala-2.12", "resource_managed", "main", "conf", "index", indexName)
 
   def openIndex() = new NIOFSDirectory(indexPath)
 
@@ -64,13 +64,7 @@ trait SICIndexSpec extends PlaySpec {
     index.close()
   }
 
-  private def withIndex(f: Directory => Unit) = {
-    val index: Directory = openIndex()
-    f(index)
-    index.close()
-  }
-
-  def setupFacetedSearch() = {
+  def setupFacetedSearch(): (IndexSearcher, DefaultSortedSetDocValuesReaderState) = {
     val reader: IndexReader = DirectoryReader.open(openIndex())
 
     val searcher = new IndexSearcher(reader)

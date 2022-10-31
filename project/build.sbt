@@ -19,5 +19,6 @@ val luceneVersion             = "7.1.0"
 libraryDependencies ++= Seq(
   "org.apache.lucene" % "lucene-core" % luceneVersion,
   "org.apache.lucene" % "lucene-queryparser" % luceneVersion,
+  "org.apache.lucene" % "lucene-analyzers-common" % luceneVersion,
   "org.apache.lucene" % "lucene-facet" % luceneVersion
 )

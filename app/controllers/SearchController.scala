@@ -42,11 +42,12 @@ class SearchController @Inject()(lookupService: LookupService,
              page: Option[Int],
              sector: Option[String] = None,
              queryParser: Option[Boolean] = None,
-             queryBoostFirstTerm: Option[Boolean] = None): Action[AnyContent] = Action.async {
+             queryBoostFirstTerm: Option[Boolean] = None,
+             lang: String): Action[AnyContent] = Action.async {
     implicit request =>
       authorised() {
         val idxName = indexName.getOrElse(defaultIndex)
-        val results = lookupService.search(query, idxName, pageResults, page, sector, queryParser, queryBoostFirstTerm)
+        val results = lookupService.search(query, idxName, pageResults, page, sector, queryParser, queryBoostFirstTerm, lang = lang)
         Future.successful(Ok(Json.toJson(results)))
       }
   }

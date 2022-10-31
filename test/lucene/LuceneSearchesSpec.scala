@@ -18,8 +18,8 @@ package lucene
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.document.{Document, Field, StringField, TextField}
-import org.apache.lucene.facet.sortedset.{DefaultSortedSetDocValuesReaderState, SortedSetDocValuesFacetField}
-import org.apache.lucene.facet.{FacetsCollector, FacetsConfig}
+import org.apache.lucene.facet.FacetsConfig
+import org.apache.lucene.facet.sortedset.SortedSetDocValuesFacetField
 import org.apache.lucene.index._
 import org.apache.lucene.search.BooleanClause.Occur
 import org.apache.lucene.search._
@@ -30,7 +30,7 @@ class LuceneSearchesSpec extends PlaySpec {
 
   "LuceneSearchesSpec" should {
 
-    val analyzer = new StandardAnalyzer();
+    val analyzer = new StandardAnalyzer()
 
     def buildIndex() = {
       val config = new IndexWriterConfig(analyzer)
@@ -38,7 +38,7 @@ class LuceneSearchesSpec extends PlaySpec {
       val indexWriter = new IndexWriter(index, config)
       val facetConfig = new FacetsConfig()
 
-      def addDoc(title: String, isbn: String, sector: String) {
+      def addDoc(title: String, isbn: String, sector: String): Unit = {
         val doc = new Document
         doc.add(new TextField("title", title, Field.Store.YES))
         doc.add(new StringField("isbn", isbn, Field.Store.YES))
@@ -46,11 +46,11 @@ class LuceneSearchesSpec extends PlaySpec {
         indexWriter.addDocument(facetConfig.build(doc))
       }
 
-      addDoc("Lucene in Action", "193398817", "Sector 1");
-      addDoc("Lucene for Dummies", "55320055Z", "Sector 1");
-      addDoc("Lucene for Dummies 2", "55320055Z", "Sector 2");
-      addDoc("Managing Gigabytes", "55063554A", "Sector 2");
-      addDoc("The Art of Computer Science", "9900333X", "Sector 3");
+      addDoc("Lucene in Action", "193398817", "Sector 1")
+      addDoc("Lucene for Dummies", "55320055Z", "Sector 1")
+      addDoc("Lucene for Dummies 2", "55320055Z", "Sector 2")
+      addDoc("Managing Gigabytes", "55063554A", "Sector 2")
+      addDoc("The Art of Computer Science", "9900333X", "Sector 3")
 
       indexWriter.close()
 
@@ -58,13 +58,11 @@ class LuceneSearchesSpec extends PlaySpec {
     }
 
     def setupSearch() = {
-      val facetConfig = new FacetsConfig()
       val index = buildIndex()
 
       val reader: IndexReader = DirectoryReader.open(index)
 
       val searcher = new IndexSearcher(reader)
-      val state = new DefaultSortedSetDocValuesReaderState(reader)
 
       searcher
     }
@@ -74,7 +72,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val q = new TermQuery(new Term("title", "lucene"))
 
@@ -95,7 +92,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val bq = new BooleanQuery.Builder()
       bq.add(new TermQuery(new Term("title", "lucene")), Occur.MUST)
@@ -118,7 +114,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val bq = new BooleanQuery.Builder()
       bq.add(new TermQuery(new Term("title", "dummies")), Occur.SHOULD)
@@ -141,7 +136,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val bq = new BooleanQuery.Builder()
       bq.add(new BoostQuery(new TermQuery(new Term("title", "dummies")), 2), Occur.SHOULD)
@@ -165,7 +159,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val builder = new MultiPhraseQuery.Builder()
       builder.add(Seq(
@@ -190,7 +183,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val q = new FuzzyQuery(new Term("title", "lucane"))
 
@@ -211,7 +203,6 @@ class LuceneSearchesSpec extends PlaySpec {
       val searcher = setupSearch()
 
       val tdc = TopScoreDocCollector.create(10)
-      val fc = new FacetsCollector()
 
       val q = new PrefixQuery(new Term("title", "luc"))
 

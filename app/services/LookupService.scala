@@ -47,14 +47,15 @@ class LookupService @Inject()(gdsIndex: GDSRegisterSIC5IndexConnector,
              page: Option[Int] = None,
              sector: Option[String] = None,
              queryParser: Option[Boolean] = None,
-             queryBoostFirstTerm: Option[Boolean] = None): SearchResult = {
+             queryBoostFirstTerm: Option[Boolean] = None,
+             lang: String): SearchResult = {
     val queryType: Option[String] = (queryParser, queryBoostFirstTerm) match {
       case (Some(true), _) => Some("query-parser")
       case (_, Some(true)) => Some("query-boost-first-term")
       case _ => Some("query-builder")
     }
 
-    indexes(indexName).search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, queryType)
+    indexes(indexName).search(query, pageResults.getOrElse(5), page.getOrElse(1), sector, queryType, lang = lang)
   }
 }
 

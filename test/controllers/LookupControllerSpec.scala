@@ -20,7 +20,7 @@ import helpers.{AuthHelper, ControllerSpec}
 import models.SicCode
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -39,18 +39,19 @@ class LookupControllerSpec extends ControllerSpec with AuthHelper {
   }
 
   "lookup" should {
-
+    val lang = "en"
     val sicCode = "12345678"
 
     "return an Ok" when {
       "when a single sic code is supplied and a result is found" in new Setup {
-        val sicCodeLookupResult = SicCode(sicCode, "test description")
-        val sicCodeResultAsJson = Json.parse(
+        val sicCodeLookupResult: SicCode = SicCode(sicCode, "test description", "test welsh description")
+        val sicCodeResultAsJson: JsValue = Json.parse(
           s"""
              |[
              |  {
              |    "code":"$sicCode",
-             |    "desc":"test description"
+             |    "desc":"test description",
+             |    "descCy":"test welsh description"
              |  }
              |]
       """.stripMargin)
@@ -65,22 +66,27 @@ class LookupControllerSpec extends ControllerSpec with AuthHelper {
       }
 
       "matching results have been found" in new Setup {
-        val sicCodeResultAsJson = Json.parse(
+        val sicCodeResultAsJson: JsValue = Json.parse(
           s"""
              |[
              |  {
              |    "code":"testCode",
-             |    "desc":"test description"
+             |    "desc":"test description",
+             |    "descCy":"test welsh description"
              |  },
              |  {
              |    "code":"testCode2",
-             |    "desc":"test description"
+             |    "desc":"test description",
+             |    "descCy":"test welsh description"
              |  }
              |]
       """.stripMargin)
 
         when(mockLookupService.lookup(any()))
-          .thenReturn(List(SicCode("testCode", "test description"), SicCode("testCode2", "test description")))
+          .thenReturn(List(
+            SicCode("testCode", "test description", "test welsh description"),
+            SicCode("testCode2", "test description", "test welsh description")
+          ))
         mockAuthorisedRequest(Future.successful({}))
 
         val result: Future[Result] = controller.lookup("testCode,testCode2")(FakeRequest())
