@@ -18,8 +18,9 @@ package connectors
 
 import config.ICLConfig
 import connectors.utils.IndexConnector
-import javax.inject.{Inject, Singleton}
 import services.Indexes._
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class GDSRegisterSIC5IndexConnector @Inject()(val config: ICLConfig) extends IndexConnector {

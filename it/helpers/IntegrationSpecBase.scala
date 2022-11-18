@@ -28,7 +28,7 @@ trait IntegrationSpecBase extends PlaySpec with WireMockSpec with GuiceOneServer
 
   val wiremockPort = 11111
   val wiremockHost = "localhost"
-
+  val testAuthToken = "testAuthToken"
   val mockHost = wiremockHost
   val mockPort = wiremockPort
   val mockUrl = s"http://$mockHost:$mockPort"
@@ -47,6 +47,7 @@ trait IntegrationSpecBase extends PlaySpec with WireMockSpec with GuiceOneServer
 
   def buildClient(path: String)(implicit app: Application): WSRequest = {
     wsClient.url(s"http://localhost:$port/industry-classification-lookup$path")
+      .withHttpHeaders("authorization" -> testAuthToken)
   }
 
   override def beforeEach() {

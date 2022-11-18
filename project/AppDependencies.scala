@@ -33,19 +33,17 @@ object LuceneDependencies {
 }
 
 object MainDependencies {
-  private val bootstrapPlayVersion = "5.16.0"
-  private val playReactiveMongoVersion = "8.0.0-play-28"
+  private val bootstrapPlayVersion = "7.10.0"
 
   def apply() = Seq(
-    "uk.gov.hmrc" %% "bootstrap-backend-play-28" % bootstrapPlayVersion,
-    "uk.gov.hmrc" %% "simple-reactivemongo" % playReactiveMongoVersion,
+    "uk.gov.hmrc" %% "bootstrap-backend-play-28" % bootstrapPlayVersion
   )
 }
 
 trait TestDependencies {
   val scalaTestPlusVersion = "5.1.0"
-  val mockitoCoreVersion = "4.1.0"
-  val wiremockVersion = "2.31.0"
+  val mockitoCoreVersion = "4.8.0"
+  val wiremockVersion = "2.35.0"
 
   val scope: Configuration
   val test: Seq[ModuleID]

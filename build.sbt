@@ -25,8 +25,8 @@ lazy val playSettings : Seq[Setting[_]] = LuceneIndexCreator.indexSettings
 
 lazy val scoverageSettings = Seq(
   ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;view.*;config.*;.*(AuthService|BuildInfo|Routes).*",
-  ScoverageKeys.coverageMinimum := 80,
-  ScoverageKeys.coverageFailOnMinimum := false,
+  ScoverageKeys.coverageMinimumStmtTotal := 90,
+  ScoverageKeys.coverageFailOnMinimum := true,
   ScoverageKeys.coverageHighlighting := true
 )
 
@@ -45,11 +45,11 @@ lazy val microservice = Project(appName, file("."))
     scalaVersion                                  := "2.12.12",
     libraryDependencies                           ++= AppDependencies(),
     retrieveManaged                               := true,
-    evictionWarningOptions in update              := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    Keys.fork in IntegrationTest                  := false,
-    parallelExecution in IntegrationTest          := false,
+    update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+    IntegrationTest / Keys.fork                   := false,
+    IntegrationTest / parallelExecution           := false,
+    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
     resolvers                                     += Resolver.bintrayRepo("hmrc", "releases"),
     resolvers                                     += Resolver.jcenterRepo,
-    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest)(base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports")
   )
