@@ -37,7 +37,7 @@ object LuceneIndexCreator {
   import Append._
 
   val indexBuildTask = Def.task {
-    val root = (resourceManaged in Compile).value / "conf" / "index"
+    val root = (Compile / resourceManaged).value / "conf" / "index"
 
     val builders: Seq[SICIndexBuilder] = Seq(GDSSicBuilder, ONSSicBuilder)
 
@@ -55,11 +55,8 @@ object LuceneIndexCreator {
 
   val indexSettings = Seq(
     indexBuild := indexBuildTask.value,
-
-    resourceGenerators in Compile += indexBuildTask,
-
-    mappings in Universal ++= contentOf((resourceManaged in Compile).value),
-
+    Compile / resourceGenerators += indexBuildTask,
+    Universal / mappings ++= contentOf((Compile / resourceManaged).value),
     // clean the old location where indexes were stored
     cleanFiles += baseDirectory { base => base / "conf"/ "index" }.value
   )

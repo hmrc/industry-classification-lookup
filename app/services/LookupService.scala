@@ -17,9 +17,10 @@
 package services
 
 import connectors.{GDSRegisterSIC5IndexConnector, ONSSupplementSIC5IndexConnector}
-import javax.inject.{Inject, Singleton}
 import models.SicCode
 import play.api.libs.json.{Format, Json}
+
+import javax.inject.{Inject, Singleton}
 
 object Indexes {
   final val GDS_REGISTER_SIC5_INDEX = "gds-register-sic5"

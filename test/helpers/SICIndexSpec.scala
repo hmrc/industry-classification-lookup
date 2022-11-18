@@ -16,7 +16,6 @@
 
 package helpers
 
-import java.nio.file.{FileSystems, Path}
 import org.apache.lucene.analysis.CharArraySet
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.facet.sortedset.DefaultSortedSetDocValuesReaderState
@@ -24,6 +23,8 @@ import org.apache.lucene.index.{DirectoryReader, IndexReader}
 import org.apache.lucene.search._
 import org.apache.lucene.store.{Directory, NIOFSDirectory}
 import org.scalatestplus.play.PlaySpec
+
+import java.nio.file.{FileSystems, Path}
 
 trait SICIndexSpec extends PlaySpec {
 

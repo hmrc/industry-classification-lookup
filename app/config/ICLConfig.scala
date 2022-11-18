@@ -17,10 +17,11 @@
 package config
 
 import com.typesafe.config.{ConfigObject, ConfigRenderOptions}
-import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ICLConfig @Inject()(config: ServicesConfig, configuration: Configuration) {

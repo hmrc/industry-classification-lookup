@@ -18,8 +18,9 @@ package connectors
 
 import config.ICLConfig
 import connectors.utils.IndexConnector
-import javax.inject.{Inject, Singleton}
 import services.Indexes.ONS_SUPPLEMENT_SIC5_INDEX
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ONSSupplementSIC5IndexConnector @Inject()(val config: ICLConfig) extends IndexConnector {
