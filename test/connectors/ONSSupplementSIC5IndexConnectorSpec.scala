@@ -41,20 +41,20 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
 
   "lookup" should {
 
-    Map(
-      "01410" -> "Raising of dairy cattle",
-      "01130" -> "Growing of vegetables and melons, roots and tubers",
-      "28110" -> "Manufacture of engines and turbines, except aircraft, vehicle and cycle engines",
-      "28930" -> "Manufacture of machinery for food, beverage and tobacco processing"
+    List(
+      ("01410", "Raising of dairy cattle", "Magu gwartheg godro"),
+      ("01130", "Growing of vegetables and melons, roots and tubers", "Tyfu llysiau a melonau, gwreiddlysiau a chloron"),
+      ("28110", "Manufacture of engines and turbines, except aircraft, vehicle and cycle engines", "Gweithgynhyrchu injans a thyrbinau, ac eithrio injans awyrennau, cerbydau a beiciau"),
+      ("28930", "Manufacture of machinery for food, beverage and tobacco processing", "Gweithgynhyrchu peiriannau prosesu bwyd, diodydd a thybaco")
     ) foreach {
-      case (searchCode, searchDesc) =>
+      case (searchCode, searchDescEn, searchDescCy) =>
         s"find the correct single result document for code8 search with $searchCode" in new Setup {
 
           val result: Option[SicCode] = gdsIndex.lookup(searchCode)
 
           result mustBe defined
 
-          result.get mustBe SicCode(searchCode, searchDesc, searchDesc)
+          result.get mustBe SicCode(searchCode, searchDescEn, searchDescCy)
         }
     }
 
@@ -70,7 +70,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
     case class ST(query: String, numMin: Int, topHit: SicCode)
 
     Seq(
-      ST("Dairy farming", 1, SicCode("01410", "Dairy farming", "Dairy farming"))
+      ST("Dairy farming", 1, SicCode("01410", "Dairy farming", "Ffermio llaeth"))
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
@@ -82,11 +82,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
         sics.head mustBe data.topHit
 
         sics mustBe Seq(
-          SicCode("01410", "Dairy farming", "Dairy farming"),
-          SicCode("01430", "Stud farming", "Stud farming"),
-          SicCode("01450", "Goat farming", "Goat farming"),
-          SicCode("01450", "Sheep farming", "Sheep farming"),
-          SicCode("01460", "Pig farming", "Pig farming")
+          SicCode("01410", "Dairy farming", "Ffermio llaeth"),
+          SicCode("01430", "Stud farming", "Ffermio greoedd"),
+          SicCode("01450", "Goat farming", "Ffermio geifr"),
+          SicCode("01450", "Sheep farming", "Ffermio defaid"),
+          SicCode("01460", "Pig farming", "Ffermio moch")
         )
       }
     }
@@ -117,8 +117,8 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
       sics.length mustBe pageResults
 
       sics mustBe Seq(
-        SicCode("01450", "Goat farming", "Goat farming"),
-        SicCode("01450", "Sheep farming", "Sheep farming")
+        SicCode("01450", "Goat farming", "Ffermio geifr"),
+        SicCode("01450", "Sheep farming", "Ffermio defaid")
       )
     }
 
@@ -134,13 +134,13 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
       sics.length mustBe pageResults
 
       sics mustBe Seq(
-        SicCode("01410", "Dairy farming", "Dairy farming"),
-        SicCode("01430", "Stud farming", "Stud farming")
+        SicCode("01410", "Dairy farming", "Ffermio llaeth"),
+        SicCode("01430", "Stud farming", "Ffermio greoedd")
       )
     }
 
     Seq(
-      ST("Cress", 1, SicCode("01130", "Cress growing", "Cress growing"))
+      ST("Cress", 1, SicCode("01130", "Cress growing", "Tyfu berwr"))
     ) foreach { data =>
       s"""should return at least ${data.numMin} result when searching for "${data.query}"  with a top hit of ${data.topHit}""" in new Setup {
 
@@ -153,7 +153,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
         sics.head mustBe data.topHit
 
         sics mustBe Seq(
-          SicCode("01130", "Cress growing", "Cress growing")
+          SicCode("01130", "Cress growing", "Tyfu berwr")
         )
       }
     }
@@ -161,11 +161,11 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
     "Should perform second search with a fuzzy match if first search has no match" in new Setup {
       val result: SearchResult = onsIndex.search("XXX", queryType = Some(journey))
       result.results mustBe Seq(
-        SicCode("25730", "Axe (manufacture)", "Axe (manufacture)"),
-        SicCode("69203", "Tax consultancy", "Tax consultancy"),
-        SicCode("16240", "Box pallet (manufacture)", "Box pallet (manufacture)"),
-        SicCode("19201", "Paraffin wax (manufacture)", "Paraffin wax (manufacture)"),
-        SicCode("20412", "Polishing wax (manufacture)", "Polishing wax (manufacture)")
+        SicCode("25730", "Axe (manufacture)", "Bwyell (gweithgynhyrchu)"),
+        SicCode("69203", "Tax consultancy", "Ymgynghoriaeth treth"),
+        SicCode("16240", "Box pallet (manufacture)", "Paled bocs (gweithgynhyrchu)"),
+        SicCode("19201", "Paraffin wax (manufacture)", "Cwyr paraffin (gweithgynhyrchu)"),
+        SicCode("20412", "Polishing wax (manufacture)", "Cwyr pwyll (gweithgynhyrchu)")
       )
     }
 
