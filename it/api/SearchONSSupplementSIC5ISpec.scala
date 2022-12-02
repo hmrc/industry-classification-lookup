@@ -29,9 +29,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 44,
         "nonFilteredFound" -> 44,
         "results" -> Json.arr(
-          Json.obj("code" -> "01410", "desc" -> "Dairy farming", "descCy" -> "Dairy farming"),
-          Json.obj("code" -> "01430", "desc" -> "Stud farming", "descCy" -> "Stud farming"),
-          Json.obj("code" -> "01450", "desc" -> "Goat farming", "descCy" -> "Goat farming")
+          Json.obj("code" -> "01410", "desc" -> "Dairy farming", "descCy" -> "Ffermio llaeth"),
+          Json.obj("code" -> "01430", "desc" -> "Stud farming", "descCy" -> "Ffermio greoedd"),
+          Json.obj("code" -> "01450", "desc" -> "Goat farming", "descCy" -> "Ffermio geifr")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 26),
@@ -58,7 +58,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 44,
         "results" -> Json.arr(
-          Json.obj("code" -> "77390", "desc" -> "Dairy machinery rental (non agricultural)", "descCy" -> "Dairy machinery rental (non agricultural)")
+          Json.obj("code" -> "77390", "desc" -> "Dairy machinery rental (non agricultural)", "descCy" -> "Rhentu peiriannau llaeth (heb fod yn amaethyddol)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 26),
@@ -121,9 +121,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 41,
         "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Instep support (manufacture)")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Coedwriaeth a gweithgareddau coedwigaeth eraill"),
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Cymorth troed (gweithgynhyrchu)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Cymorth instep (gweithgynhyrchu)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
@@ -172,9 +172,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 41,
         "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Instep support (manufacture)")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Coedwriaeth a gweithgareddau coedwigaeth eraill"),
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Cymorth troed (gweithgynhyrchu)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Cymorth instep (gweithgynhyrchu)")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
@@ -203,9 +203,9 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 41,
         "nonFilteredFound" -> 41,
         "results" -> Json.arr(
-          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Foot support (manufacture)"),
-          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Instep support (manufacture)"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support activities", "descCy" -> "Educational support activities")
+          Json.obj("code" -> "32500", "desc" -> "Foot support (manufacture)", "descCy" -> "Cymorth troed (gweithgynhyrchu)"),
+          Json.obj("code" -> "32500", "desc" -> "Instep support (manufacture)", "descCy" -> "Cymorth instep (gweithgynhyrchu)"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support activities", "descCy" -> "Gweithgareddau cymorth addysgol")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "B", "name" -> "Mining And Quarrying", "nameCy" -> "Mwyngloddio a Chwarelu", "count" -> 16),
@@ -252,7 +252,7 @@ class SearchONSSupplementSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 1,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Coedwriaeth a gweithgareddau coedwigaeth eraill")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 1)

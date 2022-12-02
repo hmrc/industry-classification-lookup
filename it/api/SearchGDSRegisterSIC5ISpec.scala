@@ -28,9 +28,9 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 3,
         "nonFilteredFound" -> 3,
         "results" -> Json.arr(
-          Json.obj("code" -> "01500", "desc" -> "Mixed farming", "descCy" -> "Mixed farming"),
-          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle", "descCy" -> "Raising of dairy cattle"),
-          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Wholesale of dairy products, eggs and edible oils and fats")
+          Json.obj("code" -> "01500", "desc" -> "Mixed farming", "descCy" -> "Ffermio cymysg"),
+          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle", "descCy" -> "Magu gwartheg godro"),
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Cyfanwerthu cynhyrchion llaeth, wyau ac olewon a brasterau bwytadwy")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
@@ -55,7 +55,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 3,
         "results" -> Json.arr(
-          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Wholesale of dairy products, eggs and edible oils and fats")
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Cyfanwerthu cynhyrchion llaeth, wyau ac olewon a brasterau bwytadwy")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
@@ -110,9 +110,9 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 12,
         "nonFilteredFound" -> 12,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities"),
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry", "descCy" -> "Support services to forestry"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support services", "descCy" -> "Educational support services")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Tyfu coed a gweithgareddau coedwigaeth eraill"),
+          Json.obj("code" -> "02400", "desc" -> "Support services to forestry", "descCy" -> "Gwasanaethau cynorthwyol ym maes coedwigaeth"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support services", "descCy" -> "Gwasanaethau cymorth addysg")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 4),
@@ -157,9 +157,9 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 3,
         "nonFilteredFound" -> 3,
         "results" -> Json.arr(
-          Json.obj("code" -> "01500", "desc" -> "Mixed farming", "descCy" -> "Mixed farming"),
-          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle", "descCy" -> "Raising of dairy cattle"),
-          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Wholesale of dairy products, eggs and edible oils and fats")
+          Json.obj("code" -> "01500", "desc" -> "Mixed farming", "descCy" -> "Ffermio cymysg"),
+          Json.obj("code" -> "01410", "desc" -> "Raising of dairy cattle", "descCy" -> "Magu gwartheg godro"),
+          Json.obj("code" -> "46330", "desc" -> "Wholesale of dairy products, eggs and edible oils and fats", "descCy" -> "Cyfanwerthu cynhyrchion llaeth, wyau ac olewon a brasterau bwytadwy")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 2),
@@ -182,11 +182,11 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 12,
         "nonFilteredFound" -> 12,
         "results" -> Json.arr(
-          Json.obj("code" -> "02400", "desc" -> "Support services to forestry", "descCy" -> "Support services to forestry"),
-          Json.obj("code" -> "85600", "desc" -> "Educational support services", "descCy" -> "Educational support services"),
-          Json.obj("code" -> "01610", "desc" -> "Support activities for crop production", "descCy" -> "Support activities for crop production"),
-          Json.obj("code" -> "52290", "desc" -> "Other transportation support activities", "descCy" -> "Other transportation support activities"),
-          Json.obj("code" -> "90020", "desc" -> "Support activities to performing arts", "descCy" -> "Support activities to performing arts")
+          Json.obj("code" -> "02400", "desc" -> "Support services to forestry", "descCy" -> "Gwasanaethau cynorthwyol ym maes coedwigaeth"),
+          Json.obj("code" -> "85600", "desc" -> "Educational support services", "descCy" -> "Gwasanaethau cymorth addysg"),
+          Json.obj("code" -> "01610", "desc" -> "Support activities for crop production", "descCy" -> "Gweithgareddau cynorthwyol ym maes cynhyrchu cnydau"),
+          Json.obj("code" -> "52290", "desc" -> "Other transportation support activities", "descCy" -> "Gweithgareddau eraill sy'n ategu trafnidiaeth"),
+          Json.obj("code" -> "90020", "desc" -> "Support activities to performing arts", "descCy" -> "Gweithgareddau cymorth ym maes y celfyddydau perfformio")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 4),
@@ -231,7 +231,7 @@ class SearchGDSRegisterSIC5ISpec extends SICSearchHelper {
         "numFound" -> 1,
         "nonFilteredFound" -> 1,
         "results" -> Json.arr(
-          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Silviculture and other forestry activities")
+          Json.obj("code" -> "02100", "desc" -> "Silviculture and other forestry activities", "descCy" -> "Tyfu coed a gweithgareddau coedwigaeth eraill")
         ),
         "sectors" -> Json.arr(
           Json.obj("code" -> "A", "name" -> "Agriculture, Forestry And Fishing", "nameCy" -> "Amaeth, Coedwigaeth a Physgota", "count" -> 1)

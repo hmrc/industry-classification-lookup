@@ -34,7 +34,7 @@ class LookupAPIISpec extends IntegrationSpecBase {
          | {
          |   "code":"$sicCode",
          |   "desc":"Growing of cereals (except rice), leguminous crops and oil seeds",
-         |   "descCy":"Growing of cereals (except rice), leguminous crops and oil seeds"
+         |   "descCy":"Tyfu grawn (ac eithrio reis), cnydau o godlysiau ac olew had"
          | }
          |]
       """.stripMargin)
