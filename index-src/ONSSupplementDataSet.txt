@@ -10112,7 +10112,7 @@
 38110	Collection of non hazardous waste output of textile mills	Casglu allbwn gwastraff nad yw'n beryglus o felinau tecstilau
 38110	Collection of refuse in litter bins in public places	Casglu sbwriel mewn biniau sbwriel mewn mannau cyhoeddus
 38110	Construction and demolition waste collection	Casglu gwastraff adeiladu a dymchwel
-38110	Dustman	Dustman
+38110	Dustman	Casglwr sbwriel
 38110	Garbage collection	Casgliad sbwriel
 38110	Litter box refuse collection (public)	Casgliad sbwriel blwch sbwriel (cyhoeddus)
 38110	Operation of waste transfer facilities for non-hazardous waste	Gweithredu cyfleusterau trosglwyddo gwastraff ar gyfer gwastraff nad yw'n beryglus
@@ -12783,7 +12783,7 @@
 50200	Oil-rig transportation by towing or pushing	Cludo rig olew trwy dynnu neu wthio
 50200	Rental of vessels with crew for coastal freight water transport	Rhentu cychod gyda chriw ar gyfer cludo d_r cludo nwyddau arfordirol
 50200	Rental of vessels with crew for sea freight water transport	Rhentu llongau gyda chriw ar gyfer cludo d_r cludo nwyddau môr
-50200	Royal Fleet Auxiliary	Royal Fleet Auxiliary
+50200	Royal Fleet Auxiliary	Llynges Frenhinol Gynorthwyol
 50200	Standby vessel services	Gwasanaethau cychod wrth gefn
 50200	Transport by towing or pushing of barges (except inland waterway)	Cludiant trwy dynnu neu wthio cychod (ac eithrio dyfrffordd fewndirol)
 50200	Transport of freight over seas and coastal waters (whether scheduled or not)	Cludo nwyddau dros foroedd a dyfroedd arfordirol (boed yn gofrestredig ai peidio)
@@ -12992,7 +12992,7 @@
 52220	Vessel registration services	Gwasanaethau cofrestru llongau
 52220	Water transport (supporting activities)	Cludiant d_r (gweithgareddau ategol)
 52220	Waterway locks operation	Gweithrediad cloeon dyfrffordd
-52220	Wharfinger	Wharfinger
+52220	Wharfinger	Glanfäwr
 52220	Wreck raising	Codi llongddrylliad
 52230	Aerodrome	Maes awyr
 52230	Air terminal operated by airline	Terfynell aer a weithredir gan y cwmni hedfan
@@ -13014,7 +13014,7 @@
 52241	Container handling services for water transport activities	Gwasanaethau trin cynwysyddion ar gyfer gweithgareddau cludo d_r
 52241	Loading and unloading of goods travelling via water transport	Llwytho a dadlwytho nwyddau sy'n teithio ar gludiant d_r
 52241	Loading and unloading of passengers' luggage travelling via water transport	Llwytho a dadlwytho bagiau teithwyr sy'n teithio ar gludiant d_r
-52241	Stevedoring	Stevedoring
+52241	Stevedoring	Llwytho/Dadlwytho
 52242	Air passenger baggage handling services	Gwasanaethau trin bagiau teithwyr awyr
 52242	Cargo handling for air transport activities	Trin cargo ar gyfer gweithgareddau trafnidiaeth awyr
 52242	Loading and unloading of goods travelling via air transport	Llwytho a dadlwytho nwyddau sy'n teithio ar drafnidiaeth awyr
@@ -13640,7 +13640,7 @@
 68209	Flat letting	Gosod fflat
 68209	Freeholder of leasehold property	Rhydd-ddeiliad eiddo prydlesol
 68209	Garage letting (lock up)	Gosod garej (cloi)
-68209	Ground, landlord	Ground, landlord
+68209	Ground, landlord	Tir, landlord
 68209	House letting (private)	Gosod t_ (preifat)
 68209	Industrial estate letting	Gosod ystad ddiwydiannol
 68209	Land letting	Gosod tir
@@ -13703,7 +13703,7 @@
 69109	Patents preparation	Paratoi patentau
 69109	Process server	Gweinydd proses
 69109	Referees legal activities	Yn dyfarnu gweithgareddau cyfreithiol
-69109	Scrivenery	Scrivenery
+69109	Scrivenery	Gwaith copïydd
 69109	Sheriff's officer	Swyddog y Siryf
 69109	Software copyright consultancy activities	Gweithgareddau ymgynghori hawlfraint meddalwedd
 69109	Trade mark agent	Asiant nod masnach
@@ -14713,7 +14713,7 @@
 85320	School of arts and crafts	Ysgol celf a chrefft
 85320	School of speech and drama	Ysgol lleferydd a drama
 85320	Secretarial college	Coleg ysgrifenyddol
-85320	Seminary	Seminary
+85320	Seminary	Coleg diwynyddol
 85320	Technical and vocational adult education (excl. cultural, sports, recreation education and the like)	Addysg dechnegol a galwedigaethol i oedolion (ac eithrio addysg ddiwylliannol, chwaraeon, hamdden ac ati)
 85320	Technical and vocational education	Addysg dechnegol a galwedigaethol
 85320	Technical and vocational secondary education	Addysg uwchradd dechnegol a galwedigaethol
@@ -15153,7 +15153,7 @@
 90010	Band (musical)	Band (sioe gerdd)
 90010	Circus	Syrcas
 90010	Concerts production	Cynhyrchu cyngherddau
-90010	Conjuror	Conjuror
+90010	Conjuror	Consuriwr
 90010	Dance band	Band dawns
 90010	Dance productions	Cynyrchiadau dawns
 90010	Impresario	Impresario
@@ -15175,7 +15175,7 @@
 90010	Theatrical touring company	Cwmni teithiol theatrig
 90010	Travelling show	Sioe deithiol
 90010	Variety artiste (own account)	Artiste amrywiol (cyfrif ei hun)
-90010	Ventriloquist	Ventriloquist
+90010	Ventriloquist	Tafleisiwr
 90020	Cultural event organisation	Sefydliad digwyddiadau diwylliannol
 90020	Dance festival organisation	Sefydliad g_yl ddawns
 90020	Direction, production and support activities to circus performances	Cyfarwyddo, cynhyrchu a chefnogi gweithgareddau i berfformiadau syrcas
@@ -15278,9 +15278,9 @@
 91030	Preservation society for historic houses	Cymdeithas gadwedigaeth ar gyfer tai hanesyddol
 91040	Botanical gardens	Gerddi botanegol
 91040	Children's zoos	S_au i blant
-91040	Menagerie	Menagerie
+91040	Menagerie	Sioe anifeiliaid
 91040	Nature reserves including wildlife preservation	Gwarchodfeydd natur gan gynnwys cadw bywyd gwyllt
-91040	Royal Botanical Gardens Kew	Royal Botanical Gardens Kew
+91040	Royal Botanical Gardens Kew	Gerddi Botaneg Brenhinol Kew
 91040	Wildlife preservation services	Gwasanaethau cadw bywyd gwyllt
 91040	Zoological gardens	Gerddi s_olegol
 92000	Amusement arcade	Arcêd ddifyr
@@ -15301,7 +15301,7 @@
 92000	Racing tipster	Tomenni rasio
 92000	The Tote	Y Tote
 92000	Tic tac person	Person tic tac
-92000	Totalisator	Totalisator
+92000	Totalisator	Cyfansymiwr
 92000	Turf accountant	Cyfrifydd tywarchen
 92000	Turf commission agency	Asiantaeth comisiwn Turf
 92000	Virtual gambling web site operation	Gweithrediad gwefan gamblo rhithwir
@@ -15319,7 +15319,7 @@
 93110	Golf links	Cysylltiadau golff
 93110	Greyhound racing stadium	Stadiwm rasio milgwn
 93110	Greyhound track	Trac milgwn
-93110	Groundsman	Groundsman
+93110	Groundsman	Gofalwr tir
 93110	Gymnasium	Campfa
 93110	Hockey, cricket, rugby stadiums operation	Hoci, criced, gweithrediad stadia rygbi
 93110	Ice skating rink	Rinc sglefrio iâ
@@ -15335,7 +15335,7 @@
 93110	Racecourse operation	Gweithrediad y Cae Ras
 93110	Rifle butts	Cigydd reiffl
 93110	Roller skating rink	Rinc sglefrio roller
-93110	Skittle alley	Skittle alley
+93110	Skittle alley	Ale fowlio
 93110	Sports arenas	Arenas chwaraeon
 93110	Sports facilities operation	Cyfleusterau chwaraeon yn gweithredu
 93110	Stadium operation	Ymgyrch stadiwm
@@ -15390,7 +15390,7 @@
 93199	Athletes	Athletwyr
 93199	Boxing	Paffio
 93199	Boxing promoter	Hyrwyddwr bocsio
-93199	Coursing	Coursing
+93199	Coursing	Helfa
 93199	Dirt track racing	Rasio trac baw
 93199	Dog breeding (for greyhound racing)	Bridio c_n (ar gyfer rasio milgwn)
 93199	Dog racing	Rasio c_n
@@ -15432,7 +15432,7 @@
 93210	Fortune telling (fairground)	Dweud ffortiwn (fairground)
 93210	Fun fair	Ffair hwyl
 93210	Preserved railway operation	Gweithrediad rheilffordd wedi'i gadw
-93210	Switchback (fairground)	Switchback (fairground)
+93210	Switchback (fairground)	Ffigyr-êt (cae ffair)
 93210	Theme park operation	Gweithrediad parc thema
 93290	Adventure playground	Maes chwarae antur
 93290	Airsoft and paintball activities	Gweithgareddau Airsoft a phêl-baent
@@ -15801,9 +15801,9 @@
 96010	Industrial clothing hire from laundries	Llogi dillad diwydiannol o golchdai
 96010	Job dyeing	Swydd lliwio
 96010	Lace cleaning and mending (not net mending)	Glanhau a mendio les (nid mendio net)
-96010	Launderette	Launderette
+96010	Launderette	Golchdy
 96010	Laundry	Golchi dillad
-96010	Laundry receiving office	Laundry receiving office
+96010	Laundry receiving office	Swyddfa casglu dillad golchi
 96010	Linen hire (associated with laundry service)	Llogi lliain (sy'n gysylltiedig â gwasanaeth golchi dillad)
 96010	Pressing and valeting	Gwasgu a malu
 96010	Pressing of wearing apparel on a fee or contract basis	Pwyso ar wisgo apparel ar sail ffi neu gontract
@@ -15821,14 +15821,14 @@
 96020	Beauty parlour	Parlwr harddwch
 96020	Beauty specialist	Arbenigwr harddwch
 96020	Beauty treatment activities	Gweithgareddau triniaeth harddwch
-96020	Coiffeur	Coiffeur
+96020	Coiffeur	Triniwr gwallt
 96020	Electrolysis specialist	Arbenigwr electrolysis
 96020	Facial massage	Tylino wynebau
 96020	Hair design	Dylunio gwallt
 96020	Hairdressing activities	Gweithgareddau trin gwallt
 96020	Make-up and beauty treatment	Triniaeth golur a harddwch
-96020	Manicurist	Manicurist
-96020	Pedicure	Pedicure
+96020	Manicurist	Triniwr dwylo
+96020	Pedicure	Triniaeth y traed
 96020	Permanent make-up application	Cais colur parhaol
 96020	Trichologist	Tricholegydd
 96030	Burial services	Gwasanaethau claddu
@@ -15867,9 +15867,9 @@
 96090	Blood pressure machine operation (coin operated)	Gweithrediad peiriant pwysedd gwaed (darn arian yn cael ei weithredu)
 96090	Boarding of pet animals	Lletya anifeiliaid anwes
 96090	Body piercing studios	Stiwdios tyllu'r corff
-96090	Bootblack	Bootblack
+96090	Bootblack	Glanhäwr esgidiau
 96090	Cats' home	Cartref cathod
-96090	Clairvoyant	Clairvoyant
+96090	Clairvoyant	Clirweledydd
 96090	Cloakroom (not railway, etc.)	Ystafell Gotiau (nid rheilffordd, ac ati)
 96090	Computer dating agency	Asiantaeth dyddio cyfrifiaduron
 96090	Dating and other speed networking agency	Dyddio ac asiantaeth rwydweithio cyflymder arall
@@ -15886,14 +15886,14 @@
 96090	Horse clipping	Clipio ceffylau
 96090	Horse whisperer	Sibrwd ceffyl
 96090	Housesitting	Eistedd t_
-96090	Jobbing waiter	Jobbing waiter
+96090	Jobbing waiter	Mân weinydd
 96090	Kennels (not racing)	Cynelau (nid rasio)
 96090	Knifegrinder (travelling)	Cyllell (teithio)
 96090	Licensed porter	Porthor trwyddedig
 96090	Marriage bureau	Biwro priodas
 96090	Master of Ceremonies	Meistr y Seremonïau
 96090	Outside porter	Porthor tu allan
-96090	Palmist	Palmist
+96090	Palmist	Pobl sy’n darllen dwylo
 96090	Pavement artist	Arlunydd palmant
 96090	Pet sitting services	Gwasanaethau eistedd anifeiliaid anwes
 96090	Photographic machines (coin-operated)	Peiriannau ffotograffig (sy'n cael ei weithredu gan ddarnau arian)
@@ -15903,7 +15903,7 @@
 96090	Shoe shiners	Sgleiniog esgidiau
 96090	Spiritualists' activities	Gweithgareddau ysbrydion
 96090	Tattooist	Dat_ydd
-96090	Toastmaster	Toastmaster
+96090	Toastmaster	Tostfeistr
 96090	Town crier	Crïwr y dref
 96090	Training of pet animals	Hyfforddi anifeiliaid anwes
 96090	Valet car parkers	Maes parcio'r Valet
