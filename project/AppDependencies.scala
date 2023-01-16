@@ -33,7 +33,7 @@ object LuceneDependencies {
 }
 
 object MainDependencies {
-  private val bootstrapPlayVersion = "7.10.0"
+  private val bootstrapPlayVersion = "7.12.0"
 
   def apply() = Seq(
     "uk.gov.hmrc" %% "bootstrap-backend-play-28" % bootstrapPlayVersion

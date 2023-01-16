@@ -21,7 +21,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName: String = "industry-classification-lookup"
 
-lazy val playSettings : Seq[Setting[_]] = LuceneIndexCreator.indexSettings
+lazy val playSettings: Seq[Setting[_]] = LuceneIndexCreator.indexSettings
 
 lazy val scoverageSettings = Seq(
   ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;view.*;config.*;.*(AuthService|BuildInfo|Routes).*",
@@ -49,7 +49,6 @@ lazy val microservice = Project(appName, file("."))
     IntegrationTest / Keys.fork                   := false,
     IntegrationTest / parallelExecution           := false,
     IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
-    resolvers                                     += Resolver.bintrayRepo("hmrc", "releases"),
     resolvers                                     += Resolver.jcenterRepo,
     addTestReportOption(IntegrationTest, "int-test-reports")
   )
