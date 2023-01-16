@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,15 +24,15 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class SearchController @Inject()(lookupService: LookupService,
                                  config: ICLConfig,
                                  val authConnector: AuthConnector,
-                                 controllerComponents: ControllerComponents
-                                ) extends BackendController(controllerComponents) with AuthorisedFunctions {
+                                 controllerComponents: ControllerComponents)
+                                (implicit executionContext: ExecutionContext)
+  extends BackendController(controllerComponents) with AuthorisedFunctions {
 
   val defaultIndex = config.getConfigString("index.default")
 
