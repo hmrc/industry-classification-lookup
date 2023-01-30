@@ -2,11 +2,6 @@
 
 [![Build Status](https://travis-ci.org/hmrc/industry-classification-lookup.svg)](https://travis-ci.org/hmrc/industry-classification-lookup) [ ![Download](https://api.bintray.com/packages/hmrc/releases/industry-classification-lookup/images/download.svg) ](https://bintray.com/hmrc/releases/industry-classification-lookup/_latestVersion)
 
-## TODO !!!!
-
-* the Lookup API returns `204` at the moment rather than `404` for missing code
-* the search `indexName` defaults to the deprecated `hmrc-sic8` instead of `ons-supplement-sic5`
-
 
 ## Lookup
 
@@ -163,6 +158,21 @@ Response:
   ]
 }
 ```
+## Running locally
+User service manager to run all services required by ICL backend:
+
+```bash
+sm --start ICL_ALL -f
+```
+Note this will start the ICL backend itself too, as it's included in the profile.
+
+Alternatively, to run the service with local changes, `cd` to cloned directory and execute following:
+
+- `sm --stop ICL`
+- `/run.sh`
+
+The service will come to life  @
+http://localhost:9875/
 
 ### License
 
