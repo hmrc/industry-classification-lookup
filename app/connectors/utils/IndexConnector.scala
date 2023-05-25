@@ -88,7 +88,7 @@ trait IndexConnector extends Logging {
 
     results.totalHits match {
       case 0 =>
-        logger.info(s"Search for SIC code $sicCode found nothing")
+        logger.info(s"[IndexConnector][lookup] Search for SIC code $sicCode found nothing")
         None
       case _ => Some(extractSic(results.scoreDocs(0)))
     }
