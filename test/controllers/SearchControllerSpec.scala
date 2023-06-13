@@ -19,7 +19,7 @@ package controllers
 import config.ICLConfig
 import helpers.{AuthHelper, ControllerSpec}
 import models.SicCode
-import org.mockito.ArgumentMatchers.{eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -62,7 +62,7 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     )
 
     "return a 200 when a sic code description is returned from LookupService" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang)))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang))(any()))
         .thenReturn(sicCodeLookupResult)
       mockAuthorisedRequest(Future.successful({}))
 
@@ -72,7 +72,7 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     }
 
     "return a 404 when no description is returned from LookupService" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang)))
+      when(mockLookupService.search(eqTo(query), eqTo("foo"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang))(any()))
         .thenReturn(SearchResult(0, 0, Seq(), Seq()))
       mockAuthorisedRequest(Future.successful({}))
 
@@ -87,7 +87,7 @@ class SearchControllerSpec extends ControllerSpec with AuthHelper {
     }
 
     "Use the default index when one isn't specified" in new Setup {
-      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang)))
+      when(mockLookupService.search(eqTo(query), eqTo("bar"), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(None), eqTo(lang))(any()))
         .thenReturn(sicCodeLookupResult)
       mockAuthorisedRequest(Future.successful({}))
 

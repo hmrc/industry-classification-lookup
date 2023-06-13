@@ -25,6 +25,7 @@ import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.{JsObject, Json}
+import play.api.test.FakeRequest
 import services.Indexes._
 
 class LookupServiceSpec extends PlaySpec with MockitoSugar {
@@ -33,6 +34,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
   val mockConfig: ICLConfig = mock[ICLConfig]
   val mockONSIndex: ONSSupplementSIC5IndexConnector = mock[ONSSupplementSIC5IndexConnector]
   val mockGDSIndex: GDSRegisterSIC5IndexConnector = mock[GDSRegisterSIC5IndexConnector]
+  implicit val request = FakeRequest()
 
   trait Setup {
     val service: LookupService = new LookupService(mockGDSIndex, mockONSIndex) {
@@ -66,7 +68,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(
+      when(mockGDSIndex.lookup(any())(any())).thenReturn(
         None,
         None
       )
@@ -80,7 +82,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(Some(sicCodeResult), Some(sicCodeResult))
+      when(mockGDSIndex.lookup(any())(any())).thenReturn(Some(sicCodeResult), Some(sicCodeResult))
 
       service.lookup(searchList) mustBe List(sicCodeResult, sicCodeResult)
     }
@@ -91,7 +93,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(Some(sicCodeResult))
+      when(mockGDSIndex.lookup(any())(any())).thenReturn(Some(sicCodeResult))
 
       service.lookup(searchList) mustBe List(sicCodeResult)
     }
@@ -102,7 +104,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
       when(mockConfig.getConfigObject(eqTo("sic")))
         .thenReturn(sicCodeLookupResult)
 
-      when(mockGDSIndex.lookup(any())).thenReturn(Some(sicCodeResult), None)
+      when(mockGDSIndex.lookup(any())(any())).thenReturn(Some(sicCodeResult), None)
 
       service.lookup(searchList) mustBe List(sicCodeResult)
     }
@@ -113,7 +115,7 @@ class LookupServiceSpec extends PlaySpec with MockitoSugar {
     "return the results of the index query" in new Setup {
       val query = "Foo"
       val result: SearchResult = SearchResult(1, 1, Seq(SicCode("12345", "test description", "test welsh description")), Seq())
-      when(mockONSIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false), eqTo(lang))).thenReturn(result)
+      when(mockONSIndex.search(eqTo(query), any[Int](), any[Int](), any(), any(), eqTo(false), eqTo(lang))(any())).thenReturn(result)
 
       service.search(query, ONS_SUPPLEMENT_SIC5_INDEX, lang = lang) mustBe result
     }

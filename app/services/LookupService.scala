@@ -19,6 +19,7 @@ package services
 import connectors.{GDSRegisterSIC5IndexConnector, ONSSupplementSIC5IndexConnector}
 import models.SicCode
 import play.api.libs.json.{Format, Json}
+import play.api.mvc.Request
 
 import javax.inject.{Inject, Singleton}
 
@@ -38,7 +39,7 @@ class LookupService @Inject()(gdsIndex: GDSRegisterSIC5IndexConnector,
   )
 
 
-  def lookup(sicCodes: List[String]): List[SicCode] = {
+  def lookup(sicCodes: List[String])(implicit request: Request[_]): List[SicCode] = {
     sicCodes flatMap (code => indexes(GDS_REGISTER_SIC5_INDEX).lookup(code))
   }
 
@@ -49,7 +50,7 @@ class LookupService @Inject()(gdsIndex: GDSRegisterSIC5IndexConnector,
              sector: Option[String] = None,
              queryParser: Option[Boolean] = None,
              queryBoostFirstTerm: Option[Boolean] = None,
-             lang: String): SearchResult = {
+             lang: String)(implicit request: Request[_]): SearchResult = {
     val queryType: Option[String] = (queryParser, queryBoostFirstTerm) match {
       case (Some(true), _) => Some("query-parser")
       case (_, Some(true)) => Some("query-boost-first-term")

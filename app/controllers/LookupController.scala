@@ -21,6 +21,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.LookupService
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import utils.LoggingUtil
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,13 +31,17 @@ class LookupController @Inject()(lookupService: LookupService,
                                  val authConnector: AuthConnector,
                                  controllerComponents: ControllerComponents)
                                 (implicit executionContext: ExecutionContext)
-  extends BackendController(controllerComponents) with AuthorisedFunctions {
+  extends BackendController(controllerComponents) with AuthorisedFunctions with LoggingUtil {
 
   def lookup(sicCodes: String): Action[AnyContent] = Action.async { implicit request =>
     authorised() {
       lookupService.lookup(sicCodes.split(",").toList) match {
-        case Nil => Future.successful(NoContent)
-        case list => Future.successful(Ok(Json.toJson(list.distinct)))
+        case Nil =>
+          infoLog("[LookupController][lookup] No SIC codes found")
+          Future.successful(NoContent)
+        case list =>
+          infoLog("[LookupController][lookup] SIC codes found")
+          Future.successful(Ok(Json.toJson(list.distinct)))
       }
     }
   }

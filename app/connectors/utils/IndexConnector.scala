@@ -27,14 +27,15 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.{IndexSearcher, Query, ScoreDoc, TopScoreDocCollector}
 import org.apache.lucene.store.NIOFSDirectory
 import org.apache.lucene.util.QueryBuilder
-import play.api.Logging
+import play.api.mvc.Request
 import services.QueryType.{QUERY_BOOSTER, QUERY_BUILDER, QUERY_PARSER}
 import services.{FacetResults, SearchResult}
+import utils.LoggingUtil
 
 import java.nio.file.FileSystems
 import scala.collection.JavaConverters._
 
-trait IndexConnector extends Logging {
+trait IndexConnector extends LoggingUtil {
 
   val name: String
 
@@ -81,14 +82,14 @@ trait IndexConnector extends Logging {
     SicCode(doc.get(FIELD_CODE), doc.get(FIELD_DESC), doc.get(FIELD_DESC_CY))
   }
 
-  def lookup(sicCode: String): Option[SicCode] = {
+  def lookup(sicCode: String)(implicit request: Request[_]): Option[SicCode] = {
     val qp = new QueryParser(FIELD_CODE, analyzer(LANG_EN))
 
     val results = searcher.search(qp.parse(sicCode), 1)
 
     results.totalHits match {
       case 0 =>
-        logger.info(s"[IndexConnector][lookup] Search for SIC code $sicCode found nothing")
+        infoLog(s"[IndexConnector][lookup] Search for SIC code $sicCode found nothing")
         None
       case _ => Some(extractSic(results.scoreDocs(0)))
     }
@@ -100,7 +101,7 @@ trait IndexConnector extends Logging {
              sector: Option[String] = None,
              queryType: Option[String] = None,
              isFuzzyExecuted: Boolean = false,
-             lang: String = LANG_EN): SearchResult = {
+             lang: String = LANG_EN)(implicit request: Request[_]): SearchResult = {
 
     val parsedQuery = buildQuery(query, queryType, isFuzzyExecuted, lang)
 
@@ -123,14 +124,14 @@ trait IndexConnector extends Logging {
     results.totalHits match {
       case 0 =>
         if(!queryType.contains(QUERY_PARSER) && !isFuzzyExecuted) {
-          logger.info(s"""Search for SIC codes with query "$query" found nothing performing fuzzy search""")
+          infoLog(s"""Search for SIC codes with query "$query" found nothing performing fuzzy search""")
           search(query, pageResults, page, sector, queryType, isFuzzyExecuted = true)
         } else {
-          logger.info(s"""Search for SIC codes with query "$query" found nothing""")
+          infoLog(s"""Search for SIC codes with query "$query" found nothing""")
           SearchResult(0, 0, Seq(), Seq())
         }
       case n =>
-        logger.info(s"""Search for SIC codes with query "$query" found $n results""")
+        infoLog(s"""Search for SIC codes with query "$query" found $n results""")
         val sics = results.scoreDocs.toSeq map extractSic
         val facetResults: Seq[FacetResults] = {
           result.facets.getTopChildren(1000, FIELD_SECTOR).labelValues.toSeq map { lv =>

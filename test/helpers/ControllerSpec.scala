@@ -16,15 +16,12 @@
 
 package helpers
 
-import akka.util.Timeout
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-
-import java.util.concurrent.TimeUnit.SECONDS
+import play.api.test.FakeRequest
 
 trait ControllerSpec extends PlaySpec with MockitoSugar {
 
-  private val FIVE = 5L
-  private implicit val timeout: Timeout = Timeout(FIVE, SECONDS)
+  implicit val request = FakeRequest()
 
 }
