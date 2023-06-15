@@ -21,10 +21,12 @@ import models.SicCode
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
+import play.api.test.FakeRequest
 import services.{QueryType, SearchResult}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
+  implicit val request = FakeRequest()
   val mockConfig: Configuration = mock[Configuration]
   val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
 

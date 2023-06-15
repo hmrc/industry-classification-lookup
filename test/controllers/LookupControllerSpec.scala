@@ -57,7 +57,7 @@ class LookupControllerSpec extends ControllerSpec with AuthHelper {
              |]
       """.stripMargin)
 
-        when(mockLookupService.lookup(eqTo(List(sicCode))))
+        when(mockLookupService.lookup(eqTo(List(sicCode)))(any()))
           .thenReturn(List(sicCodeLookupResult))
         mockAuthorisedRequest(Future.successful({}))
 
@@ -83,7 +83,7 @@ class LookupControllerSpec extends ControllerSpec with AuthHelper {
              |]
       """.stripMargin)
 
-        when(mockLookupService.lookup(any()))
+        when(mockLookupService.lookup(any())(any()))
           .thenReturn(List(
             SicCode("testCode", "test description", "test welsh description"),
             SicCode("testCode2", "test description", "test welsh description")
@@ -98,7 +98,7 @@ class LookupControllerSpec extends ControllerSpec with AuthHelper {
 
     "return a NoContent" when {
       "the request was successful but no results were found" in new Setup {
-        when(mockLookupService.lookup(any()))
+        when(mockLookupService.lookup(any())(any()))
           .thenReturn(List.empty[SicCode])
         mockAuthorisedRequest(Future.successful({}))
 
