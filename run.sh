@@ -7,7 +7,7 @@ function deleteManagedResourcesAndRun() {
   echo "-------------------------------------------------------"
   repo_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
   cd "$parent_path"
-  rm -rf target/scala-2.12/resource_managed
+  rm -rf target/scala-2.13/resource_managed
   sbt "run 9875 -Dapplication.router=testOnlyDoNotUseInAppConf.Routes -Dlogger.resource=logback-test.xml"
 }
 

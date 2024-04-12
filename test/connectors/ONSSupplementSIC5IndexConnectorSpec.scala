@@ -31,7 +31,7 @@ class ONSSupplementSIC5IndexConnectorSpec extends PlaySpec with MockitoSugar {
   val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
 
   val mockICLConfig: ICLConfig = new ICLConfig(mockServicesConfig, mockConfig) {
-    override def getConfigString(x: String) = "target/scala-2.12/resource_managed/main/conf/index"
+    override def getConfigString(x: String) = "target/scala-2.13/resource_managed/main/conf/index"
   }
 
   trait Setup {

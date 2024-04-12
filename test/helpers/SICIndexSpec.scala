@@ -53,7 +53,7 @@ trait SICIndexSpec extends PlaySpec {
   val analyzer = new StandardAnalyzer(stopSet)
 
   lazy val indexPath: Path =
-    FileSystems.getDefault.getPath("target", "scala-2.12", "resource_managed", "main", "conf", "index", indexName)
+    FileSystems.getDefault.getPath("target", "scala-2.13", "resource_managed", "main", "conf", "index", indexName)
 
   def openIndex() = new NIOFSDirectory(indexPath)
 
