@@ -15,10 +15,8 @@
  */
 
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import sbt.Keys.scalacOptions
 import uk.gov.hmrc.DefaultBuildSettings
 
 val appName: String = "industry-classification-lookup"
@@ -37,11 +35,10 @@ ThisBuild / scalaVersion := "2.13.12"
 ThisBuild / majorVersion := 0
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin): _*)
+  .enablePlugins(Seq(play.sbt.PlayScala): _*)
   .settings(playSettings : _*)
   .settings(scalaSettings: _*)
   .settings(scoverageSettings : _*)
-  .settings(publishingSettings: _*)
   .settings(PlayKeys.playDefaultPort := 9875)
   .settings(defaultSettings(): _*)
   .settings(
@@ -57,4 +54,4 @@ lazy val it = project.in(file("it"))
   .settings(DefaultBuildSettings.itSettings())
   .settings(
     libraryDependencies ++= AppDependencies(),
-    addTestReportOption(IntegrationTest, "int-test-reports"))
+    addTestReportOption(Test, "int-test-reports"))
