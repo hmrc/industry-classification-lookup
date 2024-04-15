@@ -48,7 +48,7 @@ trait TestDependencies {
   lazy val coreTestDependencies = Seq(
     "uk.gov.hmrc" %% "bootstrap-test-play-30" % "8.5.0" % scope,
     "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % scope,
-    "com.vladsch.flexmark" % "flexmark-all" % "0.36.8" % scope
+    "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % scope
   )
 }
 
