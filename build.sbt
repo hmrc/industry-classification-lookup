@@ -15,9 +15,9 @@
  */
 
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
+import uk.gov.hmrc.DefaultBuildSettings
 
 val appName: String = "industry-classification-lookup"
 
@@ -30,25 +30,28 @@ lazy val scoverageSettings = Seq(
   ScoverageKeys.coverageHighlighting := true
 )
 
+
+ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / majorVersion := 0
+
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin): _*)
+  .enablePlugins(Seq(play.sbt.PlayScala): _*)
   .settings(playSettings : _*)
   .settings(scalaSettings: _*)
-  .settings(majorVersion := 0)
   .settings(scoverageSettings : _*)
-  .settings(publishingSettings: _*)
   .settings(PlayKeys.playDefaultPort := 9875)
   .settings(defaultSettings(): _*)
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    scalaVersion                                  := "2.12.12",
     libraryDependencies                           ++= AppDependencies(),
     retrieveManaged                               := true,
     update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    IntegrationTest / Keys.fork                   := false,
-    IntegrationTest / parallelExecution           := false,
-    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory)(base => Seq(base / "it")).value,
-    resolvers                                     += Resolver.jcenterRepo,
-    addTestReportOption(IntegrationTest, "int-test-reports")
+    resolvers                                     += Resolver.jcenterRepo
   )
+
+lazy val it = project.in(file("it"))
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .settings(DefaultBuildSettings.itSettings())
+  .settings(
+    libraryDependencies ++= AppDependencies(),
+    addTestReportOption(Test, "int-test-reports"))
