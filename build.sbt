@@ -47,6 +47,7 @@ lazy val microservice = Project(appName, file("."))
     update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     resolvers                                     += Resolver.jcenterRepo
   )
+  .settings(scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s")
 
 lazy val it = project.in(file("it"))
   .enablePlugins(PlayScala)
