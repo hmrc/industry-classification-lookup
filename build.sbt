@@ -18,6 +18,7 @@ import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, s
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import uk.gov.hmrc.DefaultBuildSettings
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 
 val appName: String = "industry-classification-lookup"
 
@@ -35,7 +36,7 @@ ThisBuild / scalaVersion := "2.13.12"
 ThisBuild / majorVersion := 0
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala): _*)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin): _*)
   .settings(playSettings : _*)
   .settings(scalaSettings: _*)
   .settings(scoverageSettings : _*)
