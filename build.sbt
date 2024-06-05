@@ -37,6 +37,7 @@ ThisBuild / majorVersion := 0
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(Seq(play.sbt.PlayScala, SbtDistributablesPlugin): _*)
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings : _*)
   .settings(scalaSettings: _*)
   .settings(scoverageSettings : _*)
