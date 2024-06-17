@@ -33,7 +33,7 @@ object LuceneDependencies {
 }
 
 object MainDependencies {
-  private val bootstrapPlayVersion = "8.5.0"
+  private val bootstrapPlayVersion = "8.6.0"
 
   def apply() = Seq(
     "uk.gov.hmrc" %% "bootstrap-backend-play-30" % bootstrapPlayVersion
@@ -46,7 +46,7 @@ trait TestDependencies {
   val test: Seq[ModuleID]
 
   lazy val coreTestDependencies = Seq(
-    "uk.gov.hmrc" %% "bootstrap-test-play-30" % "8.5.0" % scope
+    "uk.gov.hmrc" %% "bootstrap-test-play-30" % "8.6.0" % scope
   )
 }
 
