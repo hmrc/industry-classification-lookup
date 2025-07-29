@@ -65,6 +65,9 @@ trait IndexConnector extends LoggingUtil {
     val stopWords = lang match {
       case LANG_EN => STOP_WORDS.asJava
       case LANG_CY => STOP_WORDS_CY.asJava
+      case _ =>
+        logger.warn(s"Unsupported language '$lang', falling back to English (en).")
+        STOP_WORDS.asJava
     }
     new StandardAnalyzer(new CharArraySet(stopWords, true))
   }
