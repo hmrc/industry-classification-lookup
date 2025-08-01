@@ -49,23 +49,54 @@ class IndexConnectorSpec extends PlaySpec with MockitoSugar {
       analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
     }
 
-    "return StandardAnalyzer with English stop words for 'en-GB' language" in {
-      val connector = new TestConnector(realICLConfig)
-      val analyzer = connector.analyzer("en-GB")
-      analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
-    }
-
     "return StandardAnalyzer with Welsh stop words for 'cy' language" in {
       val connector = new TestConnector(realICLConfig)
       val analyzer = connector.analyzer("cy")
       analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
     }
 
-    "return StandardAnalyzer with Welsh stop words for 'cy-GB' language" in {
+    "not log a warning when language is 'cy-GB'" in {
       val connector = new TestConnector(realICLConfig)
+
+      val logger = LoggerFactory.getLogger(connector.getClass).asInstanceOf[Logger]
+      val listAppender = new ListAppender[ch.qos.logback.classic.spi.ILoggingEvent]()
+      listAppender.start()
+      logger.addAppender(listAppender)
+
       val analyzer = connector.analyzer("cy-GB")
       analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
+
+      val logs = listAppender.list.asScala
+      logs.exists(event =>
+        event.getLevel == Level.WARN &&
+          event.getFormattedMessage.contains("falling back to English")
+      ) mustBe false
+
+      logger.detachAppender(listAppender)
+      listAppender.stop()
     }
+
+    "not log a warning when language is 'en-GB'" in {
+      val connector = new TestConnector(realICLConfig)
+
+      val logger = LoggerFactory.getLogger(connector.getClass).asInstanceOf[Logger]
+      val listAppender = new ListAppender[ch.qos.logback.classic.spi.ILoggingEvent]()
+      listAppender.start()
+      logger.addAppender(listAppender)
+
+      val analyzer = connector.analyzer("en-GB")
+      analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
+
+      val logs = listAppender.list.asScala
+      logs.exists(event =>
+        event.getLevel == Level.WARN &&
+          event.getFormattedMessage.contains("falling back to English")
+      ) mustBe false
+
+      logger.detachAppender(listAppender)
+      listAppender.stop()
+    }
+
 
     "log a warning and fallback to English stop words for unsupported language" in {
       val connector = new TestConnector(realICLConfig)
