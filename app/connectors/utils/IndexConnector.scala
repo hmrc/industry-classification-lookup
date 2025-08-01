@@ -40,7 +40,9 @@ trait IndexConnector extends LoggingUtil {
   val name: String
 
   val LANG_EN = "en"
+  val LANG_EN_GB = "en-GB"
   val LANG_CY = "cy"
+  val LANG_CY_GB = "cy-GB"
 
   val FIELD_CODE = "code"
   val FIELD_DESC = "description"
@@ -63,8 +65,8 @@ trait IndexConnector extends LoggingUtil {
     )
     val STOP_WORDS_CY = List()
     val stopWords = lang match {
-      case LANG_EN => STOP_WORDS.asJava
-      case LANG_CY => STOP_WORDS_CY.asJava
+      case LANG_EN | LANG_EN_GB => STOP_WORDS.asJava
+      case LANG_CY | LANG_CY_GB => STOP_WORDS_CY.asJava
       case _ =>
         logger.warn(s"Unsupported language '$lang', falling back to English (en).")
         STOP_WORDS.asJava

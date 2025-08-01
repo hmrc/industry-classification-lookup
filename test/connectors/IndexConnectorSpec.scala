@@ -49,9 +49,21 @@ class IndexConnectorSpec extends PlaySpec with MockitoSugar {
       analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
     }
 
+    "return StandardAnalyzer with English stop words for 'en-GB' language" in {
+      val connector = new TestConnector(realICLConfig)
+      val analyzer = connector.analyzer("en-GB")
+      analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
+    }
+
     "return StandardAnalyzer with Welsh stop words for 'cy' language" in {
       val connector = new TestConnector(realICLConfig)
       val analyzer = connector.analyzer("cy")
+      analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
+    }
+
+    "return StandardAnalyzer with Welsh stop words for 'cy-GB' language" in {
+      val connector = new TestConnector(realICLConfig)
+      val analyzer = connector.analyzer("cy-GB")
       analyzer mustBe a [org.apache.lucene.analysis.standard.StandardAnalyzer]
     }
 
