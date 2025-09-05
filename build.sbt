@@ -46,8 +46,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     libraryDependencies                           ++= AppDependencies(),
     retrieveManaged                               := true,
-    update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    resolvers                                     += Resolver.jcenterRepo
+    update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
   )
   .settings(scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s")
 
