@@ -32,7 +32,7 @@ lazy val scoverageSettings = Seq(
 )
 
 
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 0
 
 lazy val microservice = Project(appName, file("."))
@@ -46,8 +46,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     libraryDependencies                           ++= AppDependencies(),
     retrieveManaged                               := true,
-    update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    resolvers                                     += Resolver.jcenterRepo
+    update / evictionWarningOptions               := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
   )
   .settings(scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s")
 

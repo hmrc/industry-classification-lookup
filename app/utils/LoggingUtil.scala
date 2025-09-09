@@ -19,7 +19,7 @@ package utils
 import org.slf4j.{Logger, LoggerFactory}
 import play.api.mvc.Request
 import play.api.{LoggerLike, MarkerContext}
-import uk.gov.hmrc.http.{HeaderNames, HttpResponse, SessionKeys}
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 
 trait LoggingUtil extends LoggerLike {
 
